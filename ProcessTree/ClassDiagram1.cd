@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ProcessTree.ChangePass" Collapsed="true">
+    <Position X="6.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IQAABAAAAACgBASAAAAAgAAQICAIQAAAAAAAAEIiAQA=</HashCode>
+      <FileName>ChangePass.aspx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProcessTree.Constitution" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUBAEAgEAAAAQCAAFggBEAAIAAQAiAwAAAEgAIAAAA=</HashCode>
+      <FileName>Constitution.aspx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProcessTree.ControlPanel" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQUQAkEAGAiigACICEABQAAAIBASAAIITiIhshMcYQI=</HashCode>
+      <FileName>ControlPanel.aspx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProcessTree.Main" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IQgAJAAIAAAiARCAAJAIgKBAACArQAAAEAAAAAIiAok=</HashCode>
+      <FileName>Default.aspx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProcessTree.Global">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACBAACAAAAEAAAAAQAAAIEGIBQABAAAAAAA=</HashCode>
+      <FileName>Global.asax.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProcessTree.Rating">
+    <Position X="4" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAEAAAAQAAABAAAEAAIAAAAAAAABgAAgAAAgA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProcessTree.Suggestion" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAEAgAAAAAQCAAAAAAEAQoBAAAAABAAgFAFIAAQA=</HashCode>
+      <FileName>Suggestion.aspx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProcessTree.Voting" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCAEAAAAAAAQCAAAAAAEgQIDAAgAABAAAkIAIAAAA=</HashCode>
+      <FileName>Voting.aspx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

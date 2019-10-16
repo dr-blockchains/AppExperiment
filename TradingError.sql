@@ -1,0 +1,7 @@
+﻿SELECT * 
+FROM Transactions
+WHERE Period=2 AND(Buyer='A9YN0N476F6PR' OR Seller='A9YN0N476F6PR') AND TranID IN (327,325, 324)
+
+SELECT * 
+FROM Offers
+WHERE Period=2 AND(Bidder='A9YN0N476F6PR')

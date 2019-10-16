@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Waaa</title>
+<style type="text/css">
+
+.chat-log {
+	height: 200px;
+	overflow: auto;
+	background-color: #EDA;
+}
+
+.chat-log ul {
+	list-style: none;
+	padding: 5px 5px 5px 5px;
+}
+
+.chat-author {
+	display: inline-block;
+	font-weight: bold;
+	font-size: 125%;
+}
+
+.chat-message {
+	display: inline-block;
+	margin-bottom: 10px;
+}
+
+.chat-textarea {
+	height: 150px;
+	background-color: #BDF;
+}
+
+.chat-log, .chat-textarea {
+	display: block;
+	width: 100%;
+	max-width: 800px;
+	margin: 5px auto;
+}
+
+</style>
+</head>
+<body>
+
+<div class="chat-log" id="chat_log">
+	<ul>
+		<li><span class="chat-author">Person 1</span>: &nbsp;<span class="chat-message">This is loads of example text for your face to read slowy in some kind of chair...</span></li>
+		<li><span class="chat-author">Not a Person</span>: &nbsp;<span class="chat-message">Whatever else can go here is more things and stuff and words and whatever...</span></li>
+		<li><span class="chat-author">Person 1</span>: &nbsp;<span class="chat-message">This is loads of example text for your face to read slowy in some kind of chair...</span></li>
+		<li><span class="chat-author">Not a Person</span>: &nbsp;<span class="chat-message">Whatever else can go here is more things and stuff and words and whatever...</span></li>
+		<li><span class="chat-author">Person 1</span>: &nbsp;<span class="chat-message">This is loads of example text for your face to read slowy in some kind of chair...</span></li>
+		<li><span class="chat-author">Not a Person</span>: &nbsp;<span class="chat-message">Whatever else can go here is more things and stuff and words and whatever...</span></li>
+		<li><span class="chat-author">Person 1</span>: &nbsp;<span class="chat-message">This is loads of example text for your face to read slowy in some kind of chair...</span></li>
+		<li><span class="chat-author">Not a Person</span>: &nbsp;<span class="chat-message">Whatever else can go here is more things and stuff and words and whatever...</span></li>		
+	</ul>
+	<script type="text/javascript">
+		var chatlog_div = document.getElementById("chat_log");
+		chatlog_div.scrollTop = chatlog_div.scrollHeight;
+	</script>
+</div>
+
+<form action="." method="post">
+	<textarea class="chat-textarea" name="message"></textarea>
+</form>
+
+<a href="/hamed/" target="_blank">Chat</a>
+
+</body>
+</html>
