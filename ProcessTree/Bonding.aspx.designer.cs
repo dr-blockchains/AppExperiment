@@ -78,15 +78,6 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.Label TimerMessage;
 
         /// <summary>
-        /// BtnRefresh control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnRefresh;
-
-        /// <summary>
         /// Message control.
         /// </summary>
         /// <remarks>
@@ -105,22 +96,13 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.RadioButtonList RadioOrder;
 
         /// <summary>
-        /// StartPrice control.
+        /// AvShare control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label StartPrice;
-
-        /// <summary>
-        /// StartShares control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label StartShares;
+        protected global::System.Web.UI.WebControls.Label AvShare;
 
         /// <summary>
         /// BuySell control.
@@ -141,13 +123,13 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.TextBox DeltaShares;
 
         /// <summary>
-        /// AvShare control.
+        /// AvFund control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label AvShare;
+        protected global::System.Web.UI.WebControls.Label AvFund;
 
         /// <summary>
         /// DeltaFund control.
@@ -159,22 +141,31 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.TextBox DeltaFund;
 
         /// <summary>
-        /// AvFund control.
+        /// StartShares control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label AvFund;
+        protected global::System.Web.UI.WebControls.Label StartShares;
 
         /// <summary>
-        /// AveragePrice control.
+        /// EndShares control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox AveragePrice;
+        protected global::System.Web.UI.WebControls.TextBox EndShares;
+
+        /// <summary>
+        /// StartPrice control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label StartPrice;
 
         /// <summary>
         /// EndPrice control.
@@ -186,13 +177,13 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.TextBox EndPrice;
 
         /// <summary>
-        /// PlaceOrder control.
+        /// AveragePrice control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button PlaceOrder;
+        protected global::System.Web.UI.WebControls.TextBox AveragePrice;
 
         /// <summary>
         /// AutoFill control.
@@ -202,6 +193,15 @@ namespace ProcessTree
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button AutoFill;
+
+        /// <summary>
+        /// PlaceOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button PlaceOrder;
 
         /// <summary>
         /// Chart1 control.

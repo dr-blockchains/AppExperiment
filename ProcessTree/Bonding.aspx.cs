@@ -6,7 +6,7 @@ using System.Globalization;
 namespace ProcessTree
 {
     public partial class Bonding : System.Web.UI.Page
-    {   
+    {
         protected void Page_Load(object sender, EventArgs e)
         {
             Page.MaintainScrollPositionOnPostBack = true;
@@ -15,9 +15,10 @@ namespace ProcessTree
                 Response.Redirect("~/Default.aspx");
 
             if (Session["Treat"] == null || Session["Group"] == null || Session["Period"] == null || Session["Choice"] == null || (string)Session["Choice"] == "" || Session["DT"] == null || (short)Session["Valuation"] != 10)
-                Response.Redirect("~/Voting.aspx");            
+                Response.Redirect("~/Voting.aspx");
 
             int Period = Global.Refresh((int)Session["Treat"], (int)Session["Group"], out DateTime DT);
+
 
             if (Period == 0 || Period == -9)
             {
@@ -80,7 +81,7 @@ namespace ProcessTree
                 return;
             }
 
-            Session["Balance"] = User["Balance"];
+            Session["AvFund"] = User["Balance"];
 
             if (Session["V"]==null)
                 Message.Text = User["Name"] + ", buy or sell considering the price!";
@@ -222,6 +223,7 @@ namespace ProcessTree
                 DeltaFund.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
                 AveragePrice.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
                 EndPrice.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                DeltaShares.Focus();
             }
             else
             {
@@ -235,9 +237,9 @@ namespace ProcessTree
                 DeltaFund.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
                 AveragePrice.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
                 EndPrice.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                DeltaFund.Focus();
             }
 
-            DeltaFund.Focus();
             Session["BuySell"] = RadioOrder.SelectedValue;
             BuySell.Text = RadioOrder.SelectedValue;
             Session["V"] = null;
@@ -245,131 +247,124 @@ namespace ProcessTree
 
         protected void PlaceOrder_Click(object sender, EventArgs e)
         {
-            float P, V; // Price , Unfullfilled
+            if (Session["User"] == null)
+                Response.Redirect("~/Default.aspx");
+
+            Session["V"] = null;
+
+            float shares1, shares2, dshare, dfund;
 
             try
             {
-                V = float.Parse(DeltaShares.Text, CultureInfo.InvariantCulture.NumberFormat);
+                shares1 = float.Parse(StartShares.Text, CultureInfo.InvariantCulture.NumberFormat);
+            }
+            catch
+            {                
+                Message.Text = "Please refresh the page!";
+                Global.EmailAdmin("Error 257: Bonding", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"] + " & StartShares = " + StartShares.Text);
+                return;
+            }
+
+            try
+            {
+                dshare = float.Parse(DeltaShares.Text, CultureInfo.InvariantCulture.NumberFormat);
+                if (dshare <= 0 || dshare > 10000) throw new Exception();
             }
             catch
             {
                 DeltaShares.Focus();
-                Message.Text = "Number of shares is not in proper format!";
+                Message.Text = "Number of shares is out of range!";
                 return;
             }
 
             try
             {
-                P = float.Parse(DeltaFund.Text, CultureInfo.InvariantCulture.NumberFormat);                
+                dfund = float.Parse(DeltaFund.Text, CultureInfo.InvariantCulture.NumberFormat);
+                if (dfund <= 0 || dfund > 1000) throw new Exception();
             }
             catch
             {
                 DeltaFund.Focus();
-                Message.Text = "Your price is not in proper format!";
+                Message.Text = "Amount of fund is out of range!";
                 return;
             }
 
-            Price.Text += "*";
-            TotalVol.Text += "*";
-
-            if (P <= 0 || P > 100)
-            {
-                Price.Focus();
-                Message.Text = "Your offered price is out of range!";
-                return;
-            }
-
-            if (V <= 0 || V > 10000)
-            {
-                TotalVol.Focus();
-                Message.Text = "Number of shares is out of range!";
-                return;
-            }
 
             if (RadioOrder.SelectedValue == "Buy")
             {
-                if (P * V > (float)Session["Balance"])
+                if (dfund > (float)Session["AvFund"])
                 {
-                    ClientScript.RegisterStartupScript(GetType(), "Insufficient Balance", "alert('You need $" + (P * V).ToString("C") + " of available balance for this order.');", true);               
-                    TotalVol.Text = (Math.Floor((float)Session["Balance"] * 1000 / P) / 1000).ToString();
-                    Message.Text = "Try to buy " + TotalVol.Text + " shares!";
-                    TotalVol.Focus();
-                    return;
+                    //ClientScript.RegisterStartupScript(GetType(), "Insufficient Balance", "alert('You do not have $" + dfund.ToString("C") + " of available fund. \n The order is fullfilled partially.');", true);
+                    dfund = (float) Math.Floor((float)Session["AvFund"] * 10000) / 10000;
+                    DeltaFund.Text = dfund.ToString("C");
+                    Message.Text = "You invested $" + DeltaFund.Text + " !";
+                    DeltaFund.Focus();
                 }
-                Session["Balance"] = (float)Session["Balance"] - P * V;
+
+                shares2 = (float)Math.Sqrt(200.0f * dfund + shares1 * shares1);
+
+                dshare = shares2 - shares1;
+                DeltaShares.Text = dshare.ToString("F") + "*";
+
+                Session["AvFund"] = (float)Session["AvFund"] - dfund;
+                AvFund.Text = ((float)Session["AvFund"]).ToString("C");
             }
             else
             {
-                if (V > (float)Session["Shares"])
+                if (dshare > (float)Session["AvShare"])
                 {
-                    ClientScript.RegisterStartupScript(GetType(), "Insufficient Shares", "alert('You do not have " + V + " shares for this choice.');", true);
-                    TotalVol.Text = (Math.Floor((float)Session["Shares"]*1000)/1000).ToString();
-                    Message.Text = "Try to sell " + TotalVol.Text + " shares!";
-                    TotalVol.Focus();
-                    return;
+                    //ClientScript.RegisterStartupScript(GetType(), "Insufficient Shares", "alert('You do not have " + dshare + " shares for this choice. \n You sell all your shares.');", true);
+                    dshare = (float) Math.Floor((float)Session["AvShare"] * 10000) / 10000;
+                    DeltaShares.Text = dshare.ToString("F");
+                    Message.Text = "You sold " + DeltaShares.Text + " shares!";
+                    DeltaShares.Focus();
                 }
 
-                Session["Shares"] = (float)Session["Shares"] - V;
+                shares2 = shares1 - dshare;
+
+                dfund = dshare * (shares1 + shares2) / 200.0f;
+                DeltaFund.Text = dfund.ToString("C") + "*";
+
+                Session["AvShare"] = (float)Session["AvShare"] - dshare;
+                AvShare.Text = ((float)Session["AvShare"]).ToString("C");
             }
+
+            AveragePrice.Text = ((shares1 + shares2) / 200.0).ToString("C");
+            EndPrice.Text = (shares2 / 100.0).ToString("C");
+            EndShares.Text = shares2.ToString("C");
 
             Session["Time"] = DateTime.Now;
 
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);            
-            conn.Open();
+            //SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);            
+            //conn.Open();
                        
-            string query = "INSERT INTO Offers VALUES (@Treatment, @Group, @Period, @Choice, @Bidder, @Time, @Price, @TotalVol, @TotalVol, @Buy0Sell1)";
-            SqlCommand com = new SqlCommand(query, conn);
+            //string query = "EXEC Bond @Treatment, @Group, @Period, @Choice, @Bidder, @Time, @Buy0Sell1, @Shares1, @Vol";           
+            //SqlCommand com = new SqlCommand(query, conn);
 
-            com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
-            com.Parameters.AddWithValue("@Group", Session["Group"]);
-            com.Parameters.AddWithValue("@Period", Session["Period"]);
-            com.Parameters.AddWithValue("@Choice", Session["Choice"]);
-            com.Parameters.AddWithValue("@Bidder", Session["User"]);
-            com.Parameters.AddWithValue("@Time", Session["Time"]);
-            com.Parameters.AddWithValue("@Price", P);
-            com.Parameters.AddWithValue("@TotalVol", V);
-            com.Parameters.AddWithValue("@Buy0Sell1", RadioOrder.SelectedIndex);
+            //com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
+            //com.Parameters.AddWithValue("@Group", Session["Group"]);
+            //com.Parameters.AddWithValue("@Period", Session["Period"]);
+            //com.Parameters.AddWithValue("@Choice", Session["Choice"]);
+            //com.Parameters.AddWithValue("@Bidder", Session["User"]);
+            //com.Parameters.AddWithValue("@Time", Session["Time"]);
+            //com.Parameters.AddWithValue("@Buy0Sell1", RadioOrder.SelectedIndex);
+            //com.Parameters.AddWithValue("@Shares1", shares1);
+            //com.Parameters.AddWithValue("@Vol", dshare);
 
-            if (com.ExecuteNonQuery() != 1)
-            {
-                Message.Text = "Could not place the order. Try again!";
-                Global.EmailAdmin("Error 250: Trading", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"]);
-                conn.Close();
-                return;
-            }
+
+            //if (com.ExecuteNonQuery() != 1)
+            //{
+            //    Message.Text = "Could not place the order. Try again!";
+            //    Global.EmailAdmin("Error 250: Trading", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"]);
+            //    conn.Close();
+            //    return;
+            //}
             
-            query = "EXEC Transact @Treatment, @Group, @Period, @Choice, @Seller, @Sell_Time, @Buyer, @Buy_Time, @Price, @Vol";
-
-            float Pi = 0.0f, Vi, Vol;
+            //conn.Close();
 
 
-
-
-
-
-
-            if (Pi > 0)
-            {                
-                query = "UPDATE Versions SET Score = @Score WHERE (Treatment = @Treatment) AND ([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice)";
-                com = new SqlCommand(query, conn);
-
-                com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
-                com.Parameters.AddWithValue("@Group", Session["Group"]);
-                com.Parameters.AddWithValue("@Period", Session["Period"]);
-                com.Parameters.AddWithValue("@Choice", Session["Choice"]);
-                com.Parameters.AddWithValue("@Score", Pi);
-
-                if (com.ExecuteNonQuery() != 1)
-                {             
-                    Global.EmailAdmin("Error 538: Trading", "UserID =" + Session["User"]);
-                    conn.Close();
-                    return;
-                }
-            }
-
-            conn.Close();
-            Session["V"] = V;            
-            Response.Redirect("~/Trading.aspx");
+            Session["V"] = shares2;            
+            Response.Redirect("~/Bonding.aspx");
         }
 
         protected void AutoFill_Click(object sender, EventArgs e)
@@ -379,54 +374,47 @@ namespace ProcessTree
 
             Session["V"] = null;
 
-            float P, V; // Price , Unfullfilled
+            float shares1, shares2, dshare, dfund;
 
             try
             {
-                P = float.Parse(Price.Text, CultureInfo.InvariantCulture.NumberFormat);
+                shares1 = float.Parse(StartShares.Text, CultureInfo.InvariantCulture.NumberFormat);
             }
             catch
             {
-                P = 0;                
+                Message.Text = "Please refresh the page!";
+                Global.EmailAdmin("Error 257: Bonding", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"] + " & StartShares = " + StartShares.Text);
+                return;
             }
 
-            try
+            if (RadioOrder.SelectedValue == "Buy")
             {
-                V = float.Parse(TotalVol.Text, CultureInfo.InvariantCulture.NumberFormat);
+                dfund = (float)Math.Floor((float)Session["AvFund"] * 10000) / 10000;
+                DeltaFund.Text = dfund.ToString("C");
+                Message.Text = "Investing " + DeltaFund.Text + " !";
+
+                shares2 = (float)Math.Sqrt(200.0f * dfund + shares1 * shares1);
+
+                dshare = shares2 - shares1;
+                DeltaShares.Text = dshare.ToString("F");
             }
-            catch
+            else
             {
-                V = 0;                
+                dshare = (float)Math.Floor((float)Session["AvShare"] * 10000) / 10000;
+                DeltaShares.Text = dshare.ToString("F");
+                Message.Text = "Selling " + DeltaShares.Text + " shares!";
+
+                shares2 = shares1 - dshare;
+
+                dfund = dshare * (shares1 + shares2) / 200.0f;
+                DeltaFund.Text = dfund.ToString("C");
             }
 
-            if (P <= 0 || P > 100)
-            {
-                SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
-                conn.Open();
+            AveragePrice.Text = ((shares1 + shares2) / 200.0).ToString("C");
+            EndPrice.Text = (shares2 / 100.0).ToString("C");
+            EndShares.Text = shares2.ToString("C");
 
-                string query = "SELECT Price FROM Offers WHERE (Treatment = @Treatment) AND ([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice) AND (UnFullfilled > 0) AND " +
-                (RadioOrder.SelectedValue == "Buy" ? " Buy0Sell1 = 1 ORDER BY Price" : " Buy0Sell1 = 0 ORDER BY Price DESC");
-
-                SqlCommand com = new SqlCommand(query, conn);
-
-                com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
-                com.Parameters.AddWithValue("@Group", Session["Group"]);
-                com.Parameters.AddWithValue("@Period", Session["Period"]);
-                com.Parameters.AddWithValue("@Choice", Session["Choice"]);
-
-                P = (float)(com.ExecuteScalar() ?? 0.15f);
-                Price.Text = P.ToString();
-
-                conn.Close();
-            }
-
-            if (V <= 0 || V > 10000)
-            {
-                TotalVol.Text = (RadioOrder.SelectedValue == "Buy" ?
-                    Math.Floor((float)Session["Balance"] * 1000 / P ) / 1000:
-                    Math.Floor((float)Session["Shares"] * 1000) / 1000
-                    ).ToString();
-            }
+            PlaceOrder.Focus();
         }
     }
 }

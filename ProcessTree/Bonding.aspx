@@ -14,7 +14,7 @@
             
             text-align: left;
         }
-                   
+
         .style32
         {
             color: #003300;
@@ -26,11 +26,11 @@
             text-align: center;
         }
         .auto-style30 {
-            width: 50%;
+            width: 51%;
         }
         .auto-style31 {
             text-align: right;
-            width: 50%;
+            width: 51%;
         }
         .auto-style32 {
                         
@@ -40,11 +40,6 @@
             font-size: medium;
         }
 
-        .auto-style37 {
-            text-align: left;
-            height: 36px;
-            width: 50%;
-        }
         .auto-style41 {
             width: 74%;
         }
@@ -57,23 +52,15 @@
         .auto-style51 {
             text-align: right;
             }
-        .auto-style53 {
-            text-align: center;
-            height: 36px;
-            width: 50%;
-            background-color: #FFFFCC;
-        }
         .auto-style56 {
             height: 36px;
             text-align: right;
         }
-        .auto-style57 {
-            height: 36px;
-        }
-
+        
         .auto-style58 {
             text-align: left;
             font-size: small;
+            width: 51%;
         }
         .auto-style59 {
             font-size: small;
@@ -95,6 +82,27 @@
         .auto-style63 {
             text-align: left;
             width: 26%;
+        }
+
+        .auto-style64 {
+            height: 36px;
+            text-align: left;
+            width: 51%;
+        }
+
+        .auto-style65 {
+            height: 36px;
+            text-align: center;
+            width: 1075px;
+        }
+        .auto-style66 {
+            height: 36px;
+            text-align: center;
+            width: 51%;
+        }
+        .auto-style67 {
+            text-align: left;
+            width: 51%;
         }
 
         </style>
@@ -152,33 +160,7 @@
             </tr>                    
             <tr>
                
-                <td class="auto-style48" colspan="2">    
-    
-                    &nbsp;</td>
-               
-                <td class="auto-style61">    
-                    <span class="auto-style62"><em>Refresh to see the new price: </em></span>&nbsp;</td>
-               
-                <td class="auto-style56">    
-    
-                                    <asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" />
-    
-                </td>
-            </tr>                    
-            <tr>
-               
-                <td class="auto-style48" colspan="3">    
-    
-                    <asp:Label ID="Message" runat="server" Font-Bold="True" ForeColor="#993333" CssClass="auto-style1" Font-Size="Medium" Height="28px" style="font-size: medium" Font-Italic="True" Width="112%"></asp:Label>
-                </td>
-               
-                <td class="auto-style56">    
-    
-                                    &nbsp;</td>
-            </tr>                    
-            <tr>
-               
-                <td class="auto-style37" colspan="2">    
+                <td class="auto-style64" colspan="2">    
     
                     &nbsp;</td>
                
@@ -191,96 +173,235 @@
             </tr>                    
             <tr>
                
-                <td class="auto-style53" colspan="2">    
-                    <asp:RadioButtonList ID="RadioOrder" runat="server" RepeatDirection="Horizontal" AutoPostBack="True" BorderStyle="Ridge" BorderWidth="2px" Font-Bold="True" OnSelectedIndexChanged="RadioOrder_SelectedIndexChanged" TabIndex="20">
+                <td class="auto-style67" colspan="2" rowspan="2">    
+    
+                    <p class="text-justify">
+    
+                    <asp:Label ID="Message" runat="server" Font-Bold="True" ForeColor="#993333" CssClass="auto-style1" Font-Size="Medium" Height="45px" style="font-size: medium" Font-Italic="True" Width="100%"></asp:Label>
+                    </p>
+    
+                    <p>
+    
+                        &nbsp;</p>
+                                   
+                </td>
+               
+                <td class="auto-style65">    
+                    <asp:RadioButtonList ID="RadioOrder" runat="server" RepeatDirection="Horizontal" AutoPostBack="True" BorderStyle="Ridge" BorderWidth="2px" Font-Bold="True" OnSelectedIndexChanged="RadioOrder_SelectedIndexChanged" TabIndex="20" BackColor="#FFAAAA" Height="61px">
                         <asp:ListItem>Buy</asp:ListItem>
                         <asp:ListItem Selected="True">Sell</asp:ListItem>
                     </asp:RadioButtonList>
                 </td>
                
-                <td class="auto-style57" colspan="2">    
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
+            </tr>                    
+            <tr>
+               
+                <td class="auto-style61">    
+                    &nbsp;</td>
+               
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
+            </tr>                    
+            <tr>
+               
+               
+                <td class="auto-style48" colspan="2">    
+    
+                    <p>
+    
+                        Your available Shares for this choice = <asp:Label ID="AvShare" runat="server" Class="balance" Font-Bold="True" Font-Size="Medium"></asp:Label>  
+                                   
+                    </p>
+                                   
+                </td>
+               
+                <td class="auto-style61">    
+ 
+                    Number of Shares&nbsp;you <asp:Label ID="BuySell" runat="server" Text="Sell" Font-Bold="True"></asp:Label>
+&nbsp;= <asp:TextBox ID="DeltaShares" runat="server" type="text" name="txt" value="0" onchange="Dshare2All()" BackColor="#FFAAAA" TabIndex="30" Width="99px" Font-Bold="True" Height="40px"></asp:TextBox>
+
+                </td>
+               
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
+            </tr>                    
+            <tr>
+               
+               
+                <td class="auto-style48" colspan="2">    
+    
+                    <p>
+                        Your available Balance for this choice = $ <asp:Label ID="AvFund" runat="server" Class="balance" Font-Bold="True" Font-Size="Medium"></asp:Label>                                  
+                                   
+                    </p>
+                </td>
+               
+                <td class="auto-style61">    
+ 
+                    <p>
+ 
+                    Amount of Fund Transfer =$ <asp:TextBox ID="DeltaFund" runat="server" BackColor="#FFAAAA" TabIndex="40" Width="99px" Font-Bold="True" Height="40px">0</asp:TextBox>
+
+                    </p>
+
+                </td>
+               
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
+            </tr>                    
+            <tr>
+               
+                <td class="auto-style48" colspan="2">    
+    
+                    &nbsp;</td>
+               
+                <td class="auto-style61">    
+                    &nbsp;</td>
+               
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
+            </tr>                    
+            <tr>
+               
+                <td class="auto-style48" colspan="2">    
+    
+                    Current Shares Outstanding=    
+    
+                    <asp:Label ID="StartShares" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="N/A" BorderColor="#FFCC00" BorderWidth="3px"></asp:Label>
+                &nbsp;shares</td>
+               
+                <td class="auto-style61">    
+                    <p>
+                    &nbsp;Target shares outstanding:&nbsp; <asp:TextBox ID="EndShares" runat="server" BackColor="#FFAAAA" TabIndex="40" Width="99px" Font-Bold="True" Height="40px" ReadOnly="True"></asp:TextBox>
+
+                    &nbsp;shares&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    </p>
+
+                </td>
+               
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
+            </tr>                    
+            <tr>
+               
+                <td class="auto-style48" colspan="2">    
     
                     Current (Starting) Price =    
     
                     <asp:Label ID="StartPrice" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="N/A" BorderColor="#FFCC00" BorderWidth="3px"></asp:Label>
                 </td>
-            </tr>                    
-            <tr>   
-                <td class="auto-style53" colspan="2">    
- 
-                    &nbsp; </td>
-
                
-                <td class="auto-style48" colspan="2">    
-    
-                    Number of Shares Outstanding=    
-    
-                    <asp:Label ID="StartShares" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="N/A" BorderColor="#FFCC00" BorderWidth="3px"></asp:Label>
+                <td class="auto-style61">    
+                    <p>
+                    &nbsp;&nbsp; Target price:&nbsp;$ <asp:TextBox ID="EndPrice" runat="server" BackColor="#FFAAAA" TabIndex="40" Width="99px" Font-Bold="True" Height="40px" ReadOnly="True"></asp:TextBox>
+
+                    &nbsp;per share</p>
                 </td>
-            </tr>                    
-            <tr>   
-                <td class="auto-style53" colspan="2">    
- 
-                    Number of shares&nbsp;you
-                    <asp:Label ID="BuySell" runat="server" Text="Sell" Font-Bold="True"></asp:Label>
-&nbsp;= <asp:TextBox ID="DeltaShares" runat="server" BackColor="#FFAAAA" TabIndex="30" Width="99px" Font-Bold="True" Height="25px"></asp:TextBox>
-                    &nbsp;shares</td>
-
                
-                <td class="auto-style48" colspan="2">    
+                <td class="auto-style56">    
     
-                    Your available Shares for this choice =
-                                              <asp:Label ID="AvShare" runat="server" Class="balance" Font-Bold="True" Font-Size="Medium"></asp:Label>  
-                                   
-                </td>
-            </tr>                    
-            <tr>   
-                <td class="auto-style53" colspan="2">    
- 
-                    Amount of Fund =$ <asp:TextBox ID="DeltaFund" runat="server" BackColor="#FFAAAA" TabIndex="40" Width="99px" Font-Bold="True" Height="25px"></asp:TextBox>
-
-                    </td>
-
-               
-                <td class="auto-style48" colspan="2">    
-    
-                    Your available Balance for this choice = $ <asp:Label ID="AvFund" runat="server" Class="balance" Font-Bold="True" Font-Size="Medium"></asp:Label>                                  
-                                   
-                </td>
-            </tr>                    
-            <tr>   
-                <td class="auto-style53" colspan="2">    
- 
-                    Average Transaction Price
-                    = $&nbsp;<asp:TextBox ID="AveragePrice" runat="server" BackColor="#FFAAAA" TabIndex="40" Width="99px" Font-Bold="True" Height="25px" ReadOnly="True"></asp:TextBox>
-
-                    &nbsp;per share</td>
-
-               
-                <td class="auto-style48" colspan="2">    
-    
-                    &nbsp;</td>
+                                    &nbsp;</td>
             </tr>                    
             <tr>
                
-                <td class="auto-style53" colspan="2">    
-                    &nbsp;Ending Transaction Price
-                    =&nbsp;$ <asp:TextBox ID="EndPrice" runat="server" BackColor="#FFAAAA" TabIndex="40" Width="99px" Font-Bold="True" Height="25px" ReadOnly="True"></asp:TextBox>
-
-                    &nbsp;per share</td>
-               
-                <td class="auto-style48" colspan="2">    
+                <td class="auto-style64" colspan="2">    
     
                     &nbsp;</td>
+               
+                <td class="auto-style61">    
+ 
+                    <p>
+ 
+                    Average transaction price: $&nbsp;<asp:TextBox ID="AveragePrice" runat="server" BackColor="#FFAAAA" TabIndex="40" Width="99px" Font-Bold="True" Height="40px" ReadOnly="True"></asp:TextBox>
+
+                    &nbsp;per share</p>
+                </td>
+               
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
             </tr>                    
-            <tr>               
-                <td class="auto-style53" colspan="2">    
-                    &nbsp;<asp:Button ID="PlaceOrder" runat="server" Font-Bold="True" onclick="PlaceOrder_Click" TabIndex="60" Text="Place Sell Order" CssClass="auto-style21" Font-Size="Medium" BackColor="#FFAAAA" ForeColor="Black" />                                   
-                </td>               
-                <td class="auto-style48" colspan="2">        
-                    <asp:Button ID="AutoFill" runat="server" Font-Bold="False" onclick="AutoFill_Click" TabIndex="50" Text="Suggest Numbers" CssClass="text-center" Font-Size="Small" BackColor="#66FF66" ForeColor="Black" Height="50px" Width="276px" />                                   
-                    </td>
+            <tr>
+               
+                <td class="auto-style64" colspan="2">    
+    
+                    &nbsp;</td>
+               
+                <td class="auto-style61">    
+                    &nbsp;</td>
+               
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
             </tr>                    
+            <tr>
+               
+                <td class="auto-style66" colspan="2">    
+    
+                    &nbsp;<asp:Button ID="AutoFill" runat="server" Font-Bold="False" onclick="AutoFill_Click" TabIndex="50" Text="Suggest Numbers" CssClass="text-center" Font-Size="Small" BackColor="#FFAAAA" ForeColor="Black" Height="50px" Width="276px" />                                   
+                </td>
+               
+                <td class="auto-style65">    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <asp:Button ID="PlaceOrder" runat="server" Font-Bold="True" onclick="PlaceOrder_Click" TabIndex="60" Text="Place Sell Order" CssClass="auto-style21" Font-Size="Medium" BackColor="#FFAAAA" ForeColor="Black" />                                   
+                </td>
+               
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
+            </tr>                    
+            <tr>
+               
+                <td class="auto-style64" colspan="2">    
+    
+                    &nbsp;</td>
+               
+                <td class="auto-style61">    
+                    &nbsp;</td>
+               
+                <td class="auto-style56">    
+    
+                                    &nbsp;</td>
+            </tr>                    
+                      
+<script>
+                          function DShare2All() {
+
+                              shares1 = Number(StartShares.Text);
+
+                              dshare = Number(DeltaShares.Text);
+                              if (dshare <= 0 || dshare > 10000) dshare = NaN;
+
+                              dfund = Number(DeltaFund.Text);
+                              if (dfund <= 0 || dfund > 1000) dfund = NaN;
+
+                              if (RadioOrder.SelectedValue == "Buy") {
+
+                                  shares2 = Math.sqrt(200.0 * dfund + shares1 * shares1);
+                                  dshare = shares2 - shares1;
+                                  DeltaShares.Text = dshare.ToString();
+                              }
+                              else {
+
+                                  shares2 = shares1 - dshare;
+                                  dfund = dshare * (shares1 + shares2) / 200.0f;
+                                  DeltaFund.Text = dfund.ToString("C");
+                              }
+
+                              AveragePrice.Text = ((shares1 + shares2) / 200.0).toString();
+                              EndPrice.Text = (shares2 / 100.0).toString();
+                              EndShares.Text = shares2.toString();
+                          }
+</script>
+
             <tr>
                
                 <td class="auto-style51" colspan="4">    
@@ -325,6 +446,8 @@
                         <BorderSkin BackColor="White" />
                     </asp:Chart>
                    </td> 
+                    </tr>
+
                 <tr>
                
                 <td class="auto-style60" colspan="4">
