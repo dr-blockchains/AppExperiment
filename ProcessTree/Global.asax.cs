@@ -230,16 +230,18 @@ namespace ProcessTree
 
             if (!TreatGroup.Read())
             {
+                com.Dispose();
                 conn.Close();
                 DT = DateTime.MaxValue;
                 return -50;
             }
-            
+            com.Dispose();
             DateTime StartingTime = (DateTime)TreatGroup["Starting"];
             if (DateTime.Now < StartingTime)
             {
                 int returnvalue = TreatGroup["Period"].Equals(DBNull.Value) ? -9 : 0;
                 DT = StartingTime;
+                com.Dispose();
                 conn.Close();
                 return returnvalue;
             }
@@ -255,7 +257,7 @@ namespace ProcessTree
 
                 if (com.ExecuteNonQuery() != 1)
                     EmailAdmin("Error 247: Global.Refresh", "Treatment=" + Treat + " & Group = " + Group + " & Period=NULL");
-
+                com.Dispose();
                 conn.Close();                
                 return -9;
             }
@@ -265,6 +267,7 @@ namespace ProcessTree
             if (Period < -10)
             {
                 DT = DateTime.MaxValue;
+                com.Dispose();
                 conn.Close();                
                 return Period;
             }
@@ -272,7 +275,8 @@ namespace ProcessTree
             DT = (DateTime)TreatGroup["DT"];
 
             if (DateTime.Now < DT && Period != 0)
-            {                
+            {
+                com.Dispose();
                 conn.Close();                
                 return Period;
             }
@@ -288,10 +292,11 @@ namespace ProcessTree
             if (!Treatment.Read())
             {
                 EmailAdmin("Error 249: Global.Refresh", "Treatment = " + Treat);
+                com.Dispose();
                 conn.Close();                
                 return -8;
             }
-
+            
             //Treatment Parameters:            
             DateTime DeadLine = StartingTime.AddMinutes((float)Treatment["Ta"]);
             DateTime Closing = StartingTime.AddMinutes((float)Treatment["Tz"]);
@@ -312,7 +317,8 @@ namespace ProcessTree
             int V = (int)Treatment["V"];
             short Meritocracy = (Treatment["Meritocracy"].Equals(DBNull.Value) || (short)Treatment["Meritocracy"] > 3) ? (short)0 : (short)Treatment["Meritocracy"];
             bool Merit2All = Treatment["Merit2All"].Equals(true);
-                        
+            
+            com.Dispose();         
             Treatment.Close();
 
             //************************************************
@@ -324,8 +330,6 @@ namespace ProcessTree
             }         
             else if (Period == 0) // Was registration Period: ***********************************************
             {
-                //query = "insert into Versions(TreatGroup, Period , Choice , Artifact , Proposer , Time) values(" + Treat + ", 2 , 0 ," +
-                //   "(SELECT Artifact FROM Versions WHERE TreatGroup = " + Treat + " AND Period = 0 AND Choice = 0) , 'experimenter' , '" + DateTime.Now + "')";             
                 query = "UPDATE Versions SET Time = GETDATE() , Score = 0 WHERE Treatment = @Treat AND Group# = @Group";
                 com = new SqlCommand(query, conn);
                 com.Parameters.AddWithValue("@Treat", Treat);
@@ -358,6 +362,7 @@ namespace ProcessTree
                     if (com.ExecuteNonQuery() != 1)
                         EmailAdmin("Error 335: Global.Refresh", "Treatment=" + Treat + " & Period=" + Period );
                 }
+                com.Dispose();
 
                 // Invitation Emails
                 /*
@@ -379,7 +384,7 @@ namespace ProcessTree
                     Email(User["ID"].ToString(), "First Period Began", "Hello " + User["Name"] + Content);
 
                 User.Close();
-                */                
+                */
                 Period = 1;   // Switch to Suggestion Period
 
                 if (M == 0)
@@ -402,17 +407,47 @@ namespace ProcessTree
                 else
                     DT = DateTime.Now.AddMinutes(Tp) < Closing ? DateTime.Now.AddMinutes(Tp) : Closing.AddSeconds(-1);
             }
-            else if (Period % 2 == 0)  // Was Voting Period: **********************************************
+            else if (Period % 2 == 0)  // Was Selection Period: **********************************************
             {
                 int Winner;
                 string Proposer, Artifact, NewCash, HtmlNewCash;
-                float MaxVote = 0, OldValue = 100000.0f, NewValue = 0.0f, Performance = 1.0f;
+                float OldValue, NewValue, Performance;
                 //int MinVote = 0;
                 //string ProposerName;
-                //float Balance;
+                //float Balance, MaxVote;
+
                 DataTable VersionVotes = null;
 
-                if (Valuation == 10) // Parallel Market
+                if (Valuation == 12) // Parallel Bonding
+                {
+                    query = @"SELECT * FROM Versions
+                            WHERE Treatment = @Treatment AND [Group#] = @Group AND Period = @Period
+                            ORDER BY Score DESC, Versions.Choice";
+
+                    com = new SqlCommand(query, conn);
+                    com.Parameters.AddWithValue("@Treatment", Treat);
+                    com.Parameters.AddWithValue("@Group", Group);
+                    com.Parameters.AddWithValue("@Period", Period);
+
+                    var DataReader = com.ExecuteReader();
+                    if (!DataReader.Read())
+                    {
+                        EmailAdmin("Error 469: Global.Refresh", "No Version! &&  Treatment=" + Treat + " & Period=" + Period);
+                        conn.Close();
+                        return Period;
+                    }
+
+                    Winner = (int)DataReader["Choice"];
+
+                    //MaxVote = (float) DataReader["Score"];                   
+                    Proposer = (string)DataReader["Proposer"];
+                    Artifact = (string)DataReader["Artifact"];
+                    Performance = (float)DataReader["PerVal"];
+
+                    com.Dispose();
+                    DataReader.Close();
+                }
+                else if (Valuation == 10) // Parallel Market
                 {
                     // query = @"SELECT *, COALESCE ((SELECT TOP 1 Price FROM Transactions 
                     //            						WHERE Treatment = @Treatment AND [Group#] = @Group AND Period = @Period AND Choice = Versions.Choice
@@ -439,17 +474,18 @@ namespace ProcessTree
                     if (!DataReader.Read())
                     {
                         EmailAdmin("Error 469: Global.Refresh", "No Version! &&  Treatment=" + Treat + " & Period=" + Period);
+                        com.Dispose();
                         conn.Close();
                         return Period;
                     }
 
                     Winner = (int)DataReader["Choice"];
 
-                    MaxVote = (float) DataReader["Score"];                   
+                    //MaxVote = (float) DataReader["Score"];                   
                     Proposer = (string) DataReader["Proposer"];
                     Artifact = (string) DataReader["Artifact"];
                     Performance = (float)DataReader["PerVal"];
-
+                    com.Dispose();
                     DataReader.Close();
                 }
                 else // Voting
@@ -479,6 +515,7 @@ namespace ProcessTree
                     if (VersionVotes.Rows.Count == 0)
                     {
                         EmailAdmin("Error 230: Global.Refresh", "Treatment=" + Treat + " <br> Period=" + Period + " <br> query=" + query);
+                        com.Dispose();
                         conn.Close();
                         return Period;
                     }
@@ -486,7 +523,7 @@ namespace ProcessTree
                     Winner = (int)VersionVotes.Rows[0][1]; // (int)Winning["Choice"];
 
                     // MinVote = (int)VersionVotes.Rows[VersionVotes.Rows.Count - 1][0];
-                    MaxVote = (int)VersionVotes.Rows[0][0];                    
+                    //MaxVote = (int)VersionVotes.Rows[0][0];                    
                     Proposer = (string)VersionVotes.Rows[0][2]; // Version["Proposer"].ToString();
                     Artifact = (string)VersionVotes.Rows[0][3]; // Version["Artifact"].ToString(); // In Plain Text \n                    
                     Performance = (float)VersionVotes.Rows[0][4]; // Version["PerVal"];
@@ -509,6 +546,7 @@ namespace ProcessTree
 
                     OldValue = (float)(com.ExecuteScalar()??1.0f); // get the value in the previous round choice 0
                     NewValue = OldValue * Performance;
+                    com.Dispose();
                 }                
 
                 string RoundDate;
@@ -555,6 +593,8 @@ namespace ProcessTree
                     if (com.ExecuteNonQuery() != 1)
                     {
                         EmailAdmin("Error 434: Global.Refresh", "Treatment=" + Treat + " & Period=" + Period + " & Winner=" + Winner);
+                        com.Dispose();
+                        conn.Close();
                         return Period;
                     }                    
                 }
@@ -581,7 +621,8 @@ namespace ProcessTree
                         else
                             DT = DateTime.Now.AddMinutes(Tp) < Closing ? DateTime.Now.AddMinutes(Tp) : Closing.AddMilliseconds(-1);
                     }
-                                       
+
+                    com.Dispose();
                     conn.Close();
                     return Period;
                     //NoDoubleInsert = false;
@@ -596,6 +637,7 @@ namespace ProcessTree
                 com.Parameters.AddWithValue("@Winner", Winner);
                 if (com.ExecuteNonQuery() < 1)
                     EmailAdmin("Error 549: Global.Refresh", "Treatment = " + Treat + " <br> Period = " + Period + " <br> DT = " + DT + " <br> Winner = " + Winner);
+                com.Dispose();
                 //    // Proposer of the winning choice
                 //    query = "select * from People where ID = @Proposer";
                 //    com = new SqlCommand(query, conn);
@@ -999,7 +1041,9 @@ WHERE Treatment = @Treat AND Group# = @Group";
                     com.Parameters.AddWithValue("@Fund", NewValue);
                     if (com.ExecuteNonQuery() < 1)
                         EmailAdmin("Error 1004: Global.Refresh", "Treatment = " + Treat + " <br> Period = " + Period + " <br> DT = " + DT + " <br> Winner = " + Winner);
-
+                    
+                    com.Dispose();
+                    
                     Period = -1;     // FinalPeriod(Treat, Group, EndingTime);  // Switch to Final Period
                     DT = EndingTime;
                     //if (Period == -1 || Period == -2)
@@ -1064,14 +1108,14 @@ WHERE Treatment = @Treat AND Group# = @Group";
                 com = new SqlCommand(query, conn);
                 int m = (int)com.ExecuteScalar();
 
-                if (m > 1) // Enough suggestions for voting
+                if (m > 1) // Enough suggestions for selection
                 {
                     Period++; // Switch to Voting Period
                     DT = DateTime.Now.AddMinutes(Tv);
                     // InviteVoting(Treat, Group, DT);
                     // Update Offer 0
                     // Update Transaction 0
-                    if (Valuation == 10)
+                    if (Valuation > 9 )
                     {
                         query = "EXEC SetSuggestions @Treatment, @Group, @Period";
                         com = new SqlCommand(query, conn);
@@ -1084,6 +1128,7 @@ WHERE Treatment = @Treat AND Group# = @Group";
                             if (com.ExecuteNonQuery() < 3)
                             {
                                 EmailAdmin("Error 1058: Global", " Treatment = " + Treat + " & Period = " + Period);
+                                com.Dispose();
                                 conn.Close();
                                 return Period;
                             }
@@ -1091,9 +1136,11 @@ WHERE Treatment = @Treat AND Group# = @Group";
                         catch (Exception Ex)
                         {
                             EmailAdmin("Simultaneous StartTrading", "Treatment=" + Treat + " & Period=" + Period + " &&&&&&&&&&& Exception = " + Ex);
+                            com.Dispose();
                             conn.Close();
                             return Period;
                         }
+                        com.Dispose();
                     }
                 }
                 else if (m<=1) // Not enough suggestions for Voting
@@ -1129,10 +1176,11 @@ WHERE Treatment = @Treat AND Group# = @Group";
             if (com.ExecuteNonQuery() != 1)
             {
                 EmailAdmin("Error 459: Global.Refresh", "Treatment = " + Treat + " <br> Period = " + Period + " <br> DT = " + DT);
+                com.Dispose();
                 conn.Close();                
                 return Period;
             }
-
+            com.Dispose();
             conn.Close();            
             return Period;
         }

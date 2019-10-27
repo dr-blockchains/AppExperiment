@@ -67,3 +67,146 @@ function CountDownTimer(dline, id) {
 
 //var options = { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: true, timeZoneName: "long" };
 var options = { hour: "2-digit", minute: "2-digit", hour12: true, timeZoneName: "long" };
+
+function DShare2All() {
+    Message.innerHTML = " ";
+    shares1 = Number(StartShares.innerHTML);
+    StartPrice.innerHTML = (shares1 / 100).toFixed(2);
+
+    dshare = Number(DeltaShares.value);
+    if (dshare <= 0 || dshare > 10000) {
+        Message.innerHTML = "Number of shares is out of range!";
+        dshare = NaN;
+    }
+
+    const SelectedRadio = document.querySelector("input[name='Position']:checked").value;
+
+    if (SelectedRadio == "Buy") {
+
+        shares2 = shares1 + dshare;
+        dfund = Math.round(dshare * (shares1 + shares2) / 2) / 100;
+
+        const avfund = Number(AvFund.innerHTML);
+        if (dfund > avfund) {
+            Message.innerHTML = ("You only have $" + avfund + " !");
+        }
+
+    } else { // Sell
+        if (dshare > shares1) {
+            dshare = shares1;
+            DeltaShares.value = dshare;
+            Message.innerHTML = ("There are only " + shares1 + " shares!  ");
+        }
+        shares2 = shares1 - dshare;
+        dfund = dshare * (shares1 + shares2) / 200.0;
+
+        const avshare = Number(AvShare.innerHTML);
+        if (dshare > avshare) {
+            Message.innerHTML += ("<br>You only have " + avshare + " shares!");
+        }
+    }
+
+    DeltaFund.value = dfund.toFixed(2);
+
+    AveragePrice.innerHTML = ((shares1 + shares2) / 200.0).toFixed(2);
+    EndPrice.innerHTML = (shares2 / 100.0).toFixed(2);
+    EndShares.innerHTML = shares2.toFixed(2);
+}
+
+function DFund2All() {
+    Message.innerHTML = " ";
+    const shares1 = Number(StartShares.innerHTML);
+    StartPrice.innerHTML = (shares1 / 100).toFixed(2);
+
+    let dfund = Number(DeltaFund.value);
+    if (dfund <= 0 || dfund > 1000) {
+        Message.innerHTML = "Amount of fund is out of range!"
+        dfund = NaN;
+    }
+
+    let SelectedRadio = document.querySelector("input[name='Position']:checked").value;
+
+    if (SelectedRadio == "Buy") {
+        shares2 = Math.sqrt(shares1 * shares1 + 200.0 * dfund);
+        dshare = shares2 - shares1;
+
+        const avfund = Number(AvFund.innerHTML);
+        if (dfund > avfund) {
+            Message.innerHTML = ("You only have $" + avfund + " !");
+        }
+
+    } else { // Sell
+
+        if (200 * dfund > shares1 * shares1) {
+            dfund = shares1 * shares1 / 200;
+            DeltaFund.value = dfund;
+            Message.innerHTML = ("There is only $" + dfund + " of total funds!  ");
+        }
+
+        shares2 = Math.round(Math.sqrt(shares1 * shares1 - 200.0 * dfund) * 100) / 100;
+        dshare = shares1 - shares2;
+
+        const avshare = Number(AvShare.innerHTML);
+        if (dshare > avshare) {
+            Message.innerHTML += ("You only have " + avshare + " shares!");
+        }
+    }
+
+    DeltaShares.value = dshare.toFixed(2);
+
+    AveragePrice.innerHTML = ((shares1 + shares2) / 200.0).toFixed(2);
+    EndPrice.innerHTML = (shares2 / 100.0).toFixed(2);
+    EndShares.innerHTML = shares2.toFixed(2);
+}
+
+function RadioClick() {
+    const SelectedRadio = document.querySelector("input[name='Position']:checked").value;
+    if (SelectedRadio == "Buy") {
+        DeltaFund.focus();
+        Order.style.backgroundColor = "lightgreen";
+        PlaceOrder.value = "Buy Shares";
+        BuySell.innerHTML = "Buy";
+
+        // document.getElementById("PlaceOrder").innerHTML = "Buy Shares";
+        // document.getElementById("PlaceOrder").style.backgroundColor = "lightgreen";
+        // document.getElementById("AutoFill").style.backgroundColor = "lightgreen";
+        // document.getElementById("DeltaShares").style.backgroundColor = "lightgreen";
+        // document.getElementById("DeltaFund").style.backgroundColor = "lightgreen";
+        // document.getElementById("AveragePrice").style.backgroundColor = "lightgreen";
+        // document.getElementById("EndPrice").style.backgroundColor = "lightgreen";
+        // document.getElementById("EndShares").style.backgroundColor = "lightgreen";
+        // document.getElementById("RadioButton").style.backgroundColor = "lightgreen";
+    } else {
+        DeltaShares.focus();
+        Order.style.backgroundColor = "pink";
+        PlaceOrder.value = "Sell Shares";
+        BuySell.innerHTML = "Sell";
+
+        // document.getElementById("PlaceOrder").innerHTML = "Sell Shares";
+        // document.getElementById("PlaceOrder").style.backgroundColor = "pink";
+        // document.getElementById("AutoFill").style.backgroundColor = "pink";
+        // document.getElementById("DeltaShares").style.backgroundColor = "pink";
+        // document.getElementById("DeltaFund").style.backgroundColor = "pink";
+        // document.getElementById("AveragePrice").style.backgroundColor = "pink";
+        // document.getElementById("EndPrice").style.backgroundColor = "pink";
+        // document.getElementById("EndShares").style.backgroundColor = "pink";
+        // document.getElementById("RadioButton").style.backgroundColor = "pink";
+    }
+    if (LastChange.innerHTML == 'F') {
+        DFund2All();
+    } else {
+        DShare2All();
+    }
+}
+
+function AutoFill_Click() {
+
+    const SelectedRadio = document.querySelector("input[name='Position']:checked").value;
+    if (SelectedRadio == "Buy") {
+        DeltaFund.value = AvFund.innerHTML;
+        DFund2All();
+    } else {
+        DeltaShares.value = AvShare.innerHTML;
+        DShare2All();
+    }
+}

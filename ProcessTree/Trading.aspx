@@ -400,7 +400,7 @@ ORDER BY Price ASC, Time ASC">
                         </SelectParameters>
                     </asp:SqlDataSource>
     
-                    <a href="/tips.aspx" targVisual Directions </a>
+                     <a href="./tips.aspx" target="_blank"><span class="auto-style37"><strong>Visual Directions </strong></span> </a>
     
                     <asp:SqlDataSource ID="SqlDataSource6" runat="server" 
                         ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" 

@@ -226,7 +226,9 @@
              <tr>
                 <td class="auto-style71" rowspan="3">
 
-                    <asp:RadioButtonList ID="Valuation" runat="server" BackColor="Yellow" Width="296px" BorderColor="#CC3300" BorderStyle="Solid" RepeatLayout="Flow" TabIndex="220" CellPadding="5" CellSpacing="5"><asp:ListItem Value="2">Plurality</asp:ListItem><asp:ListItem Value="4">Approval</asp:ListItem><asp:ListItem Value="5">Approval: (M-V).Rv</asp:ListItem><asp:ListItem Value="10">Parallel Markets</asp:ListItem></asp:RadioButtonList></td>
+                    <asp:RadioButtonList ID="Valuation" runat="server" BackColor="Yellow" Width="296px" BorderColor="#CC3300" BorderStyle="Solid" RepeatLayout="Flow" TabIndex="220" CellPadding="5" CellSpacing="5"><asp:ListItem Value="2">Plurality</asp:ListItem><asp:ListItem Value="4">Approval</asp:ListItem><asp:ListItem Value="5">Approval: (M-V).Rv</asp:ListItem><asp:ListItem Value="10">Parallel Markets</asp:ListItem>
+                        <asp:ListItem Value="12">Parellel Bonding</asp:ListItem>
+                    </asp:RadioButtonList></td>
                 <td class="auto-style67">
 
                     Tp =

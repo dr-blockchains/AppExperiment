@@ -473,12 +473,7 @@ namespace ProcessTree
                 conn.Close();
                 return;
             }
-            //query = "insert into Versions (Treatment , Group#, Period , Choice , Artifact , HtmlArtifact,  Proposer , Time, Score) values " + Values2.TrimEnd(',');
-            //com = new SqlCommand(query, conn);
 
-            //com.Parameters.AddWithValue("@Artifact", Artifact.Text.Trim());
-            //com.Parameters.AddWithValue("@HtmlArtifact", Artifact.Text.Replace("\r", "").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;"));
-            //com.Parameters.AddWithValue("@Score", Price.Text);
             query = @"INSERT INTO Versions 
                              SELECT @NewTreat, 1, Period, Choice, Artifact, HtmlArtifact, Proposer, GETDATE(), 0, PerVal
                              FROM Versions
@@ -560,8 +555,7 @@ namespace ProcessTree
             }
             
             #endregion
-            //query = "insert into Versions (Treatment , Group#, Period , Choice , Artifact , HtmlArtifact , Proposer , Time, Score) values (" + Treat.SelectedIndex + " , " + Count + " , 2 , 0 , @Artifact , @HtmlArtifact , 'experimenter' , GETDATE(), @Score)";
-            query = @"INSERT INTO Versions 
+             query = @"INSERT INTO Versions 
                              SELECT Treatment, @NewGroup, Period, Choice, Artifact, HtmlArtifact, Proposer, Time, Score, PerVal
                              FROM Versions
                              WHERE Treatment = @Treat AND Group# = 1";

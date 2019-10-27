@@ -198,7 +198,8 @@
                                 Instructions:</span></strong></td>
                 <td class="auto-style29">    
                                 <br />              
-                    <a href="./tips.aspx" target="_blank">Visual Directions </a>                               
+                     
+                     <a href="./tips.aspx" target="_blank"><strong>Visual Directions </strong></a>
                 </td>
             </tr>
         </table>             

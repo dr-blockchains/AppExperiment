@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProcessTree {
-    
-    
-    public partial class Trading {
-        
+namespace ProcessTree
+{
+
+
+    public partial class Trading
+    {
+
         /// <summary>
         /// PeriodChoice control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label PeriodChoice;
-        
+
         /// <summary>
         /// BtnReturn control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnReturn;
-        
+
         /// <summary>
         /// Panel1 control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel Panel1;
-        
+
         /// <summary>
         /// Version control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Version;
-        
+
         /// <summary>
         /// TimeSpan control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label TimeSpan;
-        
+
         /// <summary>
         /// DeadLineMessage control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label DeadLineMessage;
-        
+
         /// <summary>
         /// TimerMessage control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label TimerMessage;
-        
+
         /// <summary>
         /// Message control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Message;
-        
+
         /// <summary>
         /// BtnRefresh control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnRefresh;
-        
+
         /// <summary>
         /// RadioOrder control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList RadioOrder;
-        
+
         /// <summary>
         /// TotalVol control.
         /// </summary>
@@ -109,8 +111,8 @@ namespace ProcessTree {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox Vol;
-        
+        protected global::System.Web.UI.WebControls.TextBox TotalVol;
+
         /// <summary>
         /// Shares control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Shares;
-        
+
         /// <summary>
         /// Than control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Than;
-        
+
         /// <summary>
         /// Price control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox Price;
-        
+
         /// <summary>
         /// Balance control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Balance;
-        
+
         /// <summary>
         /// PlaceOrder control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button PlaceOrder;
-        
+
         /// <summary>
         /// AutoFill control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button AutoFill;
-        
+
         /// <summary>
         /// ListBox1 control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ListBox ListBox1;
-        
+
         /// <summary>
         /// ListBox2 control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ListBox ListBox2;
-        
+
         /// <summary>
         /// SelfOrders control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ListBox SelfOrders;
-        
+
         /// <summary>
         /// Delete control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button Delete;
-        
+
         /// <summary>
         /// LastPrice control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LastPrice;
-        
+
         /// <summary>
         /// Chart1 control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.DataVisualization.Charting.Chart Chart1;
-        
+
         /// <summary>
         /// BalanceWin control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label BalanceWin;
-        
+
         /// <summary>
         /// Offers control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Offers;
-        
+
         /// <summary>
         /// BalanceVoid control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label BalanceVoid;
-        
+
         /// <summary>
         /// OtherOffers control.
         /// </summary>
@@ -254,7 +256,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label OtherOffers;
-        
+
         /// <summary>
         /// SqlDataSource4 control.
         /// </summary>
@@ -263,7 +265,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource4;
-        
+
         /// <summary>
         /// SqlDataSource5 control.
         /// </summary>
@@ -272,7 +274,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource5;
-        
+
         /// <summary>
         /// SqlDataSource6 control.
         /// </summary>
@@ -281,7 +283,7 @@ namespace ProcessTree {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource6;
-        
+
         /// <summary>
         /// SqlDataSource1 control.
         /// </summary>

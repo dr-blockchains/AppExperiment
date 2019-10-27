@@ -335,34 +335,34 @@ namespace ProcessTree
 
             Session["Time"] = DateTime.Now;
 
-            //SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);            
-            //conn.Open();
-                       
-            //string query = "EXEC Bond @Treatment, @Group, @Period, @Choice, @Bidder, @Time, @Buy0Sell1, @Shares1, @Vol";           
-            //SqlCommand com = new SqlCommand(query, conn);
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
+            conn.Open();
 
-            //com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
-            //com.Parameters.AddWithValue("@Group", Session["Group"]);
-            //com.Parameters.AddWithValue("@Period", Session["Period"]);
-            //com.Parameters.AddWithValue("@Choice", Session["Choice"]);
-            //com.Parameters.AddWithValue("@Bidder", Session["User"]);
-            //com.Parameters.AddWithValue("@Time", Session["Time"]);
-            //com.Parameters.AddWithValue("@Buy0Sell1", RadioOrder.SelectedIndex);
-            //com.Parameters.AddWithValue("@Shares1", shares1);
-            //com.Parameters.AddWithValue("@Vol", dshare);
+            string query = "EXEC Bond @Treatment, @Group, @Period, @Choice, @Bidder, @Time, @Buy0Sell1, @Score, @Dshare";
+            SqlCommand com = new SqlCommand(query, conn);
 
-
-            //if (com.ExecuteNonQuery() != 1)
-            //{
-            //    Message.Text = "Could not place the order. Try again!";
-            //    Global.EmailAdmin("Error 250: Trading", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"]);
-            //    conn.Close();
-            //    return;
-            //}
-            
-            //conn.Close();
+            com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
+            com.Parameters.AddWithValue("@Group", Session["Group"]);
+            com.Parameters.AddWithValue("@Period", Session["Period"]);
+            com.Parameters.AddWithValue("@Choice", Session["Choice"]);
+            com.Parameters.AddWithValue("@Bidder", Session["User"]);
+            com.Parameters.AddWithValue("@Time", Session["Time"]);
+            com.Parameters.AddWithValue("@Buy0Sell1", RadioOrder.SelectedIndex);
+            com.Parameters.AddWithValue("@Shares1", shares1);
+            com.Parameters.AddWithValue("@Vol", dshare);
 
 
+            if (com.ExecuteNonQuery() != 1)
+            {
+                Message.Text = "Could not place the order. Try again!";
+                Global.EmailAdmin("Error 250: Trading", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"]);
+                conn.Close();
+                return;
+            }
+
+            com.Dispose();
+            conn.Close();
+        
             Session["V"] = shares2;            
             Response.Redirect("~/Bonding.aspx");
         }

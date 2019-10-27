@@ -209,7 +209,7 @@ Choice ASC">
     
                   <br />
     
-                    <a href="/tips.aspx" targVisual Directions </a>
+                   <a href="./tips.aspx" target="_blank"><strong>Visual Directions </strong></a>
     
                   <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" SelectCommand="SELECT Price, CASE WHEN Sell_Time &gt; Buy_Time THEN Sell_Time ELSE Buy_Time END AS TranTime
 FROM Transactions 
