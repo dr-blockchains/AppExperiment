@@ -110,7 +110,7 @@ namespace ProcessTree
             Treatment.Close();
 
             // Parallel Markets ---------------------------------------------
-            if ((short)Session["Valuation"] == 10)
+            if ((short)Session["Valuation"] > 9)
             {                
                 RadioVersions.Visible = false;
                 ListVersions.Visible = false;
@@ -246,6 +246,21 @@ namespace ProcessTree
             //    Response.Redirect("~/Suggestion.aspx");                
             //}
             // Parallel Markets --------------------------------------
+
+            if ((short)Session["Valuation"] == 12)
+            {
+                if (ParallelMarket.SelectedIndex < 0)
+                {
+                    Message.Text = "Please select one choice!";
+                    return;
+                }
+                Session["Choice"] = ParallelMarket.SelectedValue;
+                Session["BuySell"] = null;
+                Session["V"] = null;
+                Response.Redirect("~/Bonding.aspx");
+                // Response.Write("<script>window.open('/Trading.aspx','_blank');</script>");
+                // "<a href=\"/Trading.aspx\" target=\"_blank\">Goto Exchange</a>";
+            }
 
             if ((short)Session["Valuation"] == 10)
             {
@@ -453,7 +468,7 @@ namespace ProcessTree
         {
             BtnSubmit.Enabled = true;
 
-            if ((short)Session["Valuation"] == 10)
+            if ((short)Session["Valuation"] > 9)
             {
                 LabelLogin.Text = "Error (496) \n Please contact the admin: Law.Economist@Gmail.com";
                 Global.EmailAdmin("Error 496: Trading", "UserID = " + Session["User"] + " & Treatment = " + Session["Treat"] + " & Group = " + Session["Group"]);
@@ -469,7 +484,7 @@ namespace ProcessTree
 
         protected void ListVersions_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((short)Session["Valuation"] == 10)
+            if ((short)Session["Valuation"] > 9 )
             {                
                 LabelLogin.Text = "Error (488) \n Please contact the admin: Law.Economist@Gmail.com";
                 Global.EmailAdmin("Error 488: Trading", "UserID = " + Session["User"] + " & Treatment = " + Session["Treat"] + " & Group = " + Session["Group"]);
@@ -517,7 +532,7 @@ namespace ProcessTree
         {
             BtnSubmit.Enabled = true;
 
-            if ((short)Session["Valuation"] == 10)
+            if ((short)Session["Valuation"] > 9)
             {
                 BtnSubmit.Text = "Trade";
                 Message.Text = " Trading: <i>" + (ParallelMarket.SelectedValue == "0" ? "Holding Cash" : "Portfolio " + ParallelMarket.SelectedValue) + "</i>";

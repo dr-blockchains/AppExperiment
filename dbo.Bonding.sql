@@ -36,9 +36,8 @@ BEGIN TRY
 	IF (@DShare <= 0 OR @DShare > 10000 OR @Price <0 OR @Price > 1000) 
 	BEGIN
 		ROLLBACK TRANSACTION;
-		INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 9);
-		--PRINT  CAST(ERROR_NUMBER() AS VARCHAR) + ' Error in Order: ' + ERROR_MESSAGE();
-		RETURN ERROR_NUMBER();
+		INSERT INTO ErrorLog VALUES (GETDATE(),20, 'Out of Range', 2);
+		RETURN 20;
 	END;
 
 	DECLARE @Price1 FLOAT, @Shares1 FLOAT, @Shares2 FLOAT, @DFund FLOAT;
@@ -50,61 +49,57 @@ BEGIN TRY
 	IF @Price1 <> @Price 
 	BEGIN
 		ROLLBACK TRANSACTION;
-		INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 8);
-		--PRINT  CAST(ERROR_NUMBER() AS VARCHAR) + ' Error in Order: ' + ERROR_MESSAGE();
-		RETURN ERROR_NUMBER();
+		INSERT INTO ErrorLog VALUES (GETDATE(),30, 'Price Changed', 3);
+		RETURN 30;
 	END;
 	SET @Shares1 = @Price1 * 100.0;
 
 END TRY
 BEGIN CATCH
 	ROLLBACK TRANSACTION;
-	INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 2);		
+	INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 4);		
 	RETURN ERROR_NUMBER();
-	--PRINT  CAST(ERROR_NUMBER() AS VARCHAR) + ' Did not INSERT for Buyer: ' + ERROR_MESSAGE();
 END CATCH	
 
 IF @Buy0Sell1 = 0
 --*****************************BUYER********************************
 BEGIN
+BEGIN TRY
 	SET @Shares2 = @Shares1 + @DShare;
-
 	SET @DFund = @DShare * (@Shares1 + @Shares2) / 200;
 
-BEGIN TRY
 	DECLARE @Deficit FLOAT;
-	SELECT @Deficit = @DFund - BalanceConfirm 
+	SELECT @Deficit = @DFund - BalanceConfirm
 	FROM Shares 
 	WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
-	DECLARE @NewBalance FLOAT;
-	SELECT 
+	DECLARE @AvFund FLOAT;
+	SELECT @AvFund = Balance FROM People WHERE ID=@Bidder;
 
 	IF @Deficit IS NULL
 	BEGIN
+		IF @AvFund < @DFund
+		BEGIN
+			SET @DFund = @AvFund;
+			SET @Shares2 = SQRT(@Shares1 * @Shares1 + 200.0 * @DFund);
+			SET @DShare = @Shares2 - @Shares1;
+		END;
 		INSERT INTO Shares VALUES (@Bidder, @Treatment, @Group, @Period, @Choice, @DShare, 0, @DFund);
 		UPDATE People SET Balance = Balance -  @DFund WHERE ID = @Bidder;
-		RETURN 2;
-	END
-END TRY
-BEGIN CATCH
-	ROLLBACK TRANSACTION;
-	INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 4);		
-	RETURN ERROR_NUMBER();
-	--PRINT  CAST(ERROR_NUMBER() AS VARCHAR) + ' Did not INSERT for Buyer: ' + ERROR_MESSAGE();
-	--IF ERROR_NUMBER() = 2627		
-END CATCH	
-
---Updates existing shares balances.
-BEGIN TRY
-	IF @Deficit <= 0
+	END 
+	ELSE IF	@Deficit <= 0
 	BEGIN -- No Money Transfer From People.Balance				
-		--PRINT 'Deficit <= 0';
 		UPDATE Shares SET BalanceConfirm = -@Deficit, Volume = Volume + @DShare WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 	END
 	ELSE
 	BEGIN -- With Money Transfer From People.Balance
-		--PRINT 'Deficit > 0';
+		IF @AvFund < @Deficit
+		BEGIN
+			SET @DFund += @AvFund - @Deficit;
+			SET @Deficit = @AvFund;
+			SET @Shares2 = SQRT(@Shares1 * @Shares1 + 200.0 * @DFund);
+			SET @DShare = @Shares2 - @Shares1;
+		END;
 		UPDATE People SET Balance = Balance - @Deficit WHERE ID = @Bidder; 
 		UPDATE Shares SET BalanceConfirm = 0, BalanceVoid = BalanceVoid + @Deficit , Volume = Volume + @DShare 
 			WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
@@ -112,34 +107,37 @@ BEGIN TRY
 END TRY
 BEGIN CATCH
 	ROLLBACK TRANSACTION;
-	INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 5);
-	--PRINT CAST(ERROR_NUMBER() AS VARCHAR) + ' UPDATE Buyer: ' + ERROR_MESSAGE() ;
-	RETURN ERROR_NUMBER(); -- 547 : Buyer does not have enough Balance
-END CATCH;
+	INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 5);		
+	RETURN ERROR_NUMBER();	
+END CATCH	
 
 END
 ELSE	
 --****************************SELLER ******************************
-
 BEGIN
-
-SET @Shares2 = @Shares1 - @DShare;
-SET @DFund = @DShare * (@Shares1 + @Shares2) / 200;
-
 BEGIN TRY
+	DECLARE @AvShare FLOAT;
+	SELECT @AvShare = Volume FROM Shares
+	WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
+
+	IF @AvShare < @DShare
+	BEGIN
+		SET @DShare = @AvShare;
+	END;
+		
+	SET @Shares2 = @Shares1 - @DShare;
+	SET @DFund = @DShare * (@Shares1 + @Shares2) / 200;
+
 	UPDATE Shares SET BalanceConfirm = BalanceConfirm + @DFund, Volume = Volume - @DShare WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
 	DECLARE @MinB FLOAT;
+
+	-- A choice will be voided or confirmed.
 	SELECT @MinB = CASE WHEN BalanceVoid > BalanceConfirm THEN BalanceConfirm ELSE BalanceVoid END
 		FROM Shares
 		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
-				
-	--PRINT 'MinB = ' + CAST(@MinB AS VARCHAR);
-	
 	IF @MinB > 0
 	BEGIN
-		--PRINT 'MinB > 0 ';
-
 		UPDATE Shares
 		SET BalanceConfirm = BalanceConfirm - @MinB , BalanceVoid = BalanceVoid - @MinB
 		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);	
@@ -148,28 +146,41 @@ BEGIN TRY
 		SET Balance = Balance + @MinB
 		WHERE ([ID] = @Bidder)
 	END;
+
+	-- One choice will be confirmed.
+	SELECT @MinB = MIN(BalanceConfirm)
+		FROM Shares
+		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period);
+				
+	IF @MinB > 0
+	BEGIN
+		UPDATE Shares
+		SET BalanceConfirm = BalanceConfirm - @MinB
+		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period);	
+
+		UPDATE People 
+		SET Balance = Balance + @MinB
+		WHERE ([ID] = @Bidder)
+	END;
+
 END TRY
 BEGIN CATCH
 	ROLLBACK TRANSACTION;
-	INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 3);
-	--PRINT CAST(ERROR_NUMBER() AS VARCHAR) + ' Shares Seller: ' + ERROR_MESSAGE();
-	RETURN ERROR_NUMBER(); -- 547 : Seller does not have enough Shares.
+	INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 6);
+	RETURN ERROR_NUMBER();
 END CATCH	
 
 END; -- ELSE
 
+--**************************** UPDATE Total Shares & Price ******************************
 BEGIN TRY
-
 	UPDATE Versions SET Score = (@Shares2/100.0) WHERE (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
-
 END TRY
 BEGIN CATCH
 	ROLLBACK TRANSACTION;
-	INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 2);
-	--PRINT  CAST(ERROR_NUMBER() AS VARCHAR) + ' Error in Versions: ' + ERROR_MESSAGE();
+	INSERT INTO ErrorLog VALUES (GETDATE(),ERROR_NUMBER(), ERROR_MESSAGE(), 7);
 	RETURN ERROR_NUMBER();
 END CATCH
 
 COMMIT TRANSACTION;
---PRINT 'Completed';
 RETURN 1;

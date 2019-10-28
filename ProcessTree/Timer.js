@@ -71,7 +71,7 @@ var options = { hour: "2-digit", minute: "2-digit", hour12: true, timeZoneName: 
 function DShare2All() {
     Message.innerHTML = " ";
     shares1 = Number(StartShares.innerHTML);
-    StartPrice.innerHTML = (shares1 / 100).toFixed(2);
+    StartPrice.innerHTML = (shares1 == 0 ? "0 (It will rise as you buy shares)" : (shares1 / 100).toFixed(2) );
 
     dshare = Number(DeltaShares.value);
     if (dshare <= 0 || dshare > 10000) {
@@ -84,7 +84,7 @@ function DShare2All() {
     if (SelectedRadio == "Buy") {
 
         shares2 = shares1 + dshare;
-        dfund = Math.round(dshare * (shares1 + shares2) / 2) / 100;
+        dfund = Math.round(dshare * (shares1 + shares2)) / 200;
 
         const avfund = Number(AvFund.innerHTML);
         if (dfund > avfund) {
@@ -116,7 +116,7 @@ function DShare2All() {
 function DFund2All() {
     Message.innerHTML = " ";
     const shares1 = Number(StartShares.innerHTML);
-    StartPrice.innerHTML = (shares1 / 100).toFixed(2);
+    StartPrice.innerHTML = (shares1 == 0 ? "0 (It will rise as you buy shares)" : (shares1 / 100).toFixed(2));
 
     let dfund = Number(DeltaFund.value);
     if (dfund <= 0 || dfund > 1000) {
@@ -160,13 +160,16 @@ function DFund2All() {
 }
 
 function RadioClick() {
-    const SelectedRadio = document.querySelector("input[name='Position']:checked").value;
+    //const SelectedRadio = document.querySelector("input[name='Position']:checked").value;
+    const SelectedRadio = $('#<%= RadioOrder.ClientID %> input[type=radio]:checked').val();
+
     if (SelectedRadio == "Buy") {
         DeltaFund.focus();
-        Order.style.backgroundColor = "lightgreen";
+       
         PlaceOrder.value = "Buy Shares";
         BuySell.innerHTML = "Buy";
 
+        //Order.style.backgroundColor = "lightgreen";
         // document.getElementById("PlaceOrder").innerHTML = "Buy Shares";
         // document.getElementById("PlaceOrder").style.backgroundColor = "lightgreen";
         // document.getElementById("AutoFill").style.backgroundColor = "lightgreen";
@@ -176,12 +179,14 @@ function RadioClick() {
         // document.getElementById("EndPrice").style.backgroundColor = "lightgreen";
         // document.getElementById("EndShares").style.backgroundColor = "lightgreen";
         // document.getElementById("RadioButton").style.backgroundColor = "lightgreen";
+
     } else {
         DeltaShares.focus();
-        Order.style.backgroundColor = "pink";
+
         PlaceOrder.value = "Sell Shares";
         BuySell.innerHTML = "Sell";
 
+        //Order.style.backgroundColor = "pink";
         // document.getElementById("PlaceOrder").innerHTML = "Sell Shares";
         // document.getElementById("PlaceOrder").style.backgroundColor = "pink";
         // document.getElementById("AutoFill").style.backgroundColor = "pink";

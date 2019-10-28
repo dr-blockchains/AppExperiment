@@ -11,11 +11,8 @@ namespace ProcessTree
         {
             Page.MaintainScrollPositionOnPostBack = true;
 
-            if (Session["User"] == null || Session["Valuation"] == null)
+            if (Session["User"] == null || Session["Valuation"] == null || Session["Treat"] == null || Session["Group"] == null || Session["Period"] == null || Session["Choice"] == null || (string)Session["Choice"] == "" || Session["DT"] == null || (short)Session["Valuation"] != 12)
                 Response.Redirect("~/Default.aspx");
-
-            if (Session["Treat"] == null || Session["Group"] == null || Session["Period"] == null || Session["Choice"] == null || (string)Session["Choice"] == "" || Session["DT"] == null || (short)Session["Valuation"] != 10)
-                Response.Redirect("~/Voting.aspx");
 
             int Period = Global.Refresh((int)Session["Treat"], (int)Session["Group"], out DateTime DT);
 
@@ -23,14 +20,15 @@ namespace ProcessTree
             if (Period == 0 || Period == -9)
             {
                 Version.Text = "Your experiment has not started yet.";
-                Global.EmailAdmin("Error 124: Suggestion", "UserID = " + Session["User"] + " & Treatment = " + Session["Treat"] + " & Group = " + Session["Group"]);
+                Global.EmailAdmin("Error 23: Bonding", "UserID = " + Session["User"] + " & Treatment = " + Session["Treat"] + " & Group = " + Session["Group"]);
                 Response.Redirect("~/Default.aspx");
             }
             if (Period < -10)
             {
                 Version.Text = "Your experiment has ended.";
                 ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('Your experiment has ended.');", true);
-                Session["User"] = null;                
+                Session["User"] = null;
+                Response.Redirect("~/Default.aspx");
                 return;
             }
             if (Period == -1 || Period == -2)
@@ -45,13 +43,13 @@ namespace ProcessTree
             }
             else if ((int)Session["Period"] > Period)
             {                
-                Global.EmailAdmin("Error 85: Trading", "UserID = " + Session["User"] + " & Treatment = " + Session["Treat"] + " & Group = " + Session["Group"]);             
+                Global.EmailAdmin("Error 46: Bonding", "UserID = " + Session["User"] + " & Treatment = " + Session["Treat"] + " & Group = " + Session["Group"]);             
                 Response.Redirect("~/Voting.aspx");
             }
             else if ((int)Session["Period"] < Period)
             {
-                Response.Redirect("~/Voting.aspx");
-                Version.Text = "The market for this choice is closed.";                
+                Version.Text = "The market for this choice is closed.";
+                Response.Redirect("~/Voting.aspx");             
             }
 
             TimeSpan.Text = ((DateTime)Session["DT"] - DateTime.Now).TotalMilliseconds.ToString();
@@ -83,10 +81,10 @@ namespace ProcessTree
 
             Session["AvFund"] = User["Balance"];
 
-            if (Session["V"]==null)
-                Message.Text = User["Name"] + ", buy or sell considering the price!";
+            if (Session["V"] == null)
+                Message.Text = User["Name"] + ", buy or sell considering the current price!";
             else
-                Message.Text = "You made a transaction " + User["Name"] + "!";
+                Message.Text = Session["Transacted"].ToString();
 
             User.Close();
 
@@ -97,19 +95,20 @@ namespace ProcessTree
 
             if (!VersionData.Read())
             {
-                Version.Text = "Please use another browser!";
-                Global.EmailAdmin("Error 98: Trading", "UserID = " + Session["User"] + " & Period = " + Session["Period"] + " & Choice = " + Session["Choice"]);
+                Version.Text = "Error: Please take a screenshot and contact the admin: Law.Economist@Gmail.com!";
+                Global.EmailAdmin("Error 98: Bonding", "UserID = " + Session["User"] + " & Period = " + Session["Period"] + " & Choice = " + Session["Choice"]);
                 conn.Close();
                 return;
             }
                       
             Version.Text = VersionData["Artifact"].ToString().Trim().Replace("\r", "").Replace("\n", "<br>");
+
             float shares1 = (float)VersionData["Score"];
             StartShares.Text = shares1.ToString("N3");
 
             // The bonding curve function:
             float price1 = shares1/100;
-            StartPrice.Text = (price1==0 ? "0 (It will rise as you buy shares)": "$" + price1.ToString("C"));
+            StartPrice.Text = (price1==0 ? "0 (It will rise as you buy shares)": price1.ToString("C"));
 
             VersionData.Close();
 
@@ -161,31 +160,31 @@ namespace ProcessTree
                 RadioOrder.SelectedValue = "Sell";
                 Session["BuySell"] = "Sell";
                 BuySell.Text = "Sell";
+                PlaceOrder.Text = "Sell Shares";
 
-                PlaceOrder.Text = "Place Sell Order";
-                PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
-                AutoFill.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                //PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                //AutoFill.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
 
-                DeltaShares.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
-                DeltaFund.BackColor =System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
-                AveragePrice.BackColor =System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
-                EndPrice.BackColor=System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                //DeltaShares.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                //DeltaFund.BackColor =System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                //AveragePrice.BackColor =System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                //EndPrice.BackColor=System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
                 //PeriodChoice.Focus();
             }
             else //if(Session["BuySell"].Equals("Buy"))
             {      
                 RadioOrder.SelectedValue = "Buy";
                 Session["BuySell"] = "Buy";
-                BuySell.Text = "Buy";
-                
-                PlaceOrder.Text = "Place Buy Order";
-                PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
-                AutoFill.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                BuySell.Text = "Buy";                
+                PlaceOrder.Text = "Buy Shares";
 
-                DeltaShares.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
-                DeltaFund.BackColor =System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
-                AveragePrice.BackColor =System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
-                EndPrice.BackColor=System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                //PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                //AutoFill.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+
+                //DeltaShares.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                //DeltaFund.BackColor =System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                //AveragePrice.BackColor =System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                //EndPrice.BackColor=System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
 
                 //ClientScript.RegisterStartupScript(GetType(), "ScrollDown", "window.scrollTo(0, document.body.clientHeight);", true);
             }
@@ -200,15 +199,7 @@ namespace ProcessTree
 
         protected void BtnReturn_Click(object sender, EventArgs e)
         {
-            //Session["BuySell"] = null;
             Response.Redirect("~/Voting.aspx");
-        }
-
-        protected void BtnRefresh_Click(object sender, EventArgs e)
-        {
-            //Session["BuySell"] = RadioOrder.SelectedValue;
-            Response.Redirect("~/Bonding.aspx");
-            Session["V"] = null;
         }
 
         protected void RadioOrder_SelectedIndexChanged(object sender, EventArgs e)
@@ -217,7 +208,7 @@ namespace ProcessTree
             {
                 PlaceOrder.Text = "Place Sell Order";
                 PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
-                AutoFill.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                //AutoFill.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
 
                 DeltaShares.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
                 DeltaFund.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
@@ -231,7 +222,7 @@ namespace ProcessTree
 
                 PlaceOrder.Text = "Place Buy Order";
                 PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
-                AutoFill.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                //AutoFill.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
 
                 DeltaShares.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
                 DeltaFund.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
@@ -363,7 +354,7 @@ namespace ProcessTree
             com.Dispose();
             conn.Close();
         
-            Session["V"] = shares2;            
+            Session["V"] = (RadioOrder.SelectedIndex == 0 ? "You bought ": "You sold ") + shares2 + " shares.";            
             Response.Redirect("~/Bonding.aspx");
         }
 

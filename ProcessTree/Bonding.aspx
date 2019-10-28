@@ -143,6 +143,10 @@
             width: 315px;
         }
 
+        .auto-style80 {
+            margin-bottom: 9px;
+        }
+
         </style>
     
     <script src="Timer.js"> </script>   
@@ -216,15 +220,15 @@
             <tr>
                
                 <td class="auto-style78">    
-<%--                    <asp:RadioButtonList ID="RadioOrder" runat="server" RepeatDirection="Horizontal" AutoPostBack="True" BorderStyle="Ridge" BorderWidth="2px" Font-Bold="True" OnSelectedIndexChanged="RadioOrder_SelectedIndexChanged" TabIndex="20" BackColor="#FFAAAA" Height="61px">
+                    <asp:RadioButtonList ID="RadioOrder" runat="server" RepeatDirection="Horizontal" BorderStyle="Ridge" BorderWidth="3px" Font-Bold="True" OnSelectedIndexChanged="javascript: RadioClick()" TabIndex="20" BackColor="pink" Height="66px" BorderColor="Red" CellPadding="3" CellSpacing="3" CssClass="auto-style80" Width="100%">
                         <asp:ListItem>Buy</asp:ListItem>
                         <asp:ListItem Selected="True">Sell</asp:ListItem>
-                    </asp:RadioButtonList>--%>
+                    </asp:RadioButtonList>
 
-                      <div id="RadioButton" onclick="RadioClick()" style="text-align: center; padding: 10px; border-style:groove; border-width:3px; font-weight:bold; background-color:pink; width:100%;" >
+<%--                      <div id="RadioButton" onclick="RadioClick()" style="text-align: center; padding: 10px; border-style:groove; border-width:3px; font-weight:bold; background-color:pink; width:100%;" >
                             <input type="radio" name="Position" value="Buy"/> Buy &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <input type="radio" name="Position" value="Sell" checked /> Sell
-                      </div>
+                      </div>--%>
                 </td>
                              
             </tr>                    
@@ -251,9 +255,9 @@
  
                     Number of Shares&nbsp;you <asp:Label ID="BuySell" runat="server" Text="Sell" Font-Bold="True"></asp:Label>
 &nbsp;= 
-                    <%--<asp:TextBox ID="DeltaShares" runat="server" type="text" name="txt" value="0" onchange="Dshare2All()" BackColor="#FFAAAA" TabIndex="30" Width="99px" Font-Bold="True" Height="40px"></asp:TextBox>--%>
+                    <asp:TextBox ID="DeltaShares" runat="server" type="text" name="txt" value="0" onchange="javascript: DShare2All();LastChange.innerHTML='S';" BackColor="pink" TabIndex="30" Width="99px" Font-Bold="True" Height="40px"></asp:TextBox>
 
-                          <input type="text" name="DeltaShares" id="DeltaShares" value="0" style="width: 100px; background-color:pink;" onchange="DShare2All();LastChange.innerHTML='S';" />
+                          <%--<input type="text" name="DeltaShares" id="DeltaShares" value="0" style="width: 100px; background-color:pink;" onchange="DShare2All();LastChange.innerHTML='S';" />--%>
 
                 </td>
                
@@ -278,10 +282,11 @@
                     <p>
  
                     Amount of Fund Transfer = $ 
-                        <%--<input type="text" name="DeltaFund" id="DeltaFund" value="0" style="width: 100px; background-color:pink;" onchange="DFund2All();LastChange.innerHTML='F';" />--%>
                        
                         <asp:TextBox ID="DeltaFund" runat="server" BackColor="pink" TabIndex="40" Width="99px" Font-Bold="True" Height="40px" onchange="javascript: DFund2All();LastChange.innerHTML='F';">0</asp:TextBox>
-
+         
+                        <%--<input type="text" name="DeltaFund" id="DeltaFund" value="0" style="width: 100px; background-color:pink;" onchange="DFund2All();LastChange.innerHTML='F';" />--%>
+            
                     </p>
 
                 </td>
@@ -524,11 +529,7 @@
     
                   </div>
     
-                  <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" SelectCommand="SELECT Price, CASE WHEN Sell_Time &gt; Buy_Time THEN Sell_Time ELSE Buy_Time END AS TranTime
-FROM Transactions 
-WHERE (Treatment = @Treatment) AND ([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice)
- --OR Choice = 0 AND Vol = 0) 
-ORDER BY TranID">
+                  <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" SelectCommand="SELECT Price, Time AS TranTime FROM Offers WHERE (Treatment = @Treatment) AND (Group# = @Group ) AND (Period = @Period) AND (Choice = @Choice) ORDER BY TranTime">
                       <SelectParameters>
                           <asp:Parameter DefaultValue="0" Name="Treatment" />
                           <asp:Parameter DefaultValue="1" Name="Group" />
