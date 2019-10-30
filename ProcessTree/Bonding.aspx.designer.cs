@@ -78,15 +78,6 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.Label TimerMessage;
 
         /// <summary>
-        /// Message control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Message;
-
-        /// <summary>
         /// RadioOrder control.
         /// </summary>
         /// <remarks>
@@ -156,7 +147,7 @@ namespace ProcessTree
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox EndShares;
+        protected global::System.Web.UI.WebControls.Label EndShares;
 
         /// <summary>
         /// StartPrice control.
@@ -174,7 +165,7 @@ namespace ProcessTree
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox EndPrice;
+        protected global::System.Web.UI.WebControls.Label EndPrice;
 
         /// <summary>
         /// AveragePrice control.
@@ -183,7 +174,25 @@ namespace ProcessTree
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox AveragePrice;
+        protected global::System.Web.UI.WebControls.Label AveragePrice;
+
+        /// <summary>
+        /// Message control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Message;
+
+        /// <summary>
+        /// BtnRefresh control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnRefresh;
 
         /// <summary>
         /// PlaceOrder control.

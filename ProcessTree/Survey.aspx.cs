@@ -234,7 +234,7 @@ namespace ProcessTree
                 conn.Close();
 
                 BtnSubmitScore.Text = "Thanks!";
-                //LabelMessage.Text = "Your final balance is: $" + ((double)Session["FinalBalance"]).ToString("C");
+                //LabelMessage.Text = "Your final balance is: $" + ((double)Session["FinalBalance"]).ToString("N2");
                 LabelMessage.Text = "Your completion code is: " + Session["Treat"] + Session["Group"] + "." + Session["User"].ToString().Substring(1,2).ToLower() + "." + DateTime.Now.Minute ;
 
                 Session["User"] = null;

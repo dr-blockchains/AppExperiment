@@ -103,7 +103,7 @@ namespace ProcessTree
                       
             Version.Text = VersionData["Artifact"].ToString().Trim().Replace("\r", "").Replace("\n", "<br>");
             float price = (float)VersionData["Score"];
-            LastPrice.Text = (price==0 ? "No transaction for this choice so far": "The last transaction price = $" + price.ToString("C"));
+            LastPrice.Text = (price==0 ? "No transaction for this choice so far": "The last transaction price = $" + price.ToString("N2"));
 
             VersionData.Close();
 
@@ -121,7 +121,7 @@ namespace ProcessTree
             {
                 Session["Shares"] = Share["Volume"];
                 balance += (float)Share["BalanceConfirm"];
-                BalanceVoid.Text = ((float)Share["BalanceVoid"]).ToString("C");
+                BalanceVoid.Text = ((float)Share["BalanceVoid"]).ToString("N2");
             }
             else
             {
@@ -142,7 +142,7 @@ namespace ProcessTree
 
             object obj = com.ExecuteScalar();
             if (obj != DBNull.Value) VoidBalances = (float)(double)obj;
-            BalanceWin.Text = (balance + VoidBalances).ToString("C");
+            BalanceWin.Text = (balance + VoidBalances).ToString("N2");
             
             // Amount of shares locked due to sell offers on this choice:
             query = "SELECT SUM(UnFullfilled) FROM Offers WHERE (Bidder = @Bidder) AND (Treatment = @Treat) AND ([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice) AND Buy0Sell1 = 1";
@@ -174,7 +174,7 @@ namespace ProcessTree
             if (obj != DBNull.Value)
             {
                 OffersBalance = (float)(double)obj;
-                Offers.Text = OffersBalance.ToString("C");
+                Offers.Text = OffersBalance.ToString("N2");
                 balance -= OffersBalance;
             }
 
@@ -199,11 +199,11 @@ namespace ProcessTree
             if (obj != DBNull.Value)
             {
                 OffersBalance = (float)(double)obj;
-                OtherOffers.Text = OffersBalance.ToString("C");
+                OtherOffers.Text = OffersBalance.ToString("N2");
                 balance -= OffersBalance;
             }
             
-            Balance.Text = balance.ToString("C");
+            Balance.Text = balance.ToString("N2");
             Session["Balance"] = balance;
 
             conn.Close();
@@ -225,7 +225,7 @@ namespace ProcessTree
                 PlaceOrder.Text = "Place Sell Order";
                 PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
                 Price.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
-                Vol.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                TotalVol.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
                 AutoFill.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
                 //PeriodChoice.Focus();
             }
@@ -236,7 +236,7 @@ namespace ProcessTree
                 PlaceOrder.Text = "Place Buy Order";
                 PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
                 Price.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
-                Vol.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                TotalVol.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
                 AutoFill.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
                 //ClientScript.RegisterStartupScript(GetType(), "ScrollDown", "window.scrollTo(0, document.body.clientHeight);", true);
             }
@@ -341,7 +341,7 @@ namespace ProcessTree
                 Than.Text = "<";
                 PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0x66,0xff,0x66);
                 Price.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
-                Vol.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
+                TotalVol.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
                 AutoFill.BackColor = System.Drawing.Color.FromArgb(0x66, 0xff, 0x66);
             }
             else
@@ -350,7 +350,7 @@ namespace ProcessTree
                 Than.Text = ">";
                 PlaceOrder.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
                 Price.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
-                Vol.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
+                TotalVol.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
                 AutoFill.BackColor = System.Drawing.Color.FromArgb(0xff, 0xaa, 0xaa);
             }
 
@@ -376,17 +376,17 @@ namespace ProcessTree
 
             try
             {
-                V = float.Parse(this.Vol.Text, CultureInfo.InvariantCulture.NumberFormat);                
+                V = float.Parse(this.TotalVol.Text, CultureInfo.InvariantCulture.NumberFormat);                
             }
             catch
             {
-                this.Vol.Focus();
+                this.TotalVol.Focus();
                 Message.Text = "Number of shares is not in proper format!";
                 return;
             }
 
             Price.Text += "*";
-            this.Vol.Text += "*";
+            this.TotalVol.Text += "*";
 
             if (P <= 0 || P > 100)
             {
@@ -397,7 +397,7 @@ namespace ProcessTree
 
             if (V <= 0 || V > 10000)
             {
-                this.Vol.Focus();
+                this.TotalVol.Focus();
                 Message.Text = "Number of shares is out of range!";
                 return;
             }
@@ -406,10 +406,10 @@ namespace ProcessTree
             {
                 if (P * V > (float)Session["Balance"])
                 {
-                    ClientScript.RegisterStartupScript(GetType(), "Insufficient Balance", "alert('You need $" + (P * V).ToString("C") + " of available balance for this order.');", true);               
-                    this.Vol.Text = (Math.Floor((float)base.Session["Balance"] * 1000 / P) / 1000).ToString();
-                    Message.Text = "Try to buy " + this.Vol.Text + " shares!";
-                    this.Vol.Focus();
+                    ClientScript.RegisterStartupScript(GetType(), "Insufficient Balance", "alert('You need $" + (P * V).ToString("N2") + " of available balance for this order.');", true);               
+                    this.TotalVol.Text = (Math.Floor((float)base.Session["Balance"] * 1000 / P) / 1000).ToString();
+                    Message.Text = "Try to buy " + this.TotalVol.Text + " shares!";
+                    this.TotalVol.Focus();
                     return;
                 }
                 Session["Balance"] = (float)Session["Balance"] - P * V;
@@ -419,9 +419,9 @@ namespace ProcessTree
                 if (V > (float)Session["Shares"])
                 {
                     ClientScript.RegisterStartupScript(GetType(), "Insufficient Shares", "alert('You do not have " + V + " shares for this choice.');", true);
-                    this.Vol.Text = (Math.Floor((float)base.Session["Shares"]*1000)/1000).ToString();
-                    Message.Text = "Try to sell " + this.Vol.Text + " shares!";
-                    this.Vol.Focus();
+                    this.TotalVol.Text = (Math.Floor((float)base.Session["Shares"]*1000)/1000).ToString();
+                    Message.Text = "Try to sell " + this.TotalVol.Text + " shares!";
+                    this.TotalVol.Focus();
                     return;
                 }
 
@@ -563,7 +563,7 @@ namespace ProcessTree
 
             try
             {
-                V = float.Parse(Vol.Text, CultureInfo.InvariantCulture.NumberFormat);
+                V = float.Parse(TotalVol.Text, CultureInfo.InvariantCulture.NumberFormat);
             }
             catch
             {
@@ -593,7 +593,7 @@ namespace ProcessTree
 
             if (V <= 0 || V > 10000)
             {
-                Vol.Text = (RadioOrder.SelectedValue == "Buy" ?
+                TotalVol.Text = (RadioOrder.SelectedValue == "Buy" ?
                     Math.Floor((float)Session["Balance"] * 1000 / P ) / 1000:
                     Math.Floor((float)Session["Shares"] * 1000) / 1000
                     ).ToString();

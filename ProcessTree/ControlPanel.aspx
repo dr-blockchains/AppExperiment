@@ -349,7 +349,7 @@
                     &nbsp;</td><td class="questions">Reward = <asp:TextBox ID="Reward" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="300" BackColor="Lime" Width="40px">0</asp:TextBox>$</td></tr><tr>
                 <td class="auto-style70" rowspan="3"><asp:RadioButtonList ID="RadioMeritocracy" runat="server" BackColor="#FF9900" Width="300px" AutoPostBack="True" BorderColor="#CC3300" BorderStyle="Solid" RepeatLayout="Flow" TabIndex="220">
                         <asp:ListItem Value="0">Only Constant V</asp:ListItem><asp:ListItem Value="1">Raw Vote(i)</asp:ListItem><asp:ListItem Value="2">Vote(i) - Vote(0)</asp:ListItem><asp:ListItem Value="3">Vote(i) - MinVote</asp:ListItem></asp:RadioButtonList></td>
-                <td class="auto-style65"><strong>Parallel Markets:</strong></td><td class="questions">Rv = <asp:TextBox ID="Rv" runat="server" TabIndex="310" BackColor="Lime" Width="40px" required pattern ="[0-9]*\.?[0-9]+">0</asp:TextBox>
+                <td class="auto-style65"><strong>Estimated Cost:</strong></td><td class="questions">Rv = <asp:TextBox ID="Rv" runat="server" TabIndex="310" BackColor="Lime" Width="40px" required pattern ="[0-9]*\.?[0-9]+">0</asp:TextBox>
                     $</td>
             </tr>
              <tr>

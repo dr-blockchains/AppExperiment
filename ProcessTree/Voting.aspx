@@ -136,7 +136,7 @@
                 </td>
                 <td class="auto-style33">
     
-                    &nbsp;<span class="auto-style62"><em>Refresh to see the new offers: </em></span>
+                    &nbsp;<span class="auto-style62"><em>Refresh to see the updated prices : </em></span>
     
                     <asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="50" BackColor="#66FFFF"/>    
     
@@ -175,6 +175,28 @@ ORDER BY Choice">
                     </asp:SqlDataSource>
     
                     <asp:SqlDataSource ID="SqlDataSource5" runat="server" 
+                        ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" 
+                        SelectCommand="SELECT '&lt;span class=&quot;version-choice&quot;&gt;' + 
+  CASE WHEN Choice = 0 THEN 'Hold Cash'
+ELSE 'Portfolio ' + CAST(Choice AS VARCHAR(MAX)) END + 
+' &amp;nbsp&amp;nbsp ( Current Starting Price = '  + CAST(Score/100 AS VARCHAR(MAX)) + 
+' , Number of shares outstanding = ' + CAST(Score AS VARCHAR(MAX)) + 
+' ) :&lt;/span&gt;&lt;div class=&quot;version-artifact&quot;&gt;&lt;br&gt;' + 
+REPLACE(HtmlArtifact, CHAR(13), '&lt;br&gt;') + '&lt;/div&gt;&lt;hr&gt;'   
+AS Expr1, 
+
+Choice 
+FROM Versions 
+WHERE (Treatment = @Treatment) AND ([Group#] = @Group)  AND (Period = @Period)
+ORDER BY Choice">
+                        <SelectParameters>
+                            <asp:Parameter DefaultValue="0" Name="Treatment" Type="Int32" />
+                            <asp:Parameter DefaultValue="1" Name="Group" />
+                            <asp:Parameter DefaultValue="2" Name="Period" />
+                        </SelectParameters>
+                    </asp:SqlDataSource>
+    
+                    <asp:SqlDataSource ID="SqlDataSource6" runat="server" 
                         ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" 
                         SelectCommand="SELECT '&lt;span class=&quot;version-choice&quot;&gt;' + 
   CASE WHEN Choice = 0 THEN 'Hold Cash'

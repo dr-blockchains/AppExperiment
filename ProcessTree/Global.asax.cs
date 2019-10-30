@@ -1209,11 +1209,6 @@ WHERE Treatment = @Treat AND Group# = @Group";
         {            
             Response.Write("Error in application. \n Please contact the admin: Law.Economist@Gmail.com");
             EmailAdmin("Aplpication_Error",                 
-                " <br><br> User==null = " + (Session["User"] == null) +                
-                " <br><br> User = [" + (Session["User"].ToString()) + "]" +
-                " <br><br> User.Length = " + (Session["User"].ToString().Length) +
-                " <br><br> Treatment = " + Session["Treat"] +
-                " <br><br> Group = " + Session["Group"] +
                 " <br><br> Url = " + HttpContext.Current.Request.Url +              
                 " <br><br> UserHostAddress = " + HttpContext.Current.Request.UserHostAddress +
                 " <br><br> Error = " + HttpContext.Current.Error +

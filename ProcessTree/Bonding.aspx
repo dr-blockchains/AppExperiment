@@ -1,476 +1,307 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Bonding.aspx.cs" Inherits="ProcessTree.Bonding" MaintainScrollPositionOnPostBack = "true" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Bonding.aspx.cs" Inherits="ProcessTree.Bonding" MaintainScrollPositionOnPostback="true" %>
 
-<%@ Register assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" namespace="System.Web.UI.DataVisualization.Charting" tagprefix="asp" %>
+<%@ Register Assembly="System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Namespace="System.Web.UI.DataVisualization.Charting" TagPrefix="asp" %>
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Bonding</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
-    <style type="text/css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 
-        .style2
-        {
-            
-            text-align: left;
-        }
+    <script src="Timer.js"> </script>
 
-        .style32
-        {
-            color: #003300;
-            font-size: x-large;            
-            font-family: Roman;
-            text-align: center;
-        }
-        .auto-style21 {
-            text-align: center;
-        }
-        .auto-style30 {
-            width: 51%;
-        }
-        .auto-style31 {
-            text-align: right;
-            width: 51%;
-        }
-        .auto-style32 {
-                        
-            height: 174px;
-            line-height : 30px;
-            margin: 0px auto;
-            font-size: medium;
-        }
-
-        .auto-style41 {
-            width: 74%;
-        }
-        
-        .auto-style51 {
-            text-align: right;
-            }
-        .auto-style56 {
-            height: 36px;
-            text-align: right;
-        }
-        
-        .auto-style58 {
-            text-align: left;
-            font-size: small;
-            width: 51%;
-        }
-        .auto-style59 {
-            font-size: small;
-        }
-        .auto-style60 {
-            text-align: center;
-            font-size: small;
-        }
-
-        .auto-style61 {
-            height: 36px;
-            text-align: right;
-            width: 1075px;
-        }
-        .auto-style62 {
-            color: #CC3300;
-        }
-
-        .auto-style63 {
-            text-align: left;
-            width: 26%;
-        }
-
-        .auto-style64 {
-            height: 36px;
-            text-align: left;
-            width: 51%;
-        }
-
-        .auto-style65 {
-            height: 36px;
-            text-align: center;
-            width: 1075px;
-        }
-        .auto-style66 {
-            height: 36px;
-            text-align: right;
-            width: 51%;
-        }
-        
-        .auto-style68 {
-            font-size: medium;
-        }
-        .auto-style69 {
-            height: 36px;
-            text-align: left;
-            width: 51%;
-            font-size: medium;
-        }
-        .auto-style70 {
-            height: 36px;
-            text-align: right;
-            font-size: medium;
-        }
-        .auto-style71 {
-            height: 57px;
-            text-align: right;
-            width: 1075px;
-        }
-        .auto-style73 {
-            height: 36px;
-            text-align: right;
-            width: 1075px;
-            text-decoration: underline;
-            color: #99CCFF;
-        }
-        .auto-style74 {
-            height: 36px;
-            text-align: right;
-            text-decoration: underline;
-        }
-
-        .auto-style75 {
-            height: 36px;
-            text-align: left;
-        }
-
-        .auto-style78 {
-            height: 36px;
-            text-align: center;
-            width: 895px;
-        }
-
-        .auto-style79 {
-            width: 315px;
-        }
-
-        .auto-style80 {
-            margin-bottom: 9px;
-        }
-
-        </style>
-    
-    <script src="Timer.js"> </script>   
-    
     <link href="StyleSheet.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .auto-style2 {
+            width: 50%;
+        }
+
+        .auto-style3 {
+            width: 46%
+        }
+
+        .auto-style4 {
+            width: 226px;
+            font-size: small;
+        }
+
+        .auto-style5 {
+            width: 46%;
+            text-align: right;
+        }
+
+        .auto-style6 {
+            font-style: italic;
+            font-size: 1em;
+            color: darkblue;
+            font-weight: bold;
+            border: solid #ccc 2px;
+            border-radius: 5px;
+            padding: 3px;
+            text-align: right;
+        }
+        .auto-style7 {
+            width: 50%;
+            font-size: medium;
+        }
+        .auto-style8 {
+            width: 46%;
+            font-size: medium;
+        }
+        .auto-style9 {
+            font-size: medium;
+        }
+        .auto-style10 {
+            color: #FF0000;
+        }
+        .auto-style11 {
+            width: 46%;
+            text-align: left;
+        }
+    </style>
 </head>
-<body >
+<body>
     <form id="Bonding" runat="server" class="auto-style41">
-                  <table class="auto-style32">
+        <table class="auto-style32">
             <tr>
-                <td class="auto-style30" colspan="2">
+                <td class="auto-style3" colspan="2">
                     <strong><em>
-                    <asp:Label ID="PeriodChoice" runat="server" Font-Size="Large" Text="Please contact the admin: Law.Economist@Gmail.com" ForeColor="#000099" Width="142%"></asp:Label>
+                        <asp:Label ID="PeriodChoice" runat="server" Font-Size="Large" Text="Please contact the admin: Law.Economist@Gmail.com" ForeColor="#000099" Width="147%"></asp:Label>
                     </em></strong>
-                    </td>
+                </td>
                 <td class="questions" colspan="3">
-    
+
                     <span class="auto-style62"><em>Return to switch to another choice: </em></span>
-    
-                                    <asp:Button ID="BtnReturn" runat="server" OnClick="BtnReturn_Click" Text="Return" TabIndex="90" />
-                </td>     
-            </tr>            
-                          <tr>
-                <td colspan="5">
-                     <asp:Panel ID="Panel1" runat="server" BackColor="#FFEE88">
-                         <asp:Label ID="Version" runat="server" Class="login" Text="Error! Please contact the admin: Law.Economist@Gmail.com" Font-Size="Small" ForeColor="Black" BackColor="#FFEE88" BorderColor="#FFEE88" BorderStyle="Solid" BorderWidth="5px" Width="753px"></asp:Label>
-                     </asp:Panel>
-                              </td>
-                 <asp:Label id="TimeSpan" runat="server" style="display: none"></asp:Label>   
+
+                    <asp:Button ID="BtnReturn" runat="server" OnClick="BtnReturn_Click" Text="Return" TabIndex="90" />
+                </td>
             </tr>
-           
             <tr>
-                <td class="auto-style31" colspan="2">
+                <td colspan="5">
+                    <asp:Panel ID="Panel1" runat="server" BackColor="#FFEE88">
+                        <asp:Label ID="Version" runat="server" Class="login" Text="Error! Please contact the admin: Law.Economist@Gmail.com" Font-Size="Small" ForeColor="Black" BackColor="#FFEE88" BorderColor="#FFEE88" BorderStyle="Solid" BorderWidth="5px" Width="753px"></asp:Label>
+                    </asp:Panel>
+                </td>
+                <asp:Label ID="TimeSpan" runat="server" Style="display: none"></asp:Label>
+            </tr>
+
+            <tr>
+                <td class="auto-style5" colspan="2">
                     <asp:Label ID="DeadLineMessage" runat="server" Font-Bold="True" Text="This market closes at "></asp:Label>
                 </td>
-                <td id="DeadLine" class="time" colspan="3">
+                <td id="DeadLine" class="auto-style6" colspan="3">
                     <script>
-                         var TSpan = parseInt(document.getElementById("TimeSpan").textContent);
-                         var ClientDeadLine = new Date((new Date()).getTime() + TSpan);
-                         document.write(ClientDeadLine.toLocaleTimeString([], options));
-                         CountDownTimer(ClientDeadLine, "Timer");
+                        var TSpan = parseInt(document.getElementById("TimeSpan").textContent);
+                        var ClientDeadLine = new Date((new Date()).getTime() + TSpan);
+                        document.write(ClientDeadLine.toLocaleTimeString([], options));
+                        CountDownTimer(ClientDeadLine, "Timer");
                     </script>
                 </td>
             </tr>
             <tr>
-               
-                <td class="auto-style31" colspan="2">
+
+                <td class="auto-style5" colspan="2">
                     <asp:Label ID="TimerMessage" runat="server" Font-Bold="True" Text="in about"></asp:Label>
                 </td>
-                <td id="Timer" class="time" colspan="3">
-
-                </td>
-            </tr>                    
-            <tr>               
-                <td class="text-left" colspan="2" rowspan="3">      
-    
-                    <p class="text-left">
-    
-                    &nbsp;                                    
-                &nbsp;&nbsp;&nbsp;
-                        
-                    <asp:Label ID="Message" runat="server" Font-Bold="True" ForeColor="#993333" CssClass="auto-style1" Font-Size="Medium" Height="60px" style="font-size: medium; margin-bottom: 0px;" Font-Italic="True" Width="98%"></asp:Label>
-                    </p>
-                                   
-                </td>
-               
-                <td class="auto-style75" colspan="3">      
-                    &nbsp;</td>
-               
-            </tr>                    
+                <td id="Timer" class="time" colspan="3"></td>
+            </tr>
             <tr>
-               
-                <td class="auto-style78">    
-                    <asp:RadioButtonList ID="RadioOrder" runat="server" RepeatDirection="Horizontal" BorderStyle="Ridge" BorderWidth="3px" Font-Bold="True" OnSelectedIndexChanged="javascript: RadioClick()" TabIndex="20" BackColor="pink" Height="66px" BorderColor="Red" CellPadding="3" CellSpacing="3" CssClass="auto-style80" Width="100%">
+
+                <td class="auto-style3" colspan="2">
+                    <div class="text-center">
+
+                    <asp:RadioButtonList ID="RadioOrder" ClientIDMode="Static" runat="server" RepeatDirection="Horizontal" onclick="javascript: RadioClick();"
+                        BorderStyle="Ridge" BorderWidth="3px" Font-Bold="True" TabIndex="20" BackColor="pink" Height="66px" CellPadding="5" CellSpacing="5" Font-Size="Large" Width="50%">
                         <asp:ListItem>Buy</asp:ListItem>
                         <asp:ListItem Selected="True">Sell</asp:ListItem>
                     </asp:RadioButtonList>
+                    </div>
 
-<%--                      <div id="RadioButton" onclick="RadioClick()" style="text-align: center; padding: 10px; border-style:groove; border-width:3px; font-weight:bold; background-color:pink; width:100%;" >
-                            <input type="radio" name="Position" value="Buy"/> Buy &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <input type="radio" name="Position" value="Sell" checked /> Sell
-                      </div>--%>
                 </td>
-                             
-            </tr>                    
+
+                <td class="text-center" colspan="2">
+                    <%--OnSelectedIndexChanged="javascript: RadioClick();"--%> 
+
+                    <input type="button" id="AutoFill" onclick="AutoFill_Click()" value="Suggest Numbers" style="background-color: pink" class="auto-style4" /></td>
+
+                <td class="auto-style56">&nbsp;</td>
+            </tr>
             <tr>
-               
-                <td class="auto-style71" colspan="4">    
+
+                <td class="auto-style3" colspan="2">&nbsp;</td>
+
+                <td class="text-center" colspan="2">&nbsp;</td>
+
+                <td class="auto-style56">&nbsp;</td>
+            </tr>
+
+
+            <tr>
+
+                <td class="auto-style3" colspan="2">
+
+                    <span class="auto-style2">Your available Shares for this choice = </span>
+                    <asp:Label ID="AvShare" runat="server" Class="balance" Font-Bold="True" Font-Size="Medium" CssClass="auto-style2" ForeColor="#336600" Width="100px"></asp:Label>
+
+                </td>
+
+                <td>Number of Shares&nbsp;you
+                    <asp:Label ID="BuySell" ClientIDMode="Static" runat="server" Text="Sell" Font-Bold="True"></asp:Label>
+                    &nbsp;= 
+                    <asp:TextBox ID="DeltaShares" ClientIDMode="Static" runat="server" type="text" name="txt" value="0" onchange="javascript: Message.innerHTML = ' '; DShare2All();LastChange.innerHTML='S';" BackColor="pink" TabIndex="30" Width="99px" Font-Bold="True" Height="40px">NaN</asp:TextBox>
+                </td> 
+                <td class="auto-style61" rowspan="2">
+
                     &nbsp;</td>
-               
-            </tr>                    
-            <tr>
-               
-               
-                <td class="auto-style56" colspan="2">    
-    
-                    <p>
-    
-                        Your available Shares for this choice = <asp:Label ID="AvShare" runat="server" Class="balance" Font-Bold="True" Font-Size="Medium"></asp:Label>  
-                                   
-                    </p>
-                                   
-                </td>
-               
-                <td class="auto-style61" colspan="2">    
- 
-                    Number of Shares&nbsp;you <asp:Label ID="BuySell" runat="server" Text="Sell" Font-Bold="True"></asp:Label>
-&nbsp;= 
-                    <asp:TextBox ID="DeltaShares" runat="server" type="text" name="txt" value="0" onchange="javascript: DShare2All();LastChange.innerHTML='S';" BackColor="pink" TabIndex="30" Width="99px" Font-Bold="True" Height="40px"></asp:TextBox>
 
-                          <%--<input type="text" name="DeltaShares" id="DeltaShares" value="0" style="width: 100px; background-color:pink;" onchange="DShare2All();LastChange.innerHTML='S';" />--%>
+                <td class="auto-style56">&nbsp;</td>
+            </tr>
+
+            <tr>
+
+                <td class="auto-style3" colspan="2">
+
+                    <span class="auto-style2">Your available Balance for this choice = $ </span>
+                    <asp:Label ID="AvFund" runat="server" Class="balance" Font-Bold="True" Font-Size="Medium" CssClass="auto-style2" ForeColor="#336600" Width="100px"></asp:Label>
 
                 </td>
-               
-                <td class="auto-style56">    
-                    <div id="LastChange" hidden="hidden">S</div>  
-    
-                                    &nbsp;</td>
-            </tr>                    
-            <tr>
-               
-               
-                <td class="auto-style56" colspan="2">    
-    
-                    <p>
-                        Your available Balance for this choice = $ <asp:Label ID="AvFund" runat="server" Class="balance" Font-Bold="True" Font-Size="Medium"></asp:Label>                                  
-                                   
-                    </p>
-                </td>
-               
-                <td class="auto-style61" colspan="2">    
- 
-                    <p>
- 
-                    Amount of Fund Transfer = $ 
+
+                <td>Amount of Fund Transfer = 
                        
-                        <asp:TextBox ID="DeltaFund" runat="server" BackColor="pink" TabIndex="40" Width="99px" Font-Bold="True" Height="40px" onchange="javascript: DFund2All();LastChange.innerHTML='F';">0</asp:TextBox>
-         
-                        <%--<input type="text" name="DeltaFund" id="DeltaFund" value="0" style="width: 100px; background-color:pink;" onchange="DFund2All();LastChange.innerHTML='F';" />--%>
-            
-                    </p>
+                        <strong>$</strong> 
+                       
+                        <asp:TextBox ID="DeltaFund" ClientIDMode="Static" runat="server" BackColor="pink" TabIndex="40" Width="99px" Font-Bold="True" Height="40px" onchange="javascript: Message.innerHTML = ' '; DFund2All();LastChange.innerHTML='F';">NaN</asp:TextBox>
 
+                 </td>
+
+                <td class="auto-style56">
+
+                      <div id="LastChange" hidden>
+    S
+  </div>
                 </td>
-               
-                <td class="auto-style56">    
-    
-                                    &nbsp;</td>
-            </tr>                    
-            <tr>
-               
-                <td class="auto-style74" colspan="2">    
-    
-                    </td>
-               
-                <td class="auto-style73" colspan="2">    
-                    &nbsp;</td>
-               
-                <td class="auto-style56">    
-    
-                                    &nbsp;</td>
-            </tr>                    
-            <tr>
-               
-                <td class="auto-style70" colspan="2">    
-    
-                    Current Shares outstanding =    
-    
-                    <asp:Label ID="StartShares" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="N/A" BorderColor="#FFCC00" BorderWidth="3px"></asp:Label>
-                </td>
-               
-                <td class="auto-style61" colspan="2">    
-                    <h4>
-                        <span class="auto-style68">&nbsp;Target shares outstanding =&nbsp; </span> <asp:TextBox ID="EndShares" runat="server" BackColor="pink" TabIndex="40" Width="99px" Font-Bold="True" Height="40px" ReadOnly="True" CssClass="auto-style68"></asp:TextBox>
-
-                    </h4>
-
-                </td>
-               
-                <td class="auto-style56">    
-    
-                                    &nbsp;</td>
-            </tr>                    
-            <tr>
-               
-                <td class="auto-style70" colspan="2">    
-    
-                    Current Price per share =    
-    
-                    $    
-    
-                    <asp:Label ID="StartPrice" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="N/A" BorderColor="#FFCC00" BorderWidth="3px"></asp:Label>
-                </td>
-               
-                <td class="auto-style61" colspan="2">    
-                    <h4>
-                        <span class="auto-style68">Target Price (per share) = $ </span> <asp:TextBox ID="EndPrice" runat="server" BackColor="pink" TabIndex="40" Width="99px" Font-Bold="True" Height="40px" ReadOnly="True" CssClass="auto-style68"></asp:TextBox>
-
-                        </h4>
-                </td>
-               
-                <td class="auto-style56">    
-    
-                                    &nbsp;</td>
-            </tr>                    
-            <tr>
-               
-                <td class="auto-style69" colspan="2">    
-    
-                    <h4></h4>
-                </td>
-               
-                <td class="auto-style61" colspan="2">    
- 
-                    <h4>
- 
-                        <span class="auto-style68">Average transaction Price = $&nbsp;</span><asp:TextBox ID="AveragePrice" runat="server" BackColor="pink" TabIndex="40" Width="99px" Font-Bold="True" Height="40px" ReadOnly="True" CssClass="auto-style68"></asp:TextBox>
-
-                        </h4>
-                </td>
-               
-                <td class="auto-style56">    
-    
-                                    &nbsp;</td>
-            </tr>                    
-            <tr>
-               
-                <td class="auto-style64" colspan="2">    
-    
-                    &nbsp;</td>
-               
-                <td class="auto-style61" colspan="2">    
-                    &nbsp;</td>
-               
-                <td class="auto-style56">    
-    
-                                    &nbsp;</td>
-            </tr>                    
-            <tr>
-               
-                <td class="auto-style66" colspan="2">    
-                    <input type="button" id="AutoFill" onclick="AutoFill_Click()" value="Suggest Numbers" style="background-color: pink" class="auto-style79"/>                                   
-                </td>
-               
-                <td class="auto-style65" colspan="2">    
-                <asp:Button ID="PlaceOrder" runat="server" Font-Bold="True" onclick="PlaceOrder_Click" TabIndex="60" Text="Sell Shares" CssClass="auto-style21" Font-Size="Medium" BackColor="pink" ForeColor="Black" />                                   
-                </td>
-               
-                <td class="auto-style56">    
-    
-                                    &nbsp;</td>
-            </tr>                    
-            <tr>
-               
-                <td class="auto-style64" colspan="2">    
-    
-                    &nbsp;</td>
-               
-                <td class="auto-style61" colspan="2">    
-                    &nbsp;</td>
-               
-                <td class="auto-style56">    
-    
-                                    &nbsp;</td>
-            </tr>                    
-                      
-<script>
-                          function DShare2All() {
-
-                              shares1 = Number(StartShares.Text);
-
-                              dshare = Number(DeltaShares.Text);
-                              if (dshare <= 0 || dshare > 10000) dshare = NaN;
-
-                              dfund = Number(DeltaFund.Text);
-                              if (dfund <= 0 || dfund > 1000) dfund = NaN;
-
-                              if (RadioOrder.SelectedValue == "Buy") {
-
-                                  shares2 = Math.sqrt(200.0 * dfund + shares1 * shares1);
-                                  dshare = shares2 - shares1;
-                                  DeltaShares.Text = dshare.ToString();
-                              }
-                              else {
-
-                                  shares2 = shares1 - dshare;
-                                  dfund = dshare * (shares1 + shares2) / 200.0f;
-                                  DeltaFund.Text = dfund.ToString("C");
-                              }
-
-                              AveragePrice.Text = ((shares1 + shares2) / 200.0).toString();
-                              EndPrice.Text = (shares2 / 100.0).toString();
-                              EndShares.Text = shares2.toString();
-                          }
-</script>
+            </tr>
 
             <tr>
-               
-                <td class="auto-style51" colspan="5">    
-                    &nbsp;</td>
-               
-            </tr>                    
+
+                <td class="auto-style3" colspan="2">&nbsp;</td>
+
+                <td class="auto-style61" colspan="2">&nbsp;</td>
+
+                <td class="auto-style56">&nbsp;</td>
+            </tr>
 
             <tr>
-               
-                <td class="auto-style63">    
-    
-                    Transaction price history:</td>
-               
-                <td class="text-left" colspan="4">    
-    
-                    &nbsp;</td>
-               
-            </tr>                    
 
-                <tr>
-               
-                <td class="auto-style21" colspan="5">
+                <td class="auto-style8" colspan="2">
+
+                    <span class="auto-style7">Current shares outstanding =    
     
-                    <asp:Chart ID="Chart1" runat="server" CssClass="text-center" DataSourceID="SqlDataSource1" Height="385px" Width="1000px" Palette="Bright" IsMapEnabled="False" ImageLocation="~/Images/ChartPic_#SEQ(300,3)">
-                        <series>
+                    </span>
+
+                    <asp:Label ID="StartShares" ClientIDMode="Static" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
+                    <span class="auto-style9">
+                <script>
+                    //get score from Versions.
+                    //StartShares.innerHTML =
+
+                </script>
+                
+                    </span>
+                
+                </td>
+
+                <td class="auto-style61" colspan="2">
+                    <span class="auto-style7">Target shares outstanding =&nbsp; </span>
+                    <asp:Label ID="EndShares" runat="server" BackColor="Yellow" TabIndex="40" Font-Bold="False" ReadOnly="True" CssClass="auto-style68" Style="font-size: medium" BorderColor="#FFCC00" BorderStyle="Solid" BorderWidth="3px" ClientIDMode="Static" Font-Size="Small"></asp:Label>
+
+                </td>
+
+                <td class="auto-style56">&nbsp;</td>
+            </tr>
+
+            <tr>
+
+                <td class="auto-style8" colspan="2">
+
+                    <span class="auto-style7">Current share price = $    
+    
+                    </span>
+
+                    <asp:Label ID="StartPrice" ClientIDMode="Static" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
+                </td>
+
+                <td class="auto-style61" colspan="2">
+                    <span class="auto-style7">Target share price = $ </span>
+                    <asp:Label ID="EndPrice" ClientIDMode="Static" runat="server" BackColor="Yellow" TabIndex="40" Font-Bold="False" ReadOnly="True" CssClass="auto-style68" Style="font-size: medium" BorderColor="#FFCC00" BorderStyle="Solid" BorderWidth="3px" Font-Size="Small"></asp:Label>
+                </td>
+
+                <td class="auto-style56"></td>
+            </tr>
+
+            <tr>
+
+                <td class="auto-style8" colspan="2">&nbsp;</td>
+
+                <td class="auto-style61" colspan="2">
+
+                    <span class="auto-style7">Average transaction price = $&nbsp;</span>
+                    <asp:Label ID="AveragePrice" ClientIDMode="Static" runat="server" BackColor="Yellow" TabIndex="40" Font-Bold="False" ReadOnly="True" CssClass="auto-style68" Style="font-size: medium" BorderColor="#FFCC00" BorderStyle="Solid" BorderWidth="3px" Font-Size="Small"></asp:Label>
+
+                </td>
+
+                <td class="auto-style56">&nbsp;</td>
+            </tr>
+
+            <tr>
+
+                <td class="auto-style3" colspan="2">
+
+                    <asp:Label ID="Message" ClientIDMode="Static" runat="server" Font-Bold="True" ForeColor="#993333" Font-Size="Medium" Height="63px" Style="font-size: medium; margin-bottom: 0px;" Font-Italic="True"></asp:Label>
+                </td>
+
+                <td class="auto-style61" colspan="2">&nbsp;</td>
+
+                <td class="auto-style56">&nbsp;</td>
+            </tr>
+
+            <tr>
+
+                <td class="auto-style11" colspan="2">    
+                    <span class="auto-style10"><em>Refresh to see the updated current share price: </em></span>&nbsp;&nbsp;<asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" />
+    
+                </td>
+
+                <td class="text-center" colspan="2">&nbsp;&nbsp;
+                    <asp:Button ID="PlaceOrder" ClientIDMode="Static" runat="server" Font-Bold="True" OnClick="PlaceOrder_Click" TabIndex="60" Text="Sell Shares" CssClass="auto-style21" Font-Size="Medium" BackColor="pink" ForeColor="Black" />
+                </td>
+
+                <td class="auto-style56">&nbsp;</td>
+            </tr>
+
+            <tr>
+
+                <td class="auto-style51" colspan="5">&nbsp;</td>
+
+            </tr>
+
+            <tr>
+
+                <td class="auto-style63">Transaction price history:</td>
+
+                <td class="text-left" colspan="4"></td>
+
+            </tr>
+
+            <tr>
+                <td class="text-center" colspan="4">
+
+                    <asp:Chart ID="Chart1" runat="server" CssClass="text-center" DataSourceID="SqlDataSource1" Height="522px" Width="916px" Palette="Bright" IsMapEnabled="False" ImageLocation="~/Images/ChartPic_#SEQ(300,3)">
+                        <Series>
                             <asp:Series ChartType="Line" Name="Series1" YValuesPerPoint="4" XValueMember="TranTime" YValueMembers="Price">
                             </asp:Series>
-                        </series>
-                        <chartareas>
+                        </Series>
+                        <ChartAreas>
                             <asp:ChartArea Name="ChartArea1">
                                 <AxisY>
                                     <MajorGrid Enabled="False" />
@@ -482,70 +313,217 @@
                                     <LabelStyle Enabled="False" />
                                 </AxisX>
                             </asp:ChartArea>
-                        </chartareas>
+                        </ChartAreas>
                         <BorderSkin BackColor="White" />
                     </asp:Chart>
-                   </td> 
-                    </tr>
+                </td>
+            </tr>
+            <tr>
+                <td class="auto-style3" colspan="2">&nbsp;&nbsp; Your cash balance if this choice wins = $
+                    <asp:Label ID="BalanceWin" runat="server" Class="balance" Font-Bold="False" Font-Size="Small" CssClass="auto-style59">0</asp:Label>
 
-                <tr>
-               
-                <td class="auto-style60" colspan="5">
-                    </td>
-    
-                    &nbsp;<tr>
-               
-                <td class="auto-style58" colspan="2">
-    
-                    &nbsp;&nbsp; Your cash balance if this choice wins = $ <asp:Label ID="BalanceWin" runat="server" Class="balance" Font-Bold="False" Font-Size="Small" CssClass="auto-style59">0</asp:Label>                                  
-                               
-                <td class="style2" colspan="3">
-    
-                    &nbsp;<span class="auto-style59">&nbsp; Refund amount if this choice voids = $ </span> <asp:Label ID="BalanceVoid" runat="server" Class="balance" Font-Bold="False" Font-Size="Small" CssClass="auto-style59">0</asp:Label>                                  
-                               
-                <tr>
-               
-                <td class="auto-style58" colspan="2">
-    
-                    &nbsp;<td class="style2" colspan="3">
-    
-                        &nbsp;</table>           
-                  <div class="text-right">
-    <script>
-        function VersionArtifactMouseOver() {
-            Array.from(this.getElementsByClassName("diff-delnohover")).map(function (e) { e.classList.remove("diff-delnohover"); });
-            Array.from(this.getElementsByClassName("diff-addnohover")).map(function (e) { e.classList.remove("diff-addnohover"); });
-        }
-        Array.from(document.getElementsByClassName("version-artifact")).map(function (e) { e.addEventListener("mouseover", VersionArtifactMouseOver); });
+                </td>
+                <td class="style2" colspan="3">&nbsp;<span class="auto-style59">&nbsp; Refund amount if this choice voids = $ </span>
+                    <asp:Label ID="BalanceVoid" runat="server" Class="balance" Font-Bold="False" Font-Size="Small" CssClass="auto-style59">0</asp:Label>
+                </td>
+            </tr>
+            <tr>
+            </tr>
+        </table>
+        <div class="text-right">
 
-        function VersionArtifactMouseOut() {
-            Array.from(this.getElementsByClassName("diff-add")).map(function (e) { e.classList.add("diff-addnohover"); });
-            Array.from(this.getElementsByClassName("diff-del")).map(function (e) { e.classList.add("diff-delnohover"); });
-        }
-        Array.from(document.getElementsByClassName("version-artifact")).map(function (e) { e.addEventListener("mouseout", VersionArtifactMouseOut); });
-    </script>
-        
-                   <a href="./tips.aspx" target="_blank"><strong>Visual Directdions </strong></a>
-    
-                  </div>
-    
-                  <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" SelectCommand="SELECT Price, Time AS TranTime FROM Offers WHERE (Treatment = @Treatment) AND (Group# = @Group ) AND (Period = @Period) AND (Choice = @Choice) ORDER BY TranTime">
-                      <SelectParameters>
-                          <asp:Parameter DefaultValue="0" Name="Treatment" />
-                          <asp:Parameter DefaultValue="1" Name="Group" />
-                          <asp:Parameter DefaultValue="2" Name="Period" />
-                          <asp:Parameter DefaultValue="0" Name="Choice" />
-                      </SelectParameters>
-                  </asp:SqlDataSource>
-    
-                  </a>
-    
+            <script>
+                function VersionArtifactMouseOver() {
+                    Array.from(this.getElementsByClassName("diff-delnohover")).map(function (e) { e.classList.remove("diff-delnohover"); });
+                    Array.from(this.getElementsByClassName("diff-addnohover")).map(function (e) { e.classList.remove("diff-addnohover"); });
+                }
+                Array.from(document.getElementsByClassName("version-artifact")).map(function (e) { e.addEventListener("mouseover", VersionArtifactMouseOver); });
+
+                function VersionArtifactMouseOut() {
+                    Array.from(this.getElementsByClassName("diff-add")).map(function (e) { e.classList.add("diff-addnohover"); });
+                    Array.from(this.getElementsByClassName("diff-del")).map(function (e) { e.classList.add("diff-delnohover"); });
+                }
+                Array.from(document.getElementsByClassName("version-artifact")).map(function (e) { e.addEventListener("mouseout", VersionArtifactMouseOut); });
+            </script>
+
+            <%--<a href="./tips.aspx" target="_blank"><strong>Visual Directdions </strong></a>--%>
+
+        </div>
+
+        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" SelectCommand="SELECT Price, Time AS TranTime FROM Offers WHERE (Treatment = @Treatment) AND (Group# = @Group ) AND (Period = @Period) AND (Choice = @Choice) ORDER BY TranTime">
+            <SelectParameters>
+                <asp:Parameter DefaultValue="0" Name="Treatment" />
+                <asp:Parameter DefaultValue="1" Name="Group" />
+                <asp:Parameter DefaultValue="2" Name="Period" />
+                <asp:Parameter DefaultValue="0" Name="Choice" />
+            </SelectParameters>
+        </asp:SqlDataSource>
+
     </form>
+
     <script>
+
         DShare2All();
+
+        function DShare2All() {
+            shares1 = Number(StartShares.innerHTML);
+            StartPrice.innerHTML = (shares1 == 0 ? "0 (It will rise as you buy shares)" : (shares1 / 100).toFixed(2));
+
+            dshare = Number(DeltaShares.value);
+            if (dshare < 0 || dshare > 10000) {
+                Message.innerHTML = "Number of shares is out of range!";
+                dshare = NaN;
+            }
+
+            const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
+
+            if (SelectedRadio == "Buy") {
+                shares2 = shares1 + dshare;
+                dfund = Math.round(dshare * (shares1 + shares2)) / 200;
+
+                const avfund = Number(AvFund.innerHTML);
+                if (dfund > avfund) {
+                    Message.innerHTML = ("You only have $" + avfund + " !");
+                }
+
+            } else { // Sell
+                if (dshare > shares1) {
+                    dshare = shares1;
+                    DeltaShares.value = dshare;
+                    Message.innerHTML = ("There are only " + shares1 + " shares!  ");
+                }
+                shares2 = shares1 - dshare;
+                dfund = dshare * (shares1 + shares2) / 200.0;
+
+                const avshare = Number(AvShare.innerHTML);
+                if (dshare > avshare) {
+                    Message.innerHTML += ("<br>You only have " + avshare + " shares!");
+                }
+            }
+
+            DeltaFund.value = dfund.toFixed(2);
+
+            AveragePrice.innerHTML = ((shares1 + shares2) / 200.0).toFixed(2);
+            EndPrice.innerHTML = (shares2 / 100.0).toFixed(2);
+            EndShares.innerHTML = shares2.toFixed(2);
+        }
+
+        function DFund2All() {
+
+            const shares1 = Number(StartShares.innerHTML);
+            StartPrice.innerHTML = (shares1 == 0 ? "0 (It will rise as you buy shares)" : (shares1 / 100).toFixed(2));
+
+            let dfund = Number(DeltaFund.value);
+            if (dfund < 0 || dfund > 1000) {
+                Message.innerHTML = "Amount of fund is out of range!"
+                dfund = NaN;
+            }
+
+            const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
+
+            if (SelectedRadio == "Buy") {
+                shares2 = Math.sqrt(shares1 * shares1 + 200.0 * dfund);
+                dshare = shares2 - shares1;
+
+                const avfund = Number(AvFund.innerHTML);
+                if (dfund > avfund) {
+                    Message.innerHTML = ("You only have $" + avfund + " !");
+                }
+
+            } else { // Sell
+
+                if (200 * dfund > shares1 * shares1) {
+                    dfund = shares1 * shares1 / 200;
+                    DeltaFund.value = dfund;
+                    Message.innerHTML = ("There is only $" + dfund + " of total funds!  ");
+                }
+
+                shares2 = Math.round(Math.sqrt(shares1 * shares1 - 200.0 * dfund) * 100) / 100;
+                dshare = shares1 - shares2;
+
+                const avshare = Number(AvShare.innerHTML);
+                if (dshare > avshare) {
+                    Message.innerHTML += ("You only have " + avshare + " shares!");
+                }
+            }
+
+            DeltaShares.value = dshare.toFixed(2);
+
+            AveragePrice.innerHTML = ((shares1 + shares2) / 200.0).toFixed(2);
+            EndPrice.innerHTML = (shares2 / 100.0).toFixed(2);
+            EndShares.innerHTML = shares2.toFixed(2);
+        }
+
+        function RadioClick() {
+
+            Message.innerHTML = " ";
+            const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
+
+            if (SelectedRadio == "Buy") {
+                DeltaFund.focus();
+
+                PlaceOrder.value = "Buy Shares";
+                BuySell.innerHTML = "Buy";
+
+                RadioOrder.style.backgroundColor = "lightgreen";
+                PlaceOrder.style.backgroundColor = "lightgreen";
+                AutoFill.style.backgroundColor = "lightgreen";
+                DeltaShares.style.backgroundColor = "lightgreen";
+                DeltaFund.style.backgroundColor = "lightgreen";
+
+                //AveragePrice.style.backgroundColor = "lightgreen";
+                //EndPrice.style.backgroundColor = "lightgreen";
+                //EndShares.style.backgroundColor = "lightgreen";
+
+                //Order.style.backgroundColor = "lightgreen";
+                // document.getElementById("PlaceOrder").innerHTML = "Buy Shares";
+                // document.getElementById("PlaceOrder").style.backgroundColor = "lightgreen";
+                // document.getElementById("AutoFill").style.backgroundColor = "lightgreen";
+                // document.getElementById("DeltaShares").style.backgroundColor = "lightgreen";
+                // document.getElementById("DeltaFund").style.backgroundColor = "lightgreen";
+                // document.getElementById("AveragePrice").style.backgroundColor = "lightgreen";
+                // document.getElementById("EndPrice").style.backgroundColor = "lightgreen";
+                // document.getElementById("EndShares").style.backgroundColor = "lightgreen";
+                // document.getElementById("RadioButton").style.backgroundColor = "lightgreen";
+
+            } else {
+                DeltaShares.focus();
+
+                PlaceOrder.value = "Sell Shares";
+                BuySell.innerHTML = "Sell";
+
+                RadioOrder.style.backgroundColor = "pink";
+                PlaceOrder.style.backgroundColor = "pink";
+                AutoFill.style.backgroundColor = "pink";
+                DeltaShares.style.backgroundColor = "pink";
+                DeltaFund.style.backgroundColor = "pink";
+
+            }
+
+            if (LastChange.innerHTML == 'F') {
+                DFund2All();
+            } else {
+                DShare2All();
+            }
+        }
+
+        function AutoFill_Click() {
+
+            Message.innerHTML = " ";
+            const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
+
+            if (SelectedRadio == "Buy") {
+                DeltaFund.value = AvFund.innerHTML;
+                DFund2All();
+            } else {
+                DeltaShares.value = AvShare.innerHTML;
+                DShare2All();
+            }
+        }
+
     </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    </body>
+</body>
 </html>
