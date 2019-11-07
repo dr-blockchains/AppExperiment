@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Globalization;
+//using WebSocketSharp;
 
 namespace ProcessTree
 {
@@ -15,7 +16,6 @@ namespace ProcessTree
                 Response.Redirect("~/Default.aspx");
 
             int Period = Global.Refresh((int)Session["Treat"], (int)Session["Group"], out DateTime DT);
-
 
             if (Period == 0 || Period == -9)
             {
@@ -54,9 +54,8 @@ namespace ProcessTree
 
             TimeSpan.Text = ((DateTime)Session["DT"] - DateTime.Now).TotalMilliseconds.ToString();
 
-            //ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('Reload');", true);
             if (IsPostBack) return;
-            //ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('Not Postback');", true);
+            ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('Not Postback');", true);
 
             PeriodChoice.Text = "Shares of the mutual fund ASSUMING it " + " <i>" +
     (Session["Choice"].ToString() == "0" ? "holds cash" : "invests on Portfolio " + Session["Choice"].ToString()) +
@@ -70,18 +69,14 @@ namespace ProcessTree
             com.Parameters.AddWithValue("@User", Session["User"]);
             SqlDataReader User = com.ExecuteReader();
 
-            if (!User.Read() ||
-                User["QualificationTime"].Equals(DBNull.Value) ||
-                User["Treatment"].Equals(DBNull.Value) ||
-                User["Group#"].Equals(DBNull.Value) ||
-                !User["Completed"].Equals(DBNull.Value))
-            {
+            if (!User.Read()){
+                com.Dispose();
                 conn.Close();
                 Response.Redirect("~/Default.aspx");
                 return;
             }
 
-            Session["AvFund"] = User["Balance"];
+            float avfund = (float) User["Balance"];
 
             if (Session["V"] == null)
                 Message.Text = User["Name"] + ", buy or sell considering the current price!";
@@ -124,22 +119,23 @@ namespace ProcessTree
             com.Parameters.AddWithValue("@Choice", Session["Choice"]);
             SqlDataReader SharePerson = com.ExecuteReader();
 
+            float avshare;
             if (SharePerson.Read())
             {
-                Session["AvShare"] = SharePerson["Volume"];
-                Session["AvFund"] = (float)Session["AvFund"] + (float)SharePerson["BalanceConfirm"];
+                avshare = (float) SharePerson["Volume"];
+                avfund += (float)SharePerson["BalanceConfirm"];
                 BalanceVoid.Text = ((float)SharePerson["BalanceVoid"]).ToString("N2");
             }
             else
             {
-                Session["AvShare"] = 0.0f;
+                avshare = 0.0f;
                 BalanceVoid.Text = "0";
             }
                         
             SharePerson.Close();
 
-            AvShare.Text = ((float)Session["AvShare"]).ToString("N3");
-            AvFund.Text = ((float)Session["AvFund"]).ToString("N2");
+            AvShare.Text = avshare.ToString("N3");
+            AvFund.Text = avfund.ToString("N2");
 
             // Balances of other choices if they void:
             float VoidBalances = 0.0f;
@@ -153,7 +149,7 @@ namespace ProcessTree
 
             object obj = com.ExecuteScalar();
             if (obj != DBNull.Value) VoidBalances = (float)(double)obj;
-            BalanceWin.Text = ((float)Session["AvFund"] + VoidBalances).ToString("N2");
+            BalanceWin.Text = (avfund + VoidBalances).ToString("N2");
             
             conn.Close();
 
@@ -244,7 +240,7 @@ namespace ProcessTree
 
             Session["V"] = "Your order did not go through!";
 
-            float shares1, shares2, dshare, dfund;
+            float shares1, shares2, dshare, dfund, avfund, avshare;
 
             try
             {
@@ -281,12 +277,26 @@ namespace ProcessTree
                 return;
             }
 
+         
+
             if (RadioOrder.SelectedValue == "Buy")
             {
-                if (dfund > (float)Session["AvFund"])
+                try
                 {
-                    //ClientScript.RegisterStartupScript(GetType(), "Insufficient Balance", "alert('You do not have $" + dfund.ToString("N2") + " of available fund. \n The order is fullfilled partially.');", true);
-                    dfund = (float) Math.Floor((float)Session["AvFund"] * 10000) / 10000;
+                    avfund = float.Parse(AvFund.Text, CultureInfo.InvariantCulture.NumberFormat);
+                    if (!(avfund > 0 && avfund < 1000)) throw new Exception();
+                }
+                catch
+                {
+                    DeltaFund.Focus();
+                    Message.Text = "No available fund!";
+                    return;
+                }
+
+                if (dfund > avfund)
+                {
+                    ClientScript.RegisterStartupScript(GetType(), "Insufficient Balance", "alert('You do not have $" + dfund.ToString("N2") + " of available fund. \n The order is fulfilled partially.');", true);
+                    dfund = (float) Math.Floor(avfund * 10000) / 10000;
                     DeltaFund.Text = dfund.ToString("N3");
                     Message.Text = "You invested $" + DeltaFund.Text + " !";
                     DeltaFund.Focus();
@@ -295,26 +305,36 @@ namespace ProcessTree
                 shares2 = (float)Math.Sqrt(200.0f * dfund + shares1 * shares1);
 
                 dshare = shares2 - shares1;
-                DeltaShares.Text = dshare.ToString("N2");
+
+                //DeltaShares.Text = dshare.ToString("N2");
             }
             else
             {
-                if (dshare > (float)Session["AvShare"])
+                try
                 {
-                    //ClientScript.RegisterStartupScript(GetType(), "Insufficient Shares", "alert('You do not have " + dshare + " shares for this choice. \n You sell all your shares.');", true);
-                    dshare = (float) Math.Floor((float)Session["AvShare"] * 10000) / 10000;
+                    avshare = float.Parse(AvShare.Text, CultureInfo.InvariantCulture.NumberFormat);
+                    if (!(avshare > 0 && avshare < 10000)) throw new Exception();
+                }
+                catch
+                {
+                    DeltaShares.Focus();
+                    Message.Text = "No available share!";
+                    return;
+                }
+
+                if (dshare > avshare)
+                {
+                    ClientScript.RegisterStartupScript(GetType(), "Insufficient Shares", "alert('You do not have " + dshare.ToString("N3") + " shares for this choice. \n The order is fulfilled partially.');", true);
+                    dshare = (float) Math.Floor(avshare * 10000) / 10000;
                     DeltaShares.Text = dshare.ToString("N2");
                     Message.Text = "You sold " + DeltaShares.Text + " shares!";
                     DeltaShares.Focus();
                 }
 
-                shares2 = shares1 - dshare;
-
-                dfund = dshare * (shares1 + shares2) / 200.0f;
-                DeltaFund.Text = dfund.ToString("N2");
+                //shares2 = shares1 - dshare;
+                //dfund = dshare * (shares1 + shares2) / 200.0f;
+                //DeltaFund.Text = dfund.ToString("N2");
             }
-
-            Session["Time"] = DateTime.Now;
 
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
             conn.Open();
@@ -327,7 +347,7 @@ namespace ProcessTree
             com.Parameters.AddWithValue("@Period", Session["Period"]);
             com.Parameters.AddWithValue("@Choice", Session["Choice"]);
             com.Parameters.AddWithValue("@Bidder", Session["User"]);
-            com.Parameters.AddWithValue("@Time", Session["Time"]);
+            com.Parameters.AddWithValue("@Time", DateTime.Now);
             com.Parameters.AddWithValue("@Buy0Sell1", RadioOrder.SelectedIndex);
             com.Parameters.AddWithValue("@Score", shares1);
             com.Parameters.AddWithValue("@DShare", dshare);
@@ -342,9 +362,8 @@ namespace ProcessTree
 
             com.Dispose();
             conn.Close();
-
-            DeltaFund.Text = "";
-            DeltaShares.Text = "";
+            //DeltaFund.Text = "";
+            //DeltaShares.Text = "";
 
             //if (RadioOrder.SelectedValue == "Buy")
             //{
@@ -370,7 +389,6 @@ namespace ProcessTree
             //AveragePrice.Text = ((shares1 + shares2) / 200.0).ToString("N2");
             //EndPrice.Text = (shares2 / 100.0).ToString("N2");
             //EndShares.Text = shares2.ToString("N2");
-
             Session["V"] = (RadioOrder.SelectedIndex == 0? "You bought " : "You sold ") + dshare + " shares.";
             Response.Redirect("~/Bonding.aspx");
         }

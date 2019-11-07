@@ -1,5 +1,7 @@
 ﻿DECLARE @TID INT = 1;
 
+DELETE FROM Offers WHERE Treatment = @TID;
+
 DELETE FROM Shares WHERE Treatment = @TID AND Period > 2;
 
 UPDATE Shares SET Volume = 0 , BalanceConfirm = 0 , BalanceVoid = 0 WHERE Treatment = @TID AND Period = 2;

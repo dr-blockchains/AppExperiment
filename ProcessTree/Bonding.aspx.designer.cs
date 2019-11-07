@@ -132,6 +132,15 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.TextBox DeltaFund;
 
         /// <summary>
+        /// BtnRefresh control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnRefresh;
+
+        /// <summary>
         /// StartShares control.
         /// </summary>
         /// <remarks>
@@ -168,6 +177,24 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.Label EndPrice;
 
         /// <summary>
+        /// Atxt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Atxt;
+
+        /// <summary>
+        /// Btxt control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Btxt;
+
+        /// <summary>
         /// AveragePrice control.
         /// </summary>
         /// <remarks>
@@ -184,15 +211,6 @@ namespace ProcessTree
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Message;
-
-        /// <summary>
-        /// BtnRefresh control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnRefresh;
 
         /// <summary>
         /// PlaceOrder control.

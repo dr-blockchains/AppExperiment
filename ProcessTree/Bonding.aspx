@@ -4,11 +4,14 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
+    <script>
+        import io from 'socket.io-client';
+    </script>
 <head runat="server">
     <title>Bonding</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 
-    <script src="Timer.js"> </script>
+    <script src="Timer.js">  </script>
 
     <link href="StyleSheet.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
@@ -22,7 +25,7 @@
 
         .auto-style4 {
             width: 226px;
-            font-size: small;
+            font-size: small;22
         }
 
         .auto-style5 {
@@ -57,6 +60,13 @@
         .auto-style11 {
             width: 46%;
             text-align: left;
+        }
+        .auto-style12 {
+            width: 46%;
+            font-size: small;
+        }
+        .auto-style13 {
+            font-size: small;
         }
     </style>
 </head>
@@ -184,7 +194,10 @@
 
             <tr>
 
-                <td class="auto-style3" colspan="2">&nbsp;</td>
+                <td class="auto-style3" colspan="2">    
+                    <span class="auto-style10"><em>Refresh to update numbers:&nbsp; </em></span><asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" CssClass="auto-style13" Height="44px" Width="139px" />
+    
+                </td>
 
                 <td class="auto-style61" colspan="2">&nbsp;</td>
 
@@ -201,12 +214,7 @@
 
                     <asp:Label ID="StartShares" ClientIDMode="Static" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
                     <span class="auto-style9">
-                <script>
-                    //get score from Versions.
-                    //StartShares.innerHTML =
-
-                </script>
-                
+          
                     </span>
                 
                 </td>
@@ -241,7 +249,9 @@
 
             <tr>
 
-                <td class="auto-style8" colspan="2">&nbsp;</td>
+                <td class="auto-style12" colspan="2"><em>Share Price = (<asp:Label ID="Atxt" ClientIDMode="Static" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
+                    )*(Shares Outstanding) + (<asp:Label ID="Btxt" ClientIDMode="Static" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
+                    )</em></td>
 
                 <td class="auto-style61" colspan="2">
 
@@ -257,8 +267,7 @@
 
                 <td class="auto-style3" colspan="2">
 
-                    <asp:Label ID="Message" ClientIDMode="Static" runat="server" Font-Bold="True" ForeColor="#993333" Font-Size="Medium" Height="63px" Style="font-size: medium; margin-bottom: 0px;" Font-Italic="True"></asp:Label>
-                </td>
+                    &nbsp;</td>
 
                 <td class="auto-style61" colspan="2">&nbsp;</td>
 
@@ -268,7 +277,8 @@
             <tr>
 
                 <td class="auto-style11" colspan="2">    
-                    <span class="auto-style10"><em>Refresh to see the updated current share price: </em></span>&nbsp;&nbsp;<asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" />
+
+                    <asp:Label ID="Message" ClientIDMode="Static" runat="server" Font-Bold="True" ForeColor="#993333" Font-Size="Medium" Height="63px" Style="font-size: medium; margin-bottom: 0px;" Font-Italic="True"></asp:Label>
     
                 </td>
 
@@ -327,9 +337,7 @@
                     <asp:Label ID="BalanceVoid" runat="server" Class="balance" Font-Bold="False" Font-Size="Small" CssClass="auto-style59">0</asp:Label>
                 </td>
             </tr>
-            <tr>
-            </tr>
-        </table>
+            </table>
         <div class="text-right">
 
             <script>
@@ -362,12 +370,36 @@
     </form>
 
     <script>
+                    //window.setInterval(PullPrice, 500);
+
+                    //function PullPrice() {
+
+                    //    get score from Versions.Score
+
+                    //    StartShares.innerHTML = Versions.Score ;
+                    //    Share2All();
+                    //}
+
+                    //let socket;
+
+                    //export default function Store(props) {
+
+                    //    if (!socket) {
+                    //        socket = io(':3001');
+                    //        socket.on('chat message', function (msg) {
+                    //            dispatch({ type: 'RECEIVE_MESSAGE', payload: msg })
+                    //        });
+                    //    }
 
         DShare2All();
 
         function DShare2All() {
-            shares1 = Number(StartShares.innerHTML);
-            StartPrice.innerHTML = (shares1 == 0 ? "0 (It will rise as you buy shares)" : (shares1 / 100).toFixed(2));
+
+            const shares1 = Number(StartShares.innerHTML);
+            const a = Number(Atxt.innerHTML);
+            const b = Number(Btxt.innerHTML);
+
+            StartPrice.innerHTML = (a*shares1 + b).toFixed(2);
 
             dshare = Number(DeltaShares.value);
             if (dshare < 0 || dshare > 10000) {
@@ -377,9 +409,9 @@
 
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
 
-            if (SelectedRadio == "Buy") {
+            if (SelectedRadio == "Buy") { // Buy
                 shares2 = shares1 + dshare;
-                dfund = Math.round(dshare * (shares1 + shares2)) / 200;
+                dfund = Math.round(dshare * (.5*a*(shares1 + shares2)+b));
 
                 const avfund = Number(AvFund.innerHTML);
                 if (dfund > avfund) {
@@ -393,7 +425,7 @@
                     Message.innerHTML = ("There are only " + shares1 + " shares!  ");
                 }
                 shares2 = shares1 - dshare;
-                dfund = dshare * (shares1 + shares2) / 200.0;
+                dfund = Math.round(dshare * (.5 * a * (shares1 + shares2) + b));
 
                 const avshare = Number(AvShare.innerHTML);
                 if (dshare > avshare) {
@@ -403,17 +435,22 @@
 
             DeltaFund.value = dfund.toFixed(2);
 
-            AveragePrice.innerHTML = ((shares1 + shares2) / 200.0).toFixed(2);
-            EndPrice.innerHTML = (shares2 / 100.0).toFixed(2);
             EndShares.innerHTML = shares2.toFixed(2);
+            EndPrice.innerHTML = (a * shares2 + b).toFixed(2);
+            AveragePrice.innerHTML = (.5 * a * (shares1 + shares2) + b).toFixed(2);            
         }
 
         function DFund2All() {
 
             const shares1 = Number(StartShares.innerHTML);
-            StartPrice.innerHTML = (shares1 == 0 ? "0 (It will rise as you buy shares)" : (shares1 / 100).toFixed(2));
+            const a = Number(Atxt.innerHTML);
+            const b = Number(Btxt.innerHTML);
 
-            let dfund = Number(DeltaFund.value);
+            const p1 = (a * shares1 + b);
+
+            StartPrice.innerHTML = p1.toFixed(2));
+
+            dfund = Number(DeltaFund.value);
             if (dfund < 0 || dfund > 1000) {
                 Message.innerHTML = "Amount of fund is out of range!"
                 dfund = NaN;
@@ -422,7 +459,7 @@
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
 
             if (SelectedRadio == "Buy") {
-                shares2 = Math.sqrt(shares1 * shares1 + 200.0 * dfund);
+                shares2 = (-b + Math.sqrt(b*b + p1*p1 + 2*a*dfund))/a;
                 dshare = shares2 - shares1;
 
                 const avfund = Number(AvFund.innerHTML);
@@ -432,13 +469,15 @@
 
             } else { // Sell
 
-                if (200 * dfund > shares1 * shares1) {
-                    dfund = shares1 * shares1 / 200;
+                const F1 = (.5*a*shares1 + b)*shares1;
+
+                if (dfund > F1) {
+                    dfund = F1;
                     DeltaFund.value = dfund;
-                    Message.innerHTML = ("There is only $" + dfund + " of total funds!  ");
+                    Message.innerHTML = ("There is only $" + dfund.toFixed(2) + " of total funds!  ");
                 }
 
-                shares2 = Math.round(Math.sqrt(shares1 * shares1 - 200.0 * dfund) * 100) / 100;
+                shares2 = (-b + Math.sqrt(b * b + p1 * p1 + 2 * a * dfund)) / a;                
                 dshare = shares1 - shares2;
 
                 const avshare = Number(AvShare.innerHTML);
@@ -449,9 +488,9 @@
 
             DeltaShares.value = dshare.toFixed(2);
 
-            AveragePrice.innerHTML = ((shares1 + shares2) / 200.0).toFixed(2);
-            EndPrice.innerHTML = (shares2 / 100.0).toFixed(2);
             EndShares.innerHTML = shares2.toFixed(2);
+            EndPrice.innerHTML = (a * shares2 + b).toFixed(2);
+            AveragePrice.innerHTML = (.5 * a * (shares1 + shares2) + b).toFixed(2);  
         }
 
         function RadioClick() {
