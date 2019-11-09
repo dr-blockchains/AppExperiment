@@ -78,6 +78,15 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.Label TimerMessage;
 
         /// <summary>
+        /// BtnRefresh control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnRefresh;
+
+        /// <summary>
         /// RadioOrder control.
         /// </summary>
         /// <remarks>
@@ -130,15 +139,6 @@ namespace ProcessTree
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox DeltaFund;
-
-        /// <summary>
-        /// BtnRefresh control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnRefresh;
 
         /// <summary>
         /// StartShares control.

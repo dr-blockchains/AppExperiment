@@ -81,7 +81,7 @@ namespace ProcessTree
             }
 
             float balance = (float)User["Balance"];
-            if (Session["V"]==null)
+            if (Session["Message"]==null)
                 Message.Text = User["Name"] + ", place an order with a reasonable price!";
             else
                 Message.Text = "You placed an order " + User["Name"] + "!";
@@ -287,7 +287,7 @@ namespace ProcessTree
             if (Session["User"] == null)
                 Response.Redirect("~/Default.aspx");
 
-            Session["V"] = null;
+            Session["Message"] = null;
 
             if (SelfOrders.SelectedValue == "")
             {
@@ -330,7 +330,7 @@ namespace ProcessTree
         {
             //Session["BuySell"] = RadioOrder.SelectedValue;
             Response.Redirect("~/Trading.aspx");
-            Session["V"] = null;
+            Session["Message"] = null;
         }
 
         protected void RadioOrder_SelectedIndexChanged(object sender, EventArgs e)
@@ -356,7 +356,7 @@ namespace ProcessTree
 
             Price.Focus();
             Session["BuySell"] = RadioOrder.SelectedValue;
-            Session["V"] = null;
+            Session["Message"] = null;
         }
 
         protected void PlaceOrder_Click(object sender, EventArgs e)
@@ -539,7 +539,7 @@ namespace ProcessTree
             }
 
             conn.Close();
-            Session["V"] = V;            
+            Session["Message"] = V;            
             Response.Redirect("~/Trading.aspx");
         }
 
@@ -548,7 +548,7 @@ namespace ProcessTree
             if (Session["User"] == null)
                 Response.Redirect("~/Default.aspx");
 
-            Session["V"] = null;
+            Session["Message"] = null;
 
             float P, V; // Price , Unfullfilled
 

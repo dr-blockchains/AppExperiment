@@ -78,10 +78,10 @@ namespace ProcessTree
 
             float avfund = (float) User["Balance"];
 
-            if (Session["V"] == null)
+            if (Session["MEssage"] == null)
                 Message.Text = User["Name"] + ", buy or sell considering the current price!";
             else
-                Message.Text = Session["V"].ToString();
+                Message.Text = Session["Message"].ToString();
 
             User.Close();
 
@@ -230,7 +230,7 @@ namespace ProcessTree
 
         //    Session["BuySell"] = RadioOrder.SelectedValue;
         //    BuySell.Text = RadioOrder.SelectedValue;
-        //    Session["V"] = null;
+        //    Session["Message"] = null;
         //}
 
         protected void PlaceOrder_Click(object sender, EventArgs e)
@@ -238,7 +238,7 @@ namespace ProcessTree
             if (Session["User"] == null)
                 Response.Redirect("~/Default.aspx");
 
-            Session["V"] = "Your order did not go through!";
+            Session["Message"] = "Your order did not go through!";
 
             float shares1, shares2, dshare, dfund, avfund, avshare;
 
@@ -275,9 +275,7 @@ namespace ProcessTree
                 DeltaFund.Focus();
                 Message.Text = "Amount of fund is out of range!";
                 return;
-            }
-
-         
+            }        
 
             if (RadioOrder.SelectedValue == "Buy")
             {
@@ -301,8 +299,9 @@ namespace ProcessTree
                     Message.Text = "You invested $" + DeltaFund.Text + " !";
                     DeltaFund.Focus();
                 }
-
-                shares2 = (float)Math.Sqrt(200.0f * dfund + shares1 * shares1);
+                
+                float p1 = (a * shares1 + b);
+                shares2 = (-b + (float)Math.Sqrt(b * b + p1 * p1 + 2 * a * dfund)) / a ;
 
                 dshare = shares2 - shares1;
 
@@ -339,7 +338,7 @@ namespace ProcessTree
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
             conn.Open();
 
-            string query = "EXEC Bonding @Treatment, @Group, @Period, @Choice, @Bidder, @Time, @Buy0Sell1, @Score, @Dshare";
+            string query = "EXEC Bonding @Treatment, @Group, @Period, @Choice, @Bidder, @Buy0Sell1, @Score, @Dshare";
             SqlCommand com = new SqlCommand(query, conn);
 
             com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
@@ -347,7 +346,7 @@ namespace ProcessTree
             com.Parameters.AddWithValue("@Period", Session["Period"]);
             com.Parameters.AddWithValue("@Choice", Session["Choice"]);
             com.Parameters.AddWithValue("@Bidder", Session["User"]);
-            com.Parameters.AddWithValue("@Time", DateTime.Now);
+            //com.Parameters.AddWithValue("@Time", DateTime.Now);
             com.Parameters.AddWithValue("@Buy0Sell1", RadioOrder.SelectedIndex);
             com.Parameters.AddWithValue("@Score", shares1);
             com.Parameters.AddWithValue("@DShare", dshare);
@@ -373,7 +372,7 @@ namespace ProcessTree
             //    AvFund.Text = ((float)Session["AvFund"]).ToString("N2");
             //    AvShare.Text = ((float)Session["AvShare"]).ToString("N3");
 
-            //    Session["V"] = "You bought " + shares2 + " shares.";
+            //    Session["Message"] = "You bought " + shares2 + " shares.";
             //}
             //else
             //{
@@ -383,19 +382,23 @@ namespace ProcessTree
             //    AvFund.Text = ((float)Session["AvFund"]).ToString("N2");
             //    AvShare.Text = ((float)Session["AvShare"]).ToString("N3");
 
-            //    Session["V"] = "You sold " + shares2 + " shares.";
+            //    Session["Message"] = "You sold " + shares2 + " shares.";
             //}
 
             //AveragePrice.Text = ((shares1 + shares2) / 200.0).ToString("N2");
             //EndPrice.Text = (shares2 / 100.0).ToString("N2");
             //EndShares.Text = shares2.ToString("N2");
-            Session["V"] = (RadioOrder.SelectedIndex == 0? "You bought " : "You sold ") + dshare + " shares.";
+            Session["Message"] = (RadioOrder.SelectedIndex == 0? "You bought " : "You sold ") + dshare + " shares.";
+
+            //push new X to the front end of every client.
+
+
             Response.Redirect("~/Bonding.aspx");
         }
 
         protected void BtnRefresh_Click(object sender, EventArgs e)
         {
-            Session["V"] = null;
+            Session["Message"] = null;
             Response.Redirect("~/Bonding.aspx");
         }
 
@@ -404,7 +407,7 @@ namespace ProcessTree
         //    if (Session["User"] == null)
         //        Response.Redirect("~/Default.aspx");
 
-        //    Session["V"] = null;
+        //    Session["Message"] = null;
 
         //    float shares1, shares2, dshare, dfund;
 

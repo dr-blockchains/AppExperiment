@@ -185,11 +185,13 @@ namespace ProcessTree
             // Parent.Text = Treatment["Parent"].ToString();
             Constitution.Text = Treatment["Constitution"].ToString().Replace("<br>", "\n").Replace("<b>", "{").Replace("</b>", "}").Replace("<a href=\"https://", "[[").Replace("/\" target = \"_blank\">", "%%").Replace("</a>", "]]");
             Hypothesis.Text = Treatment["Hypothesis"].ToString();
-            
+
+            Beta.Text = Treatment["Beta"].ToString();
+
             Tp.Text = Treatment["Tp"].ToString();
             Tv.Text = Treatment["Tv"].ToString();
             Te.Text = Treatment["Te"].ToString();
-
+            
             float TaNum = (float)Treatment["Ta"];
             float TzNum = (float)Treatment["Tz"];
             float TfNum = (float)Treatment["Tf"];
@@ -250,7 +252,7 @@ namespace ProcessTree
             Groups.Text = GroupsCount.ToString();
             #endregion          
 
-            query = "select Artifact, Score from Versions where Treatment = " + Treat.SelectedValue + " and Group# = 1 and Period = 2 and Choice = 0";
+            query = "select Artifact, PerVal from Versions where Treatment = " + Treat.SelectedValue + " and Group# = 1 and Period = 2 and Choice = 0";
             #region Show the Artifact
             com = new SqlCommand(query, conn);
             SqlDataReader DataReader = com.ExecuteReader();      
@@ -260,8 +262,8 @@ namespace ProcessTree
                 Message.Text = "Error (174). No Initial Solution!";
                 Artifact.Text = "No Initial solution! \n Dropnumber = " + Treat.SelectedValue;                
                 
-                query = "insert into Versions(Treatment, Group#, Period , Choice , Artifact , HtmlArtifact, Proposer , Time, Score) values("
-                    + Treat.SelectedValue + ", 1 , 2 , 0 , 'Empty', 'Empty', 'experimenter' , GETDATE(), 0)";
+                query = "insert into Versions(Treatment, Group#, Period , Choice , Artifact , HtmlArtifact, Proposer , Time, Score, PerVal) values("
+                    + Treat.SelectedValue + ", 1 , 2 , 0 , 'Empty', 'Empty', 'experimenter' , GETDATE(), 0, 0)";
                 
                 #region Execute
                 com = new SqlCommand(query, conn);
@@ -277,11 +279,13 @@ namespace ProcessTree
             }
             else
             {
-                Artifact.Text = DataReader["Artifact"].ToString();                
-            }                       
+                Artifact.Text = DataReader["Artifact"].ToString();   
+                InitialFund.Text = DataReader["PerVal"].ToString();
+            }
 
             #endregion
 
+            com.Dispose();
             conn.Close();
           
             for (int i = 1; i <= GroupsCount; i++)
@@ -379,8 +383,8 @@ namespace ProcessTree
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
             conn.Open();
 
-            string query = @"insert into Treatments (TID, Parent, Constitution, Hypothesis, Ta, Tf, Tp, Tv, Te, Tz, M, Rv, Ro, Reward, BetFee, SuggestionFee, Compensation, V, W, E, PerGroup, VoteChange, Valuation, AuctionSort, Meritocracy, Merit2All, InitialBalance, InitialVolume) 
-                                     Values (@Treatment, @Parent, @Constitution, @Hyp, @Ta, @Tf, @Tp, @Tv, @Te, @Tz, @M, @Rv, @Ro, @Reward, @BetFee, @SuggestionFee, @Compensation, @V, @W, @E, @PerGroup, @VoteChange, @Valuation, @AuctionSort, @Meritocracy, @Merit2All, @InitialBalance, @InitialVolume)";
+            string query = @"insert into Treatments (TID, Parent, Constitution, Hypothesis, Beta, Ta, Tf, Tp, Tv, Te, Tz, M, Rv, Ro, Reward, BetFee, SuggestionFee, Compensation, V, W, E, PerGroup, VoteChange, Valuation, AuctionSort, Meritocracy, Merit2All, InitialBalance, InitialVolume) 
+                                     Values (@Treatment, @Parent, @Constitution, @Hyp, @Beta, @Ta, @Tf, @Tp, @Tv, @Te, @Tz, @M, @Rv, @Ro, @Reward, @BetFee, @SuggestionFee, @Compensation, @V, @W, @E, @PerGroup, @VoteChange, @Valuation, @AuctionSort, @Meritocracy, @Merit2All, @InitialBalance, @InitialVolume)";
             #region Execute
 
             SqlCommand com = new SqlCommand(query, conn);
@@ -389,7 +393,9 @@ namespace ProcessTree
             com.Parameters.AddWithValue("@Parent", Math.Max(Treat.SelectedIndex,0));
 
             com.Parameters.AddWithValue("@Constitution", Constitution.Text.Trim().Replace("\n", "<br>").Replace("{", "<b>").Replace("}", "</b>").Replace("[[", "<a href=\"https://").Replace("%%", "/\" target = \"_blank\">").Replace("]]", "</a>"));
-            com.Parameters.AddWithValue("@Hyp", Hypothesis.Text.Trim());       
+            com.Parameters.AddWithValue("@Hyp", Hypothesis.Text.Trim());
+
+            com.Parameters.AddWithValue("@Beta", Beta.Text);
 
             com.Parameters.AddWithValue("@Ta", Ta.Text);
             com.Parameters.AddWithValue("@Tf", Tf.Text);
@@ -628,8 +634,6 @@ namespace ProcessTree
             }
             #endregion
 
-          
-
             query = "delete from Rating where Treatment = " + Treat.SelectedValue + " and Group# > " + Count;
             #region Execute
             com = new SqlCommand(query, conn);
@@ -662,7 +666,6 @@ namespace ProcessTree
                 return;
             }
             #endregion
-
 
             query = "delete from Offers where Treatment = " + Treat.SelectedValue + " and Group# > " + Count;
             #region Execute
@@ -762,7 +765,7 @@ namespace ProcessTree
 
             #endregion
 
-            query = @"update Treatments set Constitution = @Constitution , Hypothesis = @Hyp , 
+            query = @"update Treatments set Constitution = @Constitution , Hypothesis = @Hyp , Beta = @Beta
 Ta = @Ta , Tf = @Tf , Tp = @Tp , Tv = @Tv , Te = @Te , Tz = @Tz , M = @M , Rv = @Rv , Ro = @Ro , Reward = @Reward , BetFee = @BetFee , SuggestionFee = @SuggestionFee, Compensation = @Compensation , V = @V , W = @W , E = @E , 
 PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionSort = @AuctionSort, Meritocracy = @Meritocracy, Merit2All = @Merit2All , InitialBalance = @InitialBalance , InitialVolume = @InitialVolume where TID = "
 + Treat.SelectedValue;
@@ -783,7 +786,9 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
             //else
             //{
             //    com.Parameters.AddWithValue("@DT", Convert.ToDateTime(DT.Text));
-            //}                              
+            //}                            
+
+            com.Parameters.AddWithValue("@Beta", Beta.Text);
 
             com.Parameters.AddWithValue("@Tp", Tp.Text);
             com.Parameters.AddWithValue("@Tv", Tv.Text);
@@ -862,9 +867,10 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
             }
             #endregion
 
-            query = "update Versions set Artifact = @Artifact, HtmlArtifact = @HtmlArtifact, Time = '" + DateTime.Now + "' where (Treatment= " + Treat.SelectedValue + " and Period = 2 and Choice = 0)";
+            query = "update Versions set Artifact = @Artifact, HtmlArtifact = @HtmlArtifact, PerVal = @PerVal, Time = '" + DateTime.Now + "' where (Treatment= " + Treat.SelectedValue + " and Period = 2 and Choice = 0)";
             #region Execute
             com = new SqlCommand(query, conn);
+            com.Parameters.AddWithValue("@PerVal", InitialFund.Text.Trim());
             com.Parameters.AddWithValue("@Artifact", Artifact.Text.Trim());            
             com.Parameters.AddWithValue("@HtmlArtifact", Artifact.Text.Replace("\r", "").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;"));
 
@@ -877,6 +883,7 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
             #endregion
 
             Message.Text = "Saved at " + DateTime.Now.ToString(Global.TimeFormat);
+            com.Dispose();
             conn.Close();
 
             GroupList.DataBind();
@@ -884,7 +891,7 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
 
         protected void BtnActivate_Click(object sender, EventArgs e)
         {                 
-            if ((string)Session["User"] != "experimenter")            
+            if ((string)Session["User"] != "experimenter")
                 Response.Redirect("~/Default.aspx");
     
             if (Treat.SelectedIndex < 0)
@@ -929,8 +936,10 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
 
             #endregion
 
-            Message.Text = "Activated at " + DateTime.Now.ToString(Global.TimeFormat);            
+            Message.Text = "Activated at " + DateTime.Now.ToString(Global.TimeFormat);
             BtnActivate.Enabled = false;
+
+            com.Dispose();
             conn.Close();
             GroupList.DataBind();
         }

@@ -307,19 +307,23 @@ namespace ProcessTree
             int M = (int)Treatment["M"];
             short Valuation = (short) Treatment["Valuation"];
 
-            float Reward = (float)Treatment["Reward"];
-            float Rv = (float)Treatment["Rv"];
-            float Ro = (float)Treatment["Ro"];
+            float Beta = (float)Treatment["Beta"];
 
-            float Te = (float)Treatment["Te"];
+            //float Reward = (float)Treatment["Reward"];
+            //float Rv = (float)Treatment["Rv"];
+            //float Ro = (float)Treatment["Ro"];
 
-            int W = (int)Treatment["W"];
-            int V = (int)Treatment["V"];
-            short Meritocracy = (Treatment["Meritocracy"].Equals(DBNull.Value) || (short)Treatment["Meritocracy"] > 3) ? (short)0 : (short)Treatment["Meritocracy"];
-            bool Merit2All = Treatment["Merit2All"].Equals(true);
-            
+            //float Te = (float)Treatment["Te"];
+
+            //int W = (int)Treatment["W"];
+            //int V = (int)Treatment["V"];
+            //short Meritocracy = (Treatment["Meritocracy"].Equals(DBNull.Value) || (short)Treatment["Meritocracy"] > 3) ? (short)0 : (short)Treatment["Meritocracy"];
+            //bool Merit2All = Treatment["Merit2All"].Equals(true);
+
             com.Dispose();         
             Treatment.Close();
+
+            float Performance = 1;
 
             //************************************************
 
@@ -338,31 +342,32 @@ namespace ProcessTree
                     EmailAdmin("Error 340: Global.Refresh", "Treatment=" + Treat + " & Period=" + Period + " & DeadLine=" + DeadLine);
 
                 query = "DELETE FROM Versions WHERE Treatment = @Treat AND Group# = @Group AND Period > 2 AND Choice = 0";
+                #region Execute
                 com = new SqlCommand(query, conn);
                 com.Parameters.AddWithValue("@Treat", Treat);
                 com.Parameters.AddWithValue("@Group", Group);
                 if (com.ExecuteNonQuery() < 0)
-                    EmailAdmin("Error 547: Global.Refresh", "Treatment=" + Treat);
+                    Global.EmailAdmin("Error 547: Global.Refresh", "Treatment=" + Treat);
+                #endregion
+                //query = "SELECT HtmlArtifact FROM Versions WHERE Treatment = @Treat AND Group# = @Group AND Period = 2 AND Choice = 0";                
+                //com = new SqlCommand(query, conn);
+                //com.Parameters.AddWithValue("@Treat", Treat);
+                //com.Parameters.AddWithValue("@Group", Group);
+                //object HtmlObj = com.ExecuteScalar();
+                //if (HtmlObj == null)
+                //{
+                //    EmailAdmin("Error 326: Global.Refresh", "Period = " + Period + " <br> Treatment = " + Treat);
+                //    // string HtmlArtifact = Artifact.ToString().Replace("\r", "").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                //    query = "UPDATE Versions SET Artifact = @Artifact, HtmlArtifact = @HtmlArtifact WHERE Treatment = " + Treat + " AND Group# = " + Group + " AND Period = 2 AND Choice = 0";
 
-                query = "SELECT HtmlArtifact FROM Versions WHERE Treatment = @Treat AND Group# = @Group AND Period = 2 AND Choice = 0";                
-                com = new SqlCommand(query, conn);
-                com.Parameters.AddWithValue("@Treat", Treat);
-                com.Parameters.AddWithValue("@Group", Group);
-                object HtmlObj = com.ExecuteScalar();
-                if (HtmlObj == null)
-                {
-                    EmailAdmin("Error 326: Global.Refresh", "Period = " + Period + " <br> Treatment = " + Treat);
-                    // string HtmlArtifact = Artifact.ToString().Replace("\r", "").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-                    query = "UPDATE Versions SET Artifact = @Artifact, HtmlArtifact = @HtmlArtifact WHERE Treatment = " + Treat + " AND Group# = " + Group + " AND Period = 2 AND Choice = 0";
-                
-                    com = new SqlCommand(query, conn);
-                    com.Parameters.AddWithValue("@Artifact", "There is an error in the database. Please contact Admin: Law.Economist@Gmail.com.");
-                    com.Parameters.AddWithValue("@HtmlArtifact", "There is an error in the <strong>database</strong>. <br> Please contact Admin: Law.Economist@Gmail.com.");
+                //    com = new SqlCommand(query, conn);
+                //    com.Parameters.AddWithValue("@Artifact", "There is an error in the database. Please contact Admin: Law.Economist@Gmail.com.");
+                //    com.Parameters.AddWithValue("@HtmlArtifact", "There is an error in the <strong>database</strong>. <br> Please contact Admin: Law.Economist@Gmail.com.");
 
-                    if (com.ExecuteNonQuery() != 1)
-                        EmailAdmin("Error 335: Global.Refresh", "Treatment=" + Treat + " & Period=" + Period );
-                }
-                com.Dispose();
+                //    if (com.ExecuteNonQuery() != 1)
+                //        EmailAdmin("Error 335: Global.Refresh", "Treatment=" + Treat + " & Period=" + Period );
+                //}
+                //com.Dispose();
 
                 // Invitation Emails
                 /*
@@ -385,6 +390,18 @@ namespace ProcessTree
 
                 User.Close();
                 */
+
+
+
+                // Parallel Bonding
+
+                query = "UPDATE Groups SET A = 1 , B = (SELECT Beta FROM Treatments WHERE TID = @Treat) WHERE Treatment = @Treat AND Group# = @Group";
+                com = new SqlCommand(query, conn);
+                com.Parameters.AddWithValue("@Treat", Treat);
+                com.Parameters.AddWithValue("@Group", Group);
+                if (com.ExecuteNonQuery() < 1)
+                    EmailAdmin("Error 399: Global.Refresh", "Treatment=" + Treat + " & Period=" + Period + " & DeadLine=" + DeadLine);
+
                 Period = 1;   // Switch to Suggestion Period
 
                 if (M == 0)
@@ -411,12 +428,12 @@ namespace ProcessTree
             {
                 int Winner;
                 string Proposer, Artifact, NewCash, HtmlNewCash;
-                float OldValue, NewValue, Performance;
+                float OldValue, NewValue, Score = 0;
                 //int MinVote = 0;
                 //string ProposerName;
                 //float Balance, MaxVote;
 
-                DataTable VersionVotes = null;
+                DataTable VersionVotes;
 
                 if (Valuation == 12) // Parallel Bonding
                 {
@@ -439,11 +456,11 @@ namespace ProcessTree
 
                     Winner = (int)DataReader["Choice"];
 
-                    //MaxVote = (float) DataReader["Score"];                   
+                    Score= (float) DataReader["Score"];                   
                     Proposer = (string)DataReader["Proposer"];
                     Artifact = (string)DataReader["Artifact"];
                     Performance = (float)DataReader["PerVal"];
-
+  
                     com.Dispose();
                     DataReader.Close();
                 }
@@ -575,7 +592,7 @@ namespace ProcessTree
                 
                 // Insert the winner to the next round (Period +2)
                 query = @"INSERT INTO Versions(Treatment, Group#, Period , Choice , Artifact , HtmlArtifact, Proposer, Time, Score, PerVal) values(
-                     @Treatment, @Group, @Period, 0, @Artifact, @HtmlArtifact, @Proposer, GETDATE(), 0, @PerVal)";
+                     @Treatment, @Group, @Period, 0, @Artifact, @HtmlArtifact, @Proposer, GETDATE(), @Score, @PerVal)";
                 com = new SqlCommand(query, conn);
                 com.Parameters.AddWithValue("@Treatment", Treat);
                 com.Parameters.AddWithValue("@Group", Group);
@@ -583,7 +600,7 @@ namespace ProcessTree
                 com.Parameters.AddWithValue("@Artifact", NewCash);
                 com.Parameters.AddWithValue("@HtmlArtifact", HtmlNewCash);
                 com.Parameters.AddWithValue("@Proposer", Proposer);
-                //com.Parameters.AddWithValue("@Score", MaxVote);
+                com.Parameters.AddWithValue("@Score", Score);
                 com.Parameters.AddWithValue("@PerVal", NewValue);
 
                 //bool NoDoubleInsert = true;
@@ -1169,9 +1186,10 @@ WHERE Treatment = @Treat AND Group# = @Group";
 
             // Update to the next Period
 
-            query = "update Groups set [Period]=" + Period + " , DT= '" + DT + "' where Treatment=" + Treat + " and Group#=" + Group;
+            query = "update Groups set [Period]=" + Period + " , DT= '" + DT + "' , A *= @Performance , B *= @Performance where Treatment=" + Treat + " and Group#=" + Group;
 
             com = new SqlCommand(query, conn);
+            com.Parameters.AddWithValue("@Performance", Performance);
 
             if (com.ExecuteNonQuery() != 1)
             {

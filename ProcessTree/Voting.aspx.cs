@@ -256,7 +256,7 @@ namespace ProcessTree
                 }
                 Session["Choice"] = ParallelMarket.SelectedValue;
                 Session["BuySell"] = null;
-                Session["V"] = null;
+                Session["Message"] = null;
                 Response.Redirect("~/Bonding.aspx");
                 // Response.Write("<script>window.open('/Trading.aspx','_blank');</script>");
                 // "<a href=\"/Trading.aspx\" target=\"_blank\">Goto Exchange</a>";
@@ -271,7 +271,7 @@ namespace ProcessTree
                 }
                 Session["Choice"] = ParallelMarket.SelectedValue;                
                 Session["BuySell"] = null;
-                Session["V"] = null;
+                Session["Message"] = null;
                 Response.Redirect("~/Trading.aspx");
                 // Response.Write("<script>window.open('/Trading.aspx','_blank');</script>");
                 // "<a href=\"/Trading.aspx\" target=\"_blank\">Goto Exchange</a>";

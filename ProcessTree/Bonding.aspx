@@ -4,9 +4,6 @@
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <script>
-        import io from 'socket.io-client';
-    </script>
 <head runat="server">
     <title>Bonding</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
@@ -118,13 +115,11 @@
             <tr>
 
                 <td class="auto-style3" colspan="2">
-                    <div class="text-center">
+                    <div class="text-left">
 
-                    <asp:RadioButtonList ID="RadioOrder" ClientIDMode="Static" runat="server" RepeatDirection="Horizontal" onclick="javascript: RadioClick();"
-                        BorderStyle="Ridge" BorderWidth="3px" Font-Bold="True" TabIndex="20" BackColor="pink" Height="66px" CellPadding="5" CellSpacing="5" Font-Size="Large" Width="50%">
-                        <asp:ListItem>Buy</asp:ListItem>
-                        <asp:ListItem Selected="True">Sell</asp:ListItem>
-                    </asp:RadioButtonList>
+                    <span class="auto-style10"><em>Refresh to update numbers:&nbsp; </em></span><asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" CssClass="auto-style13" Height="44px" Width="139px" />
+    
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </div>
 
                 </td>
@@ -132,7 +127,12 @@
                 <td class="text-center" colspan="2">
                     <%--OnSelectedIndexChanged="javascript: RadioClick();"--%> 
 
-                    <input type="button" id="AutoFill" onclick="AutoFill_Click()" value="Suggest Numbers" style="background-color: pink" class="auto-style4" /></td>
+                    <asp:RadioButtonList ID="RadioOrder" ClientIDMode="Static" runat="server" RepeatDirection="Horizontal" onclick="javascript: RadioClick();"
+                        BorderStyle="Ridge" BorderWidth="3px" Font-Bold="True" TabIndex="20" BackColor="pink" Height="66px" CellPadding="5" CellSpacing="5" Font-Size="Large" Width="50%">
+                        <asp:ListItem>Buy</asp:ListItem>
+                        <asp:ListItem Selected="True">Sell</asp:ListItem>
+                    </asp:RadioButtonList>
+                    </td>
 
                 <td class="auto-style56">&nbsp;</td>
             </tr>
@@ -195,11 +195,9 @@
             <tr>
 
                 <td class="auto-style3" colspan="2">    
-                    <span class="auto-style10"><em>Refresh to update numbers:&nbsp; </em></span><asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" CssClass="auto-style13" Height="44px" Width="139px" />
-    
-                </td>
+                    &nbsp;</td>
 
-                <td class="auto-style61" colspan="2">&nbsp;</td>
+                <td class="text-right" colspan="2">&nbsp;</td>
 
                 <td class="auto-style56">&nbsp;</td>
             </tr>
@@ -282,7 +280,9 @@
     
                 </td>
 
-                <td class="text-center" colspan="2">&nbsp;&nbsp;
+                <td class="text-center" colspan="2"> 
+
+                    <input type="button" id="AutoFill" onclick="AutoFill_Click()" value="Suggest Numbers" style="background-color: pink" class="auto-style4" />&nbsp;&nbsp;
                     <asp:Button ID="PlaceOrder" ClientIDMode="Static" runat="server" Font-Bold="True" OnClick="PlaceOrder_Click" TabIndex="60" Text="Sell Shares" CssClass="auto-style21" Font-Size="Medium" BackColor="pink" ForeColor="Black" />
                 </td>
 
@@ -370,6 +370,7 @@
     </form>
 
     <script>
+
                     //window.setInterval(PullPrice, 500);
 
                     //function PullPrice() {
@@ -391,6 +392,17 @@
                     //        });
                     //    }
 
+        // fetch (url )
+
+
+
+        //socket = socket.io(':3001');
+        //socket.on("New shares", function (msg) {
+        //    StartShares.innerHTML = msg.StartShares;
+        //    DShare2All();
+        //})
+        
+
         DShare2All();
 
         function DShare2All() {
@@ -411,7 +423,7 @@
 
             if (SelectedRadio == "Buy") { // Buy
                 shares2 = shares1 + dshare;
-                dfund = Math.round(dshare * (.5*a*(shares1 + shares2)+b));
+                dfund = dshare * (.5*a*(shares1 + shares2)+b);
 
                 const avfund = Number(AvFund.innerHTML);
                 if (dfund > avfund) {
@@ -425,7 +437,7 @@
                     Message.innerHTML = ("There are only " + shares1 + " shares!  ");
                 }
                 shares2 = shares1 - dshare;
-                dfund = Math.round(dshare * (.5 * a * (shares1 + shares2) + b));
+                dfund = dshare * (.5 * a * (shares1 + shares2) + b);
 
                 const avshare = Number(AvShare.innerHTML);
                 if (dshare > avshare) {
@@ -564,5 +576,6 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
 </body>
 </html>
