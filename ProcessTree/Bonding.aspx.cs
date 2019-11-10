@@ -85,6 +85,7 @@ namespace ProcessTree
 
             User.Close();
 
+
             // Version Content
             query = "select * from Versions where Treatment = " + Session["Treat"] + " and Group# = " + Session["Group"] + " and [Period] = " + Period + " and Choice = " + Session["Choice"];
             com = new SqlCommand(query, conn);
@@ -103,11 +104,31 @@ namespace ProcessTree
             float shares1 = (float)VersionData["Score"];
             StartShares.Text = shares1.ToString("N3");
 
+            com.Dispose();
+            VersionData.Close();
+
             // The bonding curve function:
             //float price1 = shares1/100;
             //StartPrice.Text = (price1==0 ? "0 (It will rise as you buy shares)": price1.ToString("N2"));
 
-            VersionData.Close();
+            // The function(A and B):
+            query = "select * from Groups where Treatment = " + Session["Treat"] + " and Group# = " + Session["Group"];
+            com = new SqlCommand(query, conn);
+            SqlDataReader GroupData = com.ExecuteReader();
+            if (!GroupData.Read())
+            {
+                Version.Text = "Error: Please take a screenshot and contact the admin: Law.Economist@Gmail.com!";
+                Global.EmailAdmin("Error 121: Bonding", "UserID = " + Session["User"] + " & Period = " + Session["Period"] + " & Choice = " + Session["Choice"]);
+                conn.Close();
+                return;
+            }
+
+            Atxt.Text = GroupData["A"].ToString();
+            Btxt.Text = GroupData["B"].ToString();
+
+            com.Dispose();
+            GroupData.Close();
+
 
             // Person's shares for this choice:
             query = "SELECT Volume, BalanceConfirm, BalanceVoid FROM Shares WHERE [Owner] = @User AND Treatment = @Treat AND [Group#] = @Group AND [Period] = @Period AND Choice = @Choice";
@@ -240,11 +261,13 @@ namespace ProcessTree
 
             Session["Message"] = "Your order did not go through!";
 
-            float shares1, shares2, dshare, dfund, avfund, avshare;
+            float A, B, shares1, shares2, dshare, dfund, avfund, avshare;
 
             try
             {
                 shares1 = float.Parse(StartShares.Text, CultureInfo.InvariantCulture.NumberFormat);
+                A = float.Parse(Atxt.Text, CultureInfo.InvariantCulture.NumberFormat);
+                B = float.Parse(Btxt.Text, CultureInfo.InvariantCulture.NumberFormat);
             }
             catch
             {
@@ -300,8 +323,8 @@ namespace ProcessTree
                     DeltaFund.Focus();
                 }
                 
-                float p1 = (a * shares1 + b);
-                shares2 = (-b + (float)Math.Sqrt(b * b + p1 * p1 + 2 * a * dfund)) / a ;
+                float p1 = (A * shares1 + B);
+                shares2 = (-B + (float)Math.Sqrt(B * B + p1 * p1 + 2 * A * dfund)) / A ;
 
                 dshare = shares2 - shares1;
 
@@ -391,7 +414,6 @@ namespace ProcessTree
             Session["Message"] = (RadioOrder.SelectedIndex == 0? "You bought " : "You sold ") + dshare + " shares.";
 
             //push new X to the front end of every client.
-
 
             Response.Redirect("~/Bonding.aspx");
         }
