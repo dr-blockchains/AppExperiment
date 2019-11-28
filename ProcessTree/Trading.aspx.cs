@@ -57,7 +57,7 @@ namespace ProcessTree
 
             if (IsPostBack) return;
 
-            PeriodChoice.Text = "Shares of the mutual fund ASSUMING it " + " <i>" +
+            PeriodChoice.Text = "Shares of the firm ASSUMING it " + " <i>" +
     (Session["Choice"].ToString() == "0" ? "holds cash" : "invests on Portfolio " + Session["Choice"].ToString()) +
     "</i> in month " + ((int)Session["Period"] / 2).ToString();
 

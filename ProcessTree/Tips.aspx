@@ -51,7 +51,7 @@
             <p style="text-align: left" class="auto-style12">Perfromance of one Portfolio (One Choice):</p>                            
             <br class="auto-style10" />
             <p style="text-align: left">
-                <span class="auto-style10"><em>Example: If on Jan 1</em></span><sup><span class="auto-style10"><em>st</em></span></sup><span class="auto-style10"><em>  the mutual fund invests 30% of its cash on coin A and 70% on coin B, then on Feb 1</em></span><sup><span class="auto-style10"><em>st</em></span></sup><span class="auto-style10"><em> this is the amount it will have:
+                <span class="auto-style10"><em>Example: If on Jan 1</em></span><sup><span class="auto-style10"><em>st</em></span></sup><span class="auto-style10"><em>  the firm invests 30% of its cash on coin A and 70% on coin B, then on Feb 1</em></span><sup><span class="auto-style10"><em>st</em></span></sup><span class="auto-style10"><em> this is the amount it will have:
             </em>
             </span>
             </p>

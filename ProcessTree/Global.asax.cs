@@ -274,6 +274,10 @@ namespace ProcessTree
 
             DT = (DateTime)TreatGroup["DT"];
 
+            float A = (float)TreatGroup["A"], B = (float)TreatGroup["B"];
+
+            TreatGroup.Close();
+
             if (DateTime.Now < DT && Period != 0)
             {
                 com.Dispose();
@@ -282,8 +286,6 @@ namespace ProcessTree
             }
 
             DT = DateTime.MaxValue;
-
-            TreatGroup.Close();
 
             query = "select * from Treatments where TID = " + Treat;
             com = new SqlCommand(query, conn);
@@ -429,13 +431,11 @@ namespace ProcessTree
                 int Winner;
                 string Proposer, Artifact, NewCash, HtmlNewCash;
                 float OldValue, NewValue, Score = 0;
+                DataTable VersionVotes;
                 //int MinVote = 0;
                 //string ProposerName;
                 //float Balance, MaxVote;
-
-                DataTable VersionVotes;
-
-                if (Valuation == 12) // Parallel Bonding
+                if (Valuation == 12) // Parallel Primary
                 {
                     query = @"SELECT * FROM Versions
                             WHERE Treatment = @Treatment AND [Group#] = @Group AND Period = @Period
@@ -455,12 +455,11 @@ namespace ProcessTree
                     }
 
                     Winner = (int)DataReader["Choice"];
-
                     Score= (float) DataReader["Score"];                   
                     Proposer = (string)DataReader["Proposer"];
                     Artifact = (string)DataReader["Artifact"];
-                    Performance = (float)DataReader["PerVal"];
-  
+                    Performance = (Winner==0?1:(float)DataReader["PerVal"]);
+                                                         
                     com.Dispose();
                     DataReader.Close();
                 }
@@ -546,26 +545,30 @@ namespace ProcessTree
                     Performance = (float)VersionVotes.Rows[0][4]; // Version["PerVal"];
                 }
 
-                if (Winner == 0)
-                {
-                    OldValue = Performance;
-                    NewValue = OldValue;
-                    Performance = 1;                    
-                }
-                else
-                {                
-                    query = "SELECT PerVal FROM Versions WHERE Versions.Treatment = @Treatment AND Versions.[Group#] = @Group AND Versions.Period = @Period AND Choice = 0";
+                OldValue = .5f * A * Score * Score + B * Score;
+                NewValue = OldValue * Performance;
+                A *= Performance;
+                B *= Performance;
+                // Only for voting or parallel (secondary) markets (Valutation < 12) 
+                //if (Winner == 0)
+                //{
+                //    OldValue = Performance;
+                //    NewValue = OldValue;
+                //    Performance = 1;                    
+                //}
+                //else
+                //{                
+                //    query = "SELECT PerVal FROM Versions WHERE Versions.Treatment = @Treatment AND Versions.[Group#] = @Group AND Versions.Period = @Period AND Choice = 0";
 
-                    com = new SqlCommand(query, conn);
-                    com.Parameters.AddWithValue("@Treatment", Treat);
-                    com.Parameters.AddWithValue("@Group", Group);
-                    com.Parameters.AddWithValue("@Period", Period);
+                //    com = new SqlCommand(query, conn);
+                //    com.Parameters.AddWithValue("@Treatment", Treat);
+                //    com.Parameters.AddWithValue("@Group", Group);
+                //    com.Parameters.AddWithValue("@Period", Period);
 
-                    OldValue = (float)(com.ExecuteScalar()??1.0f); // get the value in the previous round choice 0
-                    NewValue = OldValue * Performance;
-                    com.Dispose();
-                }                
-
+                //    OldValue = (float)(com.ExecuteScalar()??1.0f); // get the value in the previous round choice 0
+                //    NewValue = OldValue * Performance;
+                //    com.Dispose();
+                //}
                 string RoundDate;
                 switch (Period)
                 {
@@ -583,12 +586,12 @@ namespace ProcessTree
                 NewCash = "$" + NewValue.ToString("N2") + " in cash ";
                 HtmlNewCash = NewCash + "<br><hr>" +
                     "<strong>Calculation:</strong><br><br><i>" +
-                    "The investment choice selected on " + RoundDate + ": <br><br>" +
+                    "The winnig choice on " + RoundDate + ": <br><br>" +
                     Artifact.Replace("\r", "").Replace("\n", "<br>") + "<br><br>" +
                     "Its performance was " + (Winner == 0 ? "1" : Performance.ToString("N6")) + "<br>" +
-                    "Prior value of the mutual fund (on " + RoundDate + ") was $" + OldValue.ToString("N2") + "<br>" +
-                    "New Value = Prior Value * Performance = $" + NewValue.ToString("N2") + "<i>";
-                    //+ "<br> Now each share is worth $" + (NewValue / 1000000.0).ToString("N5") ;
+                    "Prior fund invested by the firm (on " + RoundDate + ") was $" + OldValue.ToString("N2") + "<br>" +
+                    "New fund = Prior fund * Performance = $" + NewValue.ToString("N2") + "<i><br>" +
+                    "New price function is: Price = " + A.ToString("N3") + " * S + " + B.ToString("N3");
                 
                 // Insert the winner to the next round (Period +2)
                 query = @"INSERT INTO Versions(Treatment, Group#, Period , Choice , Artifact , HtmlArtifact, Proposer, Time, Score, PerVal) values(
@@ -602,8 +605,6 @@ namespace ProcessTree
                 com.Parameters.AddWithValue("@Proposer", Proposer);
                 com.Parameters.AddWithValue("@Score", Score);
                 com.Parameters.AddWithValue("@PerVal", NewValue);
-
-                //bool NoDoubleInsert = true;
 
                 try
                 {

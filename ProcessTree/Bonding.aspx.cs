@@ -57,7 +57,7 @@ namespace ProcessTree
             if (IsPostBack) return;
             ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('Not Postback');", true);
 
-            PeriodChoice.Text = "Shares of the mutual fund ASSUMING it " + " <i>" +
+            PeriodChoice.Text = "Shares of the firm ASSUMING it " + " <i>" +
     (Session["Choice"].ToString() == "0" ? "holds cash" : "invests on Portfolio " + Session["Choice"].ToString()) +
     "</i> in month " + ((int)Session["Period"] / 2).ToString();
 
@@ -413,7 +413,7 @@ namespace ProcessTree
             //EndShares.Text = shares2.ToString("N2");
             Session["Message"] = (RadioOrder.SelectedIndex == 0? "You bought " : "You sold ") + dshare + " shares.";
 
-            //push new X to the front end of every client.
+            //push new shares1 +- dshare to the front end of every client.
 
             Response.Redirect("~/Bonding.aspx");
         }

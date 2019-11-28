@@ -22,7 +22,7 @@
 
         .auto-style4 {
             width: 226px;
-            font-size: small;22
+            font-size: small;
         }
 
         .auto-style5 {
@@ -186,9 +186,7 @@
 
                 <td class="auto-style56">
 
-                      <div id="LastChange" hidden>
-    S
-  </div>
+                      <div id="LastChange" hidden>S</div>
                 </td>
             </tr>
 
@@ -247,8 +245,8 @@
 
             <tr>
 
-                <td class="auto-style12" colspan="2"><em>Share Price = (<asp:Label ID="Atxt" ClientIDMode="Static" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
-                    )*(Shares Outstanding) + (<asp:Label ID="Btxt" ClientIDMode="Static" runat="server" BackColor="Yellow" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
+                <td class="auto-style12" colspan="2"><em>Share Price = (<asp:Label ID="Atxt" ClientIDMode="Static" runat="server" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
+                    )*(Shares Outstanding) + (<asp:Label ID="Btxt" ClientIDMode="Static" runat="server" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
                     )</em></td>
 
                 <td class="auto-style61" colspan="2">
@@ -396,11 +394,11 @@
 
 
 
-        //socket = socket.io(':3001');
-        //socket.on("New shares", function (msg) {
-        //    StartShares.innerHTML = msg.StartShares;
-        //    DShare2All();
-        //})
+        socket = socket.io(':3001');
+        socket.on("New shares", function (msg) {
+            StartShares.innerHTML = msg.StartShares;
+            DShare2All();
+        })
         
 
         DShare2All();
@@ -460,7 +458,7 @@
 
             const p1 = (a * shares1 + b);
 
-            StartPrice.innerHTML = p1.toFixed(2));
+            StartPrice.innerHTML = p1.toFixed(2);
 
             dfund = Number(DeltaFund.value);
             if (dfund < 0 || dfund > 1000) {
