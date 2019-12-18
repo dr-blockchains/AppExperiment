@@ -20,11 +20,6 @@
             width: 46%
         }
 
-        .auto-style4 {
-            width: 226px;
-            font-size: small;
-        }
-
         .auto-style5 {
             width: 46%;
             text-align: right;
@@ -38,7 +33,7 @@
             border: solid #ccc 2px;
             border-radius: 5px;
             padding: 3px;
-            text-align: right;
+            text-align: left;
         }
         .auto-style7 {
             width: 50%;
@@ -51,9 +46,6 @@
         .auto-style9 {
             font-size: medium;
         }
-        .auto-style10 {
-            color: #FF0000;
-        }
         .auto-style11 {
             width: 46%;
             text-align: left;
@@ -62,10 +54,17 @@
             width: 46%;
             font-size: small;
         }
-        .auto-style13 {
+        .newStyle1 {
             font-size: small;
         }
-    </style>
+        .auto-style13 {
+            height: 50px;
+        }
+        .auto-style14 {
+            text-align: left;
+            height: 50px;
+        }
+        </style>
 </head>
 <body>
     <form id="Bonding" runat="server" class="auto-style41">
@@ -114,24 +113,22 @@
             </tr>
             <tr>
 
-                <td class="auto-style3" colspan="2">
-                    <div class="text-left">
+                <td class="newStyle1" colspan="2">
+                    <div class="text-center">
 
-                    <span class="auto-style10"><em>Refresh to update numbers:&nbsp; </em></span><asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" CssClass="auto-style13" Height="44px" Width="139px" />
-    
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:RadioButtonList ID="RadioOrder" ClientIDMode="Static" runat="server" RepeatDirection="Horizontal" onclick="javascript: RadioClick();"
+                        BorderStyle="Ridge" BorderWidth="3px" Font-Bold="True" TabIndex="20" BackColor="pink" Height="48px" CellPadding="5" CellSpacing="5" Font-Size="Large" Width="60%">
+                        <asp:ListItem>Buy</asp:ListItem>
+                        <asp:ListItem Selected="True">Sell</asp:ListItem>
+                    </asp:RadioButtonList>
                     </div>
 
                 </td>
 
-                <td class="text-center" colspan="2">
-                    <%--OnSelectedIndexChanged="javascript: RadioClick();"--%> 
+                <td class="newStyle1" colspan="2">
+                    <p class="text-center">
 
-                    <asp:RadioButtonList ID="RadioOrder" ClientIDMode="Static" runat="server" RepeatDirection="Horizontal" onclick="javascript: RadioClick();"
-                        BorderStyle="Ridge" BorderWidth="3px" Font-Bold="True" TabIndex="20" BackColor="pink" Height="66px" CellPadding="5" CellSpacing="5" Font-Size="Large" Width="50%">
-                        <asp:ListItem>Buy</asp:ListItem>
-                        <asp:ListItem Selected="True">Sell</asp:ListItem>
-                    </asp:RadioButtonList>
+                    <input type="button" id="AutoFill" onclick="AutoFill_Click()" value="Suggest Numbers" style="background-color: pink" /></p>
                     </td>
 
                 <td class="auto-style56">&nbsp;</td>
@@ -217,7 +214,7 @@
 
                 <td class="auto-style61" colspan="2">
                     <span class="auto-style7">Target shares outstanding =&nbsp; </span>
-                    <asp:Label ID="EndShares" runat="server" BackColor="Yellow" TabIndex="40" Font-Bold="False" ReadOnly="True" CssClass="auto-style68" Style="font-size: medium" BorderColor="#FFCC00" BorderStyle="Solid" BorderWidth="3px" ClientIDMode="Static" Font-Size="Small"></asp:Label>
+                    <asp:Label ID="EndShares" runat="server" BackColor="Yellow" TabIndex="40" Font-Bold="False" ReadOnly="True" CssClass="auto-style68" Style="font-size: medium" BorderColor="#FFCC00" BorderStyle="Solid" BorderWidth="3px" ClientIDMode="Static" Font-Size="Small">NaN</asp:Label>
 
                 </td>
 
@@ -237,7 +234,7 @@
 
                 <td class="auto-style61" colspan="2">
                     <span class="auto-style7">Target share price = $ </span>
-                    <asp:Label ID="EndPrice" ClientIDMode="Static" runat="server" BackColor="Yellow" TabIndex="40" Font-Bold="False" ReadOnly="True" CssClass="auto-style68" Style="font-size: medium" BorderColor="#FFCC00" BorderStyle="Solid" BorderWidth="3px" Font-Size="Small"></asp:Label>
+                    <asp:Label ID="EndPrice" ClientIDMode="Static" runat="server" BackColor="Yellow" TabIndex="40" Font-Bold="False" ReadOnly="True" CssClass="auto-style68" Style="font-size: medium" BorderColor="#FFCC00" BorderStyle="Solid" BorderWidth="3px" Font-Size="Small">NaN</asp:Label>
                 </td>
 
                 <td class="auto-style56"></td>
@@ -252,7 +249,7 @@
                 <td class="auto-style61" colspan="2">
 
                     <span class="auto-style7">Average transaction price = $&nbsp;</span>
-                    <asp:Label ID="AveragePrice" ClientIDMode="Static" runat="server" BackColor="Yellow" TabIndex="40" Font-Bold="False" ReadOnly="True" CssClass="auto-style68" Style="font-size: medium" BorderColor="#FFCC00" BorderStyle="Solid" BorderWidth="3px" Font-Size="Small"></asp:Label>
+                    <asp:Label ID="AveragePrice" ClientIDMode="Static" runat="server" BackColor="Yellow" TabIndex="40" Font-Bold="False" ReadOnly="True" CssClass="auto-style68" Style="font-size: medium" BorderColor="#FFCC00" BorderStyle="Solid" BorderWidth="3px" Font-Size="Small">NaN</asp:Label>
 
                 </td>
 
@@ -263,7 +260,12 @@
 
                 <td class="auto-style3" colspan="2">
 
-                    &nbsp;</td>
+                    <p>
+
+                    <span class="newStyle1"><em>Refresh to update numbers:&nbsp;</em></span><asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" Height="43px" Width="110px" Font-Size="Small"/>
+    
+                        </p>
+                </td>
 
                 <td class="auto-style61" colspan="2">&nbsp;</td>
 
@@ -274,14 +276,12 @@
 
                 <td class="auto-style11" colspan="2">    
 
-                    <asp:Label ID="Message" ClientIDMode="Static" runat="server" Font-Bold="True" ForeColor="#993333" Font-Size="Medium" Height="63px" Style="font-size: medium; margin-bottom: 0px;" Font-Italic="True"></asp:Label>
-    
-                </td>
+                    &nbsp;</td>
 
                 <td class="text-center" colspan="2"> 
 
-                    <input type="button" id="AutoFill" onclick="AutoFill_Click()" value="Suggest Numbers" style="background-color: pink" class="auto-style4" />&nbsp;&nbsp;
-                    <asp:Button ID="PlaceOrder" ClientIDMode="Static" runat="server" Font-Bold="True" OnClick="PlaceOrder_Click" TabIndex="60" Text="Sell Shares" CssClass="auto-style21" Font-Size="Medium" BackColor="pink" ForeColor="Black" />
+                    &nbsp;&nbsp;
+                    <asp:Button ID="PlaceOrder" ClientIDMode="Static" runat="server" Font-Bold="True" OnClick="PlaceOrder_Click" TabIndex="60" Text="Sell Shares" CssClass="auto-style21" Font-Size="Large" BackColor="pink" ForeColor="Black" />
                 </td>
 
                 <td class="auto-style56">&nbsp;</td>
@@ -289,15 +289,19 @@
 
             <tr>
 
-                <td class="auto-style51" colspan="5">&nbsp;</td>
+                <td class="auto-style51" colspan="5">    
+
+                    <asp:Label ID="Message" ClientIDMode="Static" runat="server" Font-Bold="True" ForeColor="#993333" Font-Size="Medium" Height="63px" Style="font-size: medium; margin-bottom: 0px;" Font-Italic="True"></asp:Label>
+    
+                </td>
 
             </tr>
 
             <tr>
 
-                <td class="auto-style63">Transaction price history:</td>
+                <td class="auto-style13">Transaction price history:</td>
 
-                <td class="text-left" colspan="4"></td>
+                <td class="auto-style14" colspan="4">&nbsp;</td>
 
             </tr>
 
@@ -394,11 +398,11 @@
 
 
 
-        socket = socket.io(':3001');
-        socket.on("New shares", function (msg) {
-            StartShares.innerHTML = msg.StartShares;
-            DShare2All();
-        })
+        //socket = socket.io(':3001');
+        //socket.on("New shares", function (msg) {
+        //    StartShares.innerHTML = msg.StartShares;
+        //    DShare2All();
+        //})
         
 
         DShare2All();
@@ -421,7 +425,7 @@
 
             if (SelectedRadio == "Buy") { // Buy
                 shares2 = shares1 + dshare;
-                dfund = dshare * (.5*a*(shares1 + shares2)+b);
+                dfund = dshare * (a*(shares1 + shares2)/2+b);
 
                 const avfund = Number(AvFund.innerHTML);
                 if (dfund > avfund) {
@@ -435,7 +439,7 @@
                     Message.innerHTML = ("There are only " + shares1 + " shares!  ");
                 }
                 shares2 = shares1 - dshare;
-                dfund = dshare * (.5 * a * (shares1 + shares2) + b);
+                dfund = dshare * (a * (shares1 + shares2) /2  + b);
 
                 const avshare = Number(AvShare.innerHTML);
                 if (dshare > avshare) {
@@ -469,7 +473,7 @@
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
 
             if (SelectedRadio == "Buy") {
-                shares2 = (-b + Math.sqrt(b*b + p1*p1 + 2*a*dfund))/a;
+                shares2 = (-b + Math.sqrt(p1*p1 + 2*a*dfund))/a;
                 dshare = shares2 - shares1;
 
                 const avfund = Number(AvFund.innerHTML);
@@ -484,10 +488,10 @@
                 if (dfund > F1) {
                     dfund = F1;
                     DeltaFund.value = dfund;
-                    Message.innerHTML = ("There is only $" + dfund.toFixed(2) + " of total funds!  ");
+                    Message.innerHTML = ("There is only $" + F1.toFixed(2) + " of total funds!  ");
                 }
 
-                shares2 = (-b + Math.sqrt(b * b + p1 * p1 + 2 * a * dfund)) / a;                
+                shares2 = (-b + Math.sqrt(p1 * p1 - 2 * a * dfund)) / a;                
                 dshare = shares1 - shares2;
 
                 const avshare = Number(AvShare.innerHTML);

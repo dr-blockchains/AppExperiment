@@ -78,15 +78,6 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.Label TimerMessage;
 
         /// <summary>
-        /// BtnRefresh control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button BtnRefresh;
-
-        /// <summary>
         /// RadioOrder control.
         /// </summary>
         /// <remarks>
@@ -204,13 +195,13 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.Label AveragePrice;
 
         /// <summary>
-        /// Message control.
+        /// BtnRefresh control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Message;
+        protected global::System.Web.UI.WebControls.Button BtnRefresh;
 
         /// <summary>
         /// PlaceOrder control.
@@ -220,6 +211,15 @@ namespace ProcessTree
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button PlaceOrder;
+
+        /// <summary>
+        /// Message control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Message;
 
         /// <summary>
         /// Chart1 control.

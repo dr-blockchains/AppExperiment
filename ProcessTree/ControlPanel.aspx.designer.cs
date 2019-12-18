@@ -222,15 +222,6 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.TextBox M;
 
         /// <summary>
-        /// VoteChange control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox VoteChange;
-
-        /// <summary>
         /// W control.
         /// </summary>
         /// <remarks>
@@ -267,6 +258,15 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.TextBox V;
 
         /// <summary>
+        /// VoteChange control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox VoteChange;
+
+        /// <summary>
         /// Reward control.
         /// </summary>
         /// <remarks>
@@ -283,15 +283,6 @@ namespace ProcessTree
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList RadioMeritocracy;
-
-        /// <summary>
-        /// InitialFund control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox InitialFund;
 
         /// <summary>
         /// Rv control.
@@ -339,13 +330,13 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.RadioButtonList RadioMerit2All;
 
         /// <summary>
-        /// MaxValue control.
+        /// MaxPerformance control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox MaxValue;
+        protected global::System.Web.UI.WebControls.TextBox MaxPerformance;
 
         /// <summary>
         /// AuctionSort control.

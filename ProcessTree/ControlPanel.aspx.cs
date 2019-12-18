@@ -8,9 +8,9 @@ namespace ProcessTree
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            double PerPerson = Convert.ToSingle(InitialBalance.Text) + Convert.ToSingle(MaxValue.Text) / 1000000.0 * Convert.ToSingle(InitialVolume.Text);
-            WPerson.Text = PerPerson.ToString();
-            WGroup.Text = (PerPerson * Convert.ToSingle(PerGroup.Text)).ToString();
+            //double PerPerson = Convert.ToSingle(InitialBalance.Text) + Convert.ToSingle(MaxPerformance.Text) / 1000000.0 * Convert.ToSingle(InitialVolume.Text);
+            //WPerson.Text = PerPerson.ToString();
+            //WGroup.Text = (PerPerson * Convert.ToSingle(PerGroup.Text)).ToString();
 
             if (IsPostBack) return;
 
@@ -280,7 +280,7 @@ namespace ProcessTree
             else
             {
                 Artifact.Text = DataReader["Artifact"].ToString();   
-                InitialFund.Text = DataReader["PerVal"].ToString();
+                InitialVolume.Text = DataReader["PerVal"].ToString();
             }
 
             #endregion
@@ -765,7 +765,7 @@ namespace ProcessTree
 
             #endregion
 
-            query = @"update Treatments set Constitution = @Constitution , Hypothesis = @Hyp , Beta = @Beta
+            query = @"update Treatments set Constitution = @Constitution , Hypothesis = @Hyp , Beta = @Beta, 
 Ta = @Ta , Tf = @Tf , Tp = @Tp , Tv = @Tv , Te = @Te , Tz = @Tz , M = @M , Rv = @Rv , Ro = @Ro , Reward = @Reward , BetFee = @BetFee , SuggestionFee = @SuggestionFee, Compensation = @Compensation , V = @V , W = @W , E = @E , 
 PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionSort = @AuctionSort, Meritocracy = @Meritocracy, Merit2All = @Merit2All , InitialBalance = @InitialBalance , InitialVolume = @InitialVolume where TID = "
 + Treat.SelectedValue;
@@ -870,7 +870,7 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
             query = "update Versions set Artifact = @Artifact, HtmlArtifact = @HtmlArtifact, PerVal = @PerVal, Time = '" + DateTime.Now + "' where (Treatment= " + Treat.SelectedValue + " and Period = 2 and Choice = 0)";
             #region Execute
             com = new SqlCommand(query, conn);
-            com.Parameters.AddWithValue("@PerVal", InitialFund.Text.Trim());
+            com.Parameters.AddWithValue("@PerVal", InitialVolume.Text.Trim());
             com.Parameters.AddWithValue("@Artifact", Artifact.Text.Trim());            
             com.Parameters.AddWithValue("@HtmlArtifact", Artifact.Text.Replace("\r", "").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;"));
 

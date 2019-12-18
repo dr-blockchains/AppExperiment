@@ -588,7 +588,7 @@ namespace ProcessTree
                     "<strong>Calculation:</strong><br><br><i>" +
                     "The winnig choice on " + RoundDate + ": <br><br>" +
                     Artifact.Replace("\r", "").Replace("\n", "<br>") + "<br><br>" +
-                    "Its performance was " + (Winner == 0 ? "1" : Performance.ToString("N6")) + "<br>" +
+                    "Its performance was " +  Performance.ToString("N6") + "<br>" + //(Winner == 0 ? "1" : Performance.ToString("N6")) + "<br>" +
                     "Prior fund invested by the firm (on " + RoundDate + ") was $" + OldValue.ToString("N2") + "<br>" +
                     "New fund = Prior fund * Performance = $" + NewValue.ToString("N2") + "<i><br>" +
                     "New price function is: Price = " + A.ToString("N3") + " * S + " + B.ToString("N3");

@@ -77,6 +77,15 @@
             text-align: left;
         }
 
+        .auto-style72 {
+            text-align: right;
+            background-color: #FFFFFF;
+        }
+        .auto-style73 {
+            width: 32%;
+            background-color: #FFFFFF;
+        }
+
         </style>
     <link href="StyleSheet.css" rel="stylesheet" type="text/css" />    
 </head>
@@ -278,9 +287,7 @@
 
                     E&nbsp;&nbsp; =
                     <asp:TextBox ID="E" runat="server" required pattern ="[0-9]*\.?[0-9]+" Width="50px" TabIndex="140" BackColor="#CCCCCC" Enabled="False">0</asp:TextBox>
-                    &nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                
-                </td>
+                    &nbsp;%</td>
                 <td class="auto-style35">
 
             Span = (Ending - Starting) =
@@ -315,10 +322,7 @@
 
                     
 
-            <span>
-                    <asp:CheckBox ID="VoteChange" runat="server" Text="Vote Revisable" TabIndex="240" Font-Bold="False" TextAlign="Left" />
-                
-                  </td>
+                    &nbsp;</td>
             </tr>
              <tr>
                 <td class="auto-style70">
@@ -332,7 +336,7 @@
 
                     MR<strong> =&nbsp;
                     <asp:TextBox ID="MR" runat="server" BackColor="Aqua" Width="40px" TabIndex="190" required pattern ="[0-9]+" Enabled="False">1</asp:TextBox>
-                    &nbsp;</strong><span class="auto-style45">Prizes&nbsp;</span></td>
+                    &nbsp;</strong><span class="auto-style45">Prizes</span></td>
                 <td class="questions">
 
                     
@@ -351,16 +355,18 @@
 
                     
 
-                    &nbsp;</td><td class="questions">Reward = <asp:TextBox ID="Reward" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="300" BackColor="Lime" Width="40px">0</asp:TextBox>$</td></tr><tr>
+            <span>
+                    <asp:CheckBox ID="VoteChange" runat="server" Text="Vote Revisable" TabIndex="240" Font-Bold="False" TextAlign="Left" />
+                
+                  </td><td class="questions">Reward = <asp:TextBox ID="Reward" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="300" BackColor="Lime" Width="40px">0</asp:TextBox>$</td></tr><tr>
                 <td class="auto-style70" rowspan="3"><asp:RadioButtonList ID="RadioMeritocracy" runat="server" BackColor="#FF9900" Width="300px" AutoPostBack="True" BorderColor="#CC3300" BorderStyle="Solid" RepeatLayout="Flow" TabIndex="220">
                         <asp:ListItem Value="0">Only Constant V</asp:ListItem><asp:ListItem Value="1">Raw Vote(i)</asp:ListItem><asp:ListItem Value="2">Vote(i) - Vote(0)</asp:ListItem><asp:ListItem Value="3">Vote(i) - MinVote</asp:ListItem></asp:RadioButtonList></td>
-                <td class="auto-style65">Initial Fund = <asp:TextBox ID="InitialFund" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="123px" AutoPostBack="True">0</asp:TextBox>
-
-                    $</td><td class="questions">Rv = <asp:TextBox ID="Rv" runat="server" TabIndex="310" BackColor="Lime" Width="40px" required pattern ="[0-9]*\.?[0-9]+">0</asp:TextBox>
+                <td class="auto-style73">
+                    &nbsp;</td><td class="auto-style72">Rv = <asp:TextBox ID="Rv" runat="server" TabIndex="310" BackColor="Lime" Width="40px" required pattern ="[0-9]*\.?[0-9]+">0</asp:TextBox>
                     $</td>
             </tr>
              <tr>
-                <td class="auto-style65">Initial Balance = <asp:TextBox ID="InitialBalance" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="40px">0</asp:TextBox>
+                <td class="auto-style65">Initial Balance = <asp:TextBox ID="InitialBalance" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="85px">0</asp:TextBox>
                     $ / Person</td>
                 <td class="questions">
 
@@ -369,8 +375,9 @@
                     $</td>
             </tr>
               <tr>
-                <td class="auto-style65">Initial Volume = <asp:TextBox ID="InitialVolume" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="40px">0</asp:TextBox>
-                    Shares / Person</td>
+                <td class="auto-style65">Initial Fund = <asp:TextBox ID="InitialVolume" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="123px" AutoPostBack="True">0</asp:TextBox>
+
+                    $ / Group</td>
                 <td class="questions">
 
                     &nbsp;</td>
@@ -388,9 +395,9 @@
 
                     
 
-                    Maximum Value of Fund = <asp:TextBox ID="MaxValue" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="123px" AutoPostBack="True">100000</asp:TextBox>
+                    Maximum Performance = <asp:TextBox ID="MaxPerformance" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="123px" AutoPostBack="True">2.5</asp:TextBox>
 
-                    $</td>
+                    </td>
                 <td class="questions">
 
                     <span>
@@ -427,7 +434,15 @@
             </tr>
               <tr>
                 <td class="auto-style17" colspan="2">
+            <script>
+                a = Number(InitialBalance.value);
+                b = Number(InitialVolume.value);
+                p = Number(MaxPerformance.value);
 
+                WPerson.innerHTML = (a * p).toFixed(2);
+                WGroup.innerHTML = (b * p).toFixed(2);
+
+            </script>
             <strong>Instructions:</strong></td>
                 <td>
 

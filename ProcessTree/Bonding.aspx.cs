@@ -324,7 +324,7 @@ namespace ProcessTree
                 }
                 
                 float p1 = (A * shares1 + B);
-                shares2 = (-B + (float)Math.Sqrt(B * B + p1 * p1 + 2 * A * dfund)) / A ;
+                shares2 = (-B + (float)Math.Sqrt(p1 * p1 + 2 * A * dfund)) / A ;
 
                 dshare = shares2 - shares1;
 
