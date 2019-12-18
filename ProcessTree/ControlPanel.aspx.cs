@@ -1067,5 +1067,26 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
 
             conn.Close();
         }
+
+        protected void BtnReset_Click(object sender, EventArgs e)
+        {
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
+            conn.Open();
+
+            string query = "EXEC ResetGroup @Treatment";
+            SqlCommand com = new SqlCommand(query, conn);
+            com.Parameters.AddWithValue("@Treatment", Treat.SelectedIndex);
+            if (com.ExecuteNonQuery() < 1)
+            {
+                Global.EmailAdmin("Error 1080: Global.Refresh", "Treatment = " + Treat.SelectedIndex);
+                Message.Text = "Error (1080) with ResetGroup.";
+                conn.Close();
+                return;
+            }
+           
+            com.Dispose();
+
+            conn.Close();
+        }
     }
 }

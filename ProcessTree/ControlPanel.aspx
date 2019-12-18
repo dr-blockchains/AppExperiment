@@ -60,11 +60,7 @@
             width: 32%;
             text-align: left;
         }
-        .auto-style68 {
-            width: 32%;
-            background-color: #CCCCFF;
-        }
-
+        
         .auto-style69 {
             width: 32%;
             text-align: right;
@@ -77,13 +73,25 @@
             text-align: left;
         }
 
-        .auto-style72 {
-            text-align: right;
-            background-color: #FFFFFF;
-        }
         .auto-style73 {
             width: 32%;
             background-color: #FFFFFF;
+        }
+
+        .auto-style74 {
+            text-align: right;
+            background-color: #CCFFFF;
+        }
+        .auto-style75 {
+            width: 35%;
+            background-color: #FFCCFF;
+        }
+        .auto-style76 {
+            background-color: #CCFFFF;
+        }
+        .auto-style77 {
+            width: 32%;
+            background-color: #CCFFCC;
         }
 
         </style>
@@ -306,10 +314,10 @@
                     &nbsp;</td>
             </tr>
              <tr>
-                <td class="auto-style70">
+                <td class="auto-style75">
 
                     <strong>Meritocracy Schemes:</strong></td>
-                <td class="auto-style66">
+                <td class="auto-style77">
 
                     
 
@@ -318,26 +326,26 @@
                     M&nbsp;&nbsp; =&nbsp;
                     <asp:TextBox ID="M" runat="server" BackColor="Aqua" Width="40px" TabIndex="190" required pattern ="[0-9]+">1</asp:TextBox>
                     &nbsp;<span class="auto-style45">Suggestions</span></strong></td>
-                <td>
+                <td class="auto-style76">
 
                     
 
                     &nbsp;</td>
             </tr>
              <tr>
-                <td class="auto-style70">
+                <td class="auto-style75">
 
                     <span>W =
                     <asp:TextBox ID="W" runat="server" Width="40px" TabIndex="200" BackColor="#FF9900" OnTextChanged="W_TextChanged" AutoPostBack="True">0</asp:TextBox>
                 &nbsp;votes</td>
-                <td class="auto-style66">
+                <td class="auto-style77">
 
                     
 
                     MR<strong> =&nbsp;
                     <asp:TextBox ID="MR" runat="server" BackColor="Aqua" Width="40px" TabIndex="190" required pattern ="[0-9]+" Enabled="False">1</asp:TextBox>
                     &nbsp;</strong><span class="auto-style45">Prizes</span></td>
-                <td class="questions">
+                <td class="auto-style74">
 
                     
 
@@ -346,29 +354,29 @@
                     $</td>
             </tr>
              <tr>
-                <td class="auto-style70">
+                <td class="auto-style75">
 
                     <span>V&nbsp; =
                     <asp:TextBox ID="V" runat="server" Width="40px" TabIndex="210" BackColor="#FF9900">0</asp:TextBox>
                 &nbsp;votes</td>
-                <td class="auto-style66">
+                <td class="auto-style77">
 
                     
 
             <span>
                     <asp:CheckBox ID="VoteChange" runat="server" Text="Vote Revisable" TabIndex="240" Font-Bold="False" TextAlign="Left" />
                 
-                  </td><td class="questions">Reward = <asp:TextBox ID="Reward" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="300" BackColor="Lime" Width="40px">0</asp:TextBox>$</td></tr><tr>
-                <td class="auto-style70" rowspan="3"><asp:RadioButtonList ID="RadioMeritocracy" runat="server" BackColor="#FF9900" Width="300px" AutoPostBack="True" BorderColor="#CC3300" BorderStyle="Solid" RepeatLayout="Flow" TabIndex="220">
+                  </td><td class="auto-style74">Reward = <asp:TextBox ID="Reward" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="300" BackColor="Lime" Width="40px">0</asp:TextBox>$</td></tr><tr>
+                <td class="auto-style75" rowspan="3"><asp:RadioButtonList ID="RadioMeritocracy" runat="server" BackColor="#FF9900" Width="300px" AutoPostBack="True" BorderColor="#CC3300" BorderStyle="Solid" RepeatLayout="Flow" TabIndex="220">
                         <asp:ListItem Value="0">Only Constant V</asp:ListItem><asp:ListItem Value="1">Raw Vote(i)</asp:ListItem><asp:ListItem Value="2">Vote(i) - Vote(0)</asp:ListItem><asp:ListItem Value="3">Vote(i) - MinVote</asp:ListItem></asp:RadioButtonList></td>
                 <td class="auto-style73">
-                    &nbsp;</td><td class="auto-style72">Rv = <asp:TextBox ID="Rv" runat="server" TabIndex="310" BackColor="Lime" Width="40px" required pattern ="[0-9]*\.?[0-9]+">0</asp:TextBox>
+                    &nbsp;</td><td class="auto-style74">Rv = <asp:TextBox ID="Rv" runat="server" TabIndex="310" BackColor="Lime" Width="40px" required pattern ="[0-9]*\.?[0-9]+">0</asp:TextBox>
                     $</td>
             </tr>
              <tr>
                 <td class="auto-style65">Initial Balance = <asp:TextBox ID="InitialBalance" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="85px">0</asp:TextBox>
                     $ / Person</td>
-                <td class="questions">
+                <td class="auto-style74">
 
             Ro =
                     <asp:TextBox ID="Ro" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="320" BackColor="Lime" Width="40px">0</asp:TextBox>
@@ -378,12 +386,12 @@
                 <td class="auto-style65">Initial Fund = <asp:TextBox ID="InitialVolume" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="123px" AutoPostBack="True">0</asp:TextBox>
 
                     $ / Group</td>
-                <td class="questions">
+                <td class="auto-style74">
 
                     &nbsp;</td>
             </tr>
               <tr>
-                <td class="auto-style70" rowspan="2">
+                <td class="auto-style75" rowspan="2">
 
                     <asp:RadioButtonList ID="RadioMerit2All" runat="server" BackColor="#FF9900" Width="300px" AutoPostBack="True" BorderColor="#CC3300" BorderStyle="Solid" RepeatLayout="Flow" TabIndex="230">
                         <asp:ListItem Value="0">Only to Winner</asp:ListItem>
@@ -398,7 +406,7 @@
                     Maximum Performance = <asp:TextBox ID="MaxPerformance" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="123px" AutoPostBack="True">2.5</asp:TextBox>
 
                     </td>
-                <td class="questions">
+                <td class="auto-style74">
 
                     <span>
                     <asp:CheckBox ID="AuctionSort" runat="server" Text="Auction for Sorting" TabIndex="260" TextAlign="Left" BackColor="Lime" BorderColor="#009933" BorderStyle="Solid" BorderWidth="1px" EnableTheming="True" />
@@ -406,28 +414,28 @@
                   </td>
             </tr>
               <tr>
-                <td class="auto-style68">
+                <td class="auto-style65">
 
                     
 
                     Max Cost per Person =
                     <asp:Label ID="WPerson" runat="server" Text="0"></asp:Label>
 &nbsp;$</td>
-                <td class="questions">
+                <td class="auto-style74">
 
                     Suggestion Fee = <asp:TextBox ID="SuggestionFee" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="40px">0</asp:TextBox>
                     $ </td>
             </tr>
               <tr>
-                <td class="auto-style70">
+                <td class="auto-style75">
 
                     &nbsp;</td>
-                <td class="auto-style68">
+                <td class="auto-style65">
 
                     Max Cost per Group =
                     <asp:Label ID="WGroup" runat="server" Text="0"></asp:Label>
 &nbsp;$</td>
-                <td class="questions">
+                <td class="auto-style74">
 
                     Voting Fee = <asp:TextBox ID="BetFee" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="40px">0</asp:TextBox>
                     $</td>
@@ -512,6 +520,10 @@
                 </td>
                 <td class="auto-style48">
 
+                    <span><strong aria-atomic="False" aria-busy="False" aria-dropeffect="none" aria-expanded="false" aria-grabbed="undefined" aria-multiline="False">
+                    <asp:Button ID="BtnReset" runat="server" OnClick="BtnReset_Click" Text="Reset Group" TabIndex="20" CausesValidation="False" BackColor="#FF5050" Width="194px" />
+                    </strong>
+                
                 </td>
             </tr>
               
