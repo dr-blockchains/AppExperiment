@@ -383,9 +383,9 @@
                     $</td>
             </tr>
               <tr>
-                <td class="auto-style65">Initial Fund = <asp:TextBox ID="InitialVolume" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="123px" AutoPostBack="True">0</asp:TextBox>
+                <td class="auto-style65">Initial Shares = <asp:TextBox ID="InitialVolume" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="123px" AutoPostBack="True">0</asp:TextBox>
 
-                    $ / Group</td>
+                    shares /Person</td>
                 <td class="auto-style74">
 
                     &nbsp;</td>
@@ -443,12 +443,19 @@
               <tr>
                 <td class="auto-style17" colspan="2">
             <script>
-                a = Number(InitialBalance.value);
-                b = Number(InitialVolume.value);
+                df = Number(InitialBalance.value);
+                ds = Number(InitialVolume.value);
                 p = Number(MaxPerformance.value);
+                n = Number(PerGroup.value);
+                b = Number(Beta.value);
 
-                WPerson.innerHTML = (a * p).toFixed(2);
-                WGroup.innerHTML = (b * p).toFixed(2);
+                s = n * ds;
+                f1 = .5 * s * s + b * s;
+
+                f2 = f1 + n * df;
+
+                WGroup.innerHTML = (p*f2).toFixed(2);
+                WPerson.innerHTML = (p*f2/n).toFixed(2);               
 
             </script>
             <strong>Instructions:</strong></td>
@@ -521,7 +528,7 @@
                 <td class="auto-style48">
 
                     <span><strong aria-atomic="False" aria-busy="False" aria-dropeffect="none" aria-expanded="false" aria-grabbed="undefined" aria-multiline="False">
-                    <asp:Button ID="BtnReset" runat="server" OnClick="BtnReset_Click" Text="Reset Group" TabIndex="20" CausesValidation="False" BackColor="#FF5050" Width="194px" />
+                    <asp:Button ID="BtnReset" runat="server" OnClick="BtnReset_Click" Text="Reset Group" TabIndex="20" BackColor="#FF5050" Width="194px" PostBackUrl="~/ControlPanel.aspx" />
                     </strong>
                 
                 </td>

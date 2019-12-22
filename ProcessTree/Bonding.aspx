@@ -242,8 +242,8 @@
 
             <tr>
 
-                <td class="auto-style12" colspan="2"><em>Share Price = (<asp:Label ID="Atxt" ClientIDMode="Static" runat="server" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
-                    )*(Shares Outstanding) + (<asp:Label ID="Btxt" ClientIDMode="Static" runat="server" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="3px" CssClass="auto-style9"></asp:Label>
+                <td class="auto-style12" colspan="2"><em>Share Price = (<asp:Label ID="Atxt" ClientIDMode="Static" runat="server" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="1px" CssClass="auto-style9"></asp:Label>
+                    )*(Shares Outstanding) + (<asp:Label ID="Btxt" ClientIDMode="Static" runat="server" BorderStyle="Solid" Font-Bold="False" Text="0" BorderColor="#FFCC00" BorderWidth="1px" CssClass="auto-style9"></asp:Label>
                     )</em></td>
 
                 <td class="auto-style61" colspan="2">
@@ -262,12 +262,12 @@
 
                     <p>
 
-                    <span class="newStyle1"><em>Refresh to update numbers:&nbsp;</em></span><asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" Height="43px" Width="110px" Font-Size="Small"/>
-    
-                        </p>
+                        &nbsp;</p>
                 </td>
 
-                <td class="auto-style61" colspan="2">&nbsp;</td>
+                <td class="auto-style61" colspan="2">    
+
+                    &nbsp;</td>
 
                 <td class="auto-style56">&nbsp;</td>
             </tr>
@@ -276,25 +276,20 @@
 
                 <td class="auto-style11" colspan="2">    
 
-                    &nbsp;</td>
+                    <span class="newStyle1"><em>Refresh to update numbers:&nbsp;</em></span><asp:Button ID="BtnRefresh" runat="server" OnClick="BtnRefresh_Click" Text="Refresh" TabIndex="85" BackColor="#66FFFF" Height="43px" Width="110px" Font-Size="Small"/>
+    
+                        </td>
 
                 <td class="text-center" colspan="2"> 
 
                     &nbsp;&nbsp;
                     <asp:Button ID="PlaceOrder" ClientIDMode="Static" runat="server" Font-Bold="True" OnClick="PlaceOrder_Click" TabIndex="60" Text="Sell Shares" CssClass="auto-style21" Font-Size="Large" BackColor="pink" ForeColor="Black" />
-                </td>
-
-                <td class="auto-style56">&nbsp;</td>
-            </tr>
-
-            <tr>
-
-                <td class="auto-style51" colspan="5">    
 
                     <asp:Label ID="Message" ClientIDMode="Static" runat="server" Font-Bold="True" ForeColor="#993333" Font-Size="Medium" Height="63px" Style="font-size: medium; margin-bottom: 0px;" Font-Italic="True"></asp:Label>
     
                 </td>
 
+                <td class="auto-style56">&nbsp;</td>
             </tr>
 
             <tr>
@@ -403,8 +398,8 @@
         //    StartShares.innerHTML = msg.StartShares;
         //    DShare2All();
         //})
-        
 
+        RadioClick();
         DShare2All();
 
         function DShare2All() {
@@ -428,28 +423,29 @@
                 dfund = dshare * (a*(shares1 + shares2)/2+b);
 
                 const avfund = Number(AvFund.innerHTML);
-                if (dfund > avfund) {
-                    Message.innerHTML = ("You only have $" + avfund + " !");
+                if (dfund >= avfund) {
+                    Message.innerHTML = ("Using all available fund!");
                 }
 
-            } else { // Sell
-                if (dshare > shares1) {
-                    dshare = shares1;
-                    DeltaShares.value = dshare;
-                    Message.innerHTML = ("There are only " + shares1 + " shares!  ");
-                }
+            } else { // Sell               
                 shares2 = shares1 - dshare;
                 dfund = dshare * (a * (shares1 + shares2) /2  + b);
 
                 const avshare = Number(AvShare.innerHTML);
-                if (dshare > avshare) {
-                    Message.innerHTML += ("<br>You only have " + avshare + " shares!");
+                if (avshare > shares1) {
+                    alert("Error438: Your Share (" + avshare + ") > Total Share ("+shares1+")");
+                    avshare = shares1;
+                    AvShare.innerHTML = avshare.toFixed(3);
+                }
+
+                if (dshare >= avshare) {
+                    Message.innerHTML = ("Selling all your shares!");
                 }
             }
 
             DeltaFund.value = dfund.toFixed(2);
 
-            EndShares.innerHTML = shares2.toFixed(2);
+            EndShares.innerHTML = shares2.toFixed(3);
             EndPrice.innerHTML = (a * shares2 + b).toFixed(2);
             AveragePrice.innerHTML = (.5 * a * (shares1 + shares2) + b).toFixed(2);            
         }
@@ -477,32 +473,37 @@
                 dshare = shares2 - shares1;
 
                 const avfund = Number(AvFund.innerHTML);
-                if (dfund > avfund) {
-                    Message.innerHTML = ("You only have $" + avfund + " !");
+                if (dfund >= avfund) {
+                    Message.innerHTML = ("Using all available fund!");
                 }
 
             } else { // Sell
 
                 const F1 = (.5*a*shares1 + b)*shares1;
-
                 if (dfund > F1) {
+                    alert("Error484: Your Fund (" + dfund + ") > Total Funds (" + F1 + ")");
                     dfund = F1;
-                    DeltaFund.value = dfund;
-                    Message.innerHTML = ("There is only $" + F1.toFixed(2) + " of total funds!  ");
+                    DeltaFund.value = dfund;                    
                 }
 
                 shares2 = (-b + Math.sqrt(p1 * p1 - 2 * a * dfund)) / a;                
                 dshare = shares1 - shares2;
 
                 const avshare = Number(AvShare.innerHTML);
-                if (dshare > avshare) {
-                    Message.innerHTML += ("You only have " + avshare + " shares!");
+                if (avshare > shares1) {
+                    alert("Error494: Your Share (" + avshare + ") > Total Share (" + shares1 + ")");
+                    avshare = shares1;
+                    AvShare.innerHTML = avshare.toFixed(3);
+                }
+
+                if (dshare >= avshare) {
+                    Message.innerHTML = ("Selling all your shares!");
                 }
             }
 
-            DeltaShares.value = dshare.toFixed(2);
+            DeltaShares.value = dshare.toFixed(3);
 
-            EndShares.innerHTML = shares2.toFixed(2);
+            EndShares.innerHTML = shares2.toFixed(3);
             EndPrice.innerHTML = (a * shares2 + b).toFixed(2);
             AveragePrice.innerHTML = (.5 * a * (shares1 + shares2) + b).toFixed(2);  
         }
@@ -566,10 +567,10 @@
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
 
             if (SelectedRadio == "Buy") {
-                DeltaFund.value = AvFund.innerHTML;
+                DeltaFund.value = (Math.ceil(Number(AvFund.innerHTML)*100)/100).toFixed(2);
                 DFund2All();
             } else {
-                DeltaShares.value = AvShare.innerHTML;
+                DeltaShares.value = (Math.ceil(Number(AvShare.innerHTML)*1000)/1000).toFixed(3);
                 DShare2All();
             }
         }

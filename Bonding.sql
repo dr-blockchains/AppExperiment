@@ -1,10 +1,10 @@
 ﻿-- =============================================
 -- Author:		<Dr Hamed Khaledi>
 -- Create date: <2018>
--- Description:	<Parallel Bonding>
+-- Description:	<Parallel Primary Markets>
 -- =============================================
 
-CREATE PROCEDURE [dbo].[Bonding]
+ALTER PROCEDURE [dbo].[Bonding]
 ( 
 	@Treatment INT, 
 	@Group INT,
@@ -22,9 +22,9 @@ BEGIN TRANSACTION
 --**************************** Shares1 / Shares2 / Price1 / Price2 / dfund ***********************
 BEGIN TRY
 
-	IF (@DShare <= 0 OR @DShare > 10000 OR @Shares1Rounded <0 OR @Shares1Rounded > 1000) 
+	IF (@DShare <= 0 OR @DShare > 10000 OR @Shares1Rounded < 0 OR @Shares1Rounded > 10000) 
 	BEGIN
-		ROLLBACK TRANSACTION;
+		--ROLLBACK TRANSACTION;
 		INSERT INTO ErrorLog VALUES (GETDATE(),20, 'Out of Range', 2);
 		RETURN 20;
 	END;
@@ -37,7 +37,7 @@ BEGIN TRY
 
 	IF ABS(@Shares1 - @Shares1Rounded) > .01 
 	BEGIN
-		ROLLBACK TRANSACTION;
+		--ROLLBACK TRANSACTION;
 		INSERT INTO ErrorLog VALUES (GETDATE(),30, 'Price Changed: Difference=' + CAST(@Shares1 - @Shares1Rounded AS VARCHAR), 3);
 		RETURN 30;
 	END;
@@ -69,7 +69,6 @@ BEGIN CATCH
 END CATCH;
 
 
-
 IF @Buy0Sell1 = 0
 --*****************************BUYER********************************
 BEGIN
@@ -77,42 +76,47 @@ BEGIN TRY
 	SET @Shares2 = @Shares1 + @DShare;
 	SET @DFund = @DShare * ( .5 * @A * (@Shares1 + @Shares2) + @B);
 
-	DECLARE @Deficit FLOAT;
-	SELECT @Deficit = @DFund - BalanceConfirm
+	DECLARE @Confirm FLOAT;
+	SELECT @Confirm = COALESCE(BalanceConfirm,0)
 	FROM Shares 
-	WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
+	WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);	
 
-	DECLARE @AvFund FLOAT;
-	SELECT @AvFund = Balance FROM People WHERE ID=@Bidder;
+	--IF @Confirm IS NULL -- No BalanceConfirm
+	--BEGIN
+	--	IF @Cash < @DFund BEGIN
+	--		SET @DFund = @Cash;
+	--		SET @Shares2 = (-@B + SQRT(@B * @B + @Price1 *@Price1 + 2 * @A * @DFund) ) / @A;
+	--		SET @DShare = @Shares2 - @Shares1;
+	--	END;
 
-	IF @Deficit IS NULL
-	BEGIN
-		IF @AvFund < @DFund
-		BEGIN
-			SET @DFund = @AvFund;
-			SET @Shares2 = (-@B + SQRT(@Price1 *@Price1 + 2 * @A * @DFund) ) / @A;
+	--	UPDATE People SET Balance = Balance -  @DFund WHERE ID = @Bidder;
+	--	INSERT INTO Shares VALUES (@Bidder, @Treatment, @Group, @Period, @Choice, @DShare, 0, @DFund);
+		
+	--END 
+	--ELSE 
+
+	IF	 @Confirm < @DFund -- Need Money Transfer From People.Balance
+	BEGIN 
+		DECLARE @EndBalance FLOAT;
+		SELECT @EndBalance = Balance + @Confirm - @DFund FROM People WHERE ID=@Bidder;
+
+		IF @EndBalance < 0 BEGIN
+			SET @DFund = @DFund + @EndBalance;
+			SET @EndBalance = 0;
+			SET @Shares2 = (-@B + SQRT(@B * @B + @Price1 *@Price1 + 2 * @A * @DFund) ) / @A;
 			SET @DShare = @Shares2 - @Shares1;
 		END;
-		INSERT INTO Shares VALUES (@Bidder, @Treatment, @Group, @Period, @Choice, @DShare, 0, @DFund);
-		UPDATE People SET Balance = Balance -  @DFund WHERE ID = @Bidder;
-	END 
-	ELSE IF	@Deficit <= 0
-	BEGIN -- No Money Transfer From People.Balance				
-		UPDATE Shares SET BalanceConfirm = -@Deficit, Volume = Volume + @DShare WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
+
+		UPDATE People SET Balance = @EndBalance WHERE ID = @Bidder; 
+		UPDATE Shares SET BalanceConfirm = 0, BalanceVoid = BalanceVoid + @DFund - @Confirm , Volume = Volume + @DShare 
+			WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND ([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 	END
 	ELSE
-	BEGIN -- With Money Transfer From People.Balance
-		IF @AvFund < @Deficit
-		BEGIN
-			SET @DFund += @AvFund - @Deficit;
-			SET @Deficit = @AvFund;
-			SET @Shares2 = (-@B + SQRT(@Price1 *@Price1 + 2 * @A * @DFund) ) / @A;
-			SET @DShare = @Shares2 - @Shares1;
-		END;
-		UPDATE People SET Balance = Balance - @Deficit WHERE ID = @Bidder; 
-		UPDATE Shares SET BalanceConfirm = 0, BalanceVoid = BalanceVoid + @Deficit , Volume = Volume + @DShare 
+	BEGIN -- No Money Transfer From People.Balance				
+		UPDATE Shares SET BalanceConfirm = BalanceConfirm - @DFund, Volume = Volume + @DShare 
 			WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 	END;
+
 END TRY
 BEGIN CATCH
 	ROLLBACK TRANSACTION;
@@ -127,17 +131,17 @@ BEGIN
 BEGIN TRY
 	DECLARE @AvShare FLOAT;
 	SELECT @AvShare = Volume FROM Shares
-	WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
+		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
-	IF @AvShare < @DShare
-	BEGIN
+	IF @AvShare < @DShare BEGIN
 		SET @DShare = @AvShare;
 	END;
 		
 	SET @Shares2 = @Shares1 - @DShare;
 	SET @DFund = @DShare * ( .5 * @A * (@Shares1 + @Shares2) + @B);
 
-	UPDATE Shares SET BalanceConfirm = BalanceConfirm + @DFund, Volume = Volume - @DShare WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
+	UPDATE Shares SET BalanceConfirm = BalanceConfirm + @DFund, Volume = Volume - @DShare 
+		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
 	DECLARE @MinB FLOAT;
 
@@ -145,31 +149,27 @@ BEGIN TRY
 	SELECT @MinB = CASE WHEN BalanceVoid > BalanceConfirm THEN BalanceConfirm ELSE BalanceVoid END
 		FROM Shares
 		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
+	
 	IF @MinB > 0
 	BEGIN
-		UPDATE Shares
-		SET BalanceConfirm = BalanceConfirm - @MinB , BalanceVoid = BalanceVoid - @MinB
-		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
+		UPDATE Shares SET BalanceConfirm = BalanceConfirm - @MinB , BalanceVoid = BalanceVoid - @MinB
+			WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
-		UPDATE People
-		SET Balance = Balance + @MinB
-		WHERE ([ID] = @Bidder)
+		UPDATE People SET Balance = Balance + @MinB
+			WHERE ([ID] = @Bidder)
 	END;
 
 	-- One choice will be confirmed.
 	SELECT @MinB = MIN(BalanceConfirm)
-		FROM Shares
-		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period);
+		FROM Shares	WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period);
 				
 	IF @MinB > 0
 	BEGIN
-		UPDATE Shares
-		SET BalanceConfirm = BalanceConfirm - @MinB
-		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period);
+		UPDATE Shares SET BalanceConfirm = BalanceConfirm - @MinB
+			WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period);
 
-		UPDATE People
-		SET Balance = Balance + @MinB
-		WHERE ([ID] = @Bidder)
+		UPDATE People SET Balance = Balance + @MinB
+			WHERE ([ID] = @Bidder)
 	END;
 
 END TRY
@@ -183,7 +183,8 @@ END; -- ELSE
 
 --**************************** UPDATE Total Shares & Price ******************************
 BEGIN TRY
-	UPDATE Versions SET Score = (@Shares2) WHERE (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
+	UPDATE Versions SET Score = @Shares2 
+		WHERE (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 END TRY
 BEGIN CATCH
 	ROLLBACK TRANSACTION;

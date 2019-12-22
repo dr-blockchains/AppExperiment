@@ -270,28 +270,27 @@ namespace ProcessTree
                 conn.Close();
                 return;
             }
+            //query = "EXEC Orient @Treatment, @Group, @User, @Vol";
+            //com = new SqlCommand(query, conn);
+            //com.Parameters.AddWithValue("@User", Session["User"]);
+            //com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
+            //com.Parameters.AddWithValue("@Group", Session["Group"]);
+            //com.Parameters.AddWithValue("@Vol", Session["InitialVolume"]);
+            //try
+            //{
+            //    if (com.ExecuteNonQuery() < 1)
+            //    {                    
+            //        Global.EmailAdmin("Error 258: Constitution", "UserID =" + Session["User"]);
+            //        LabelMessage.Text = "Your answers are updated.";
+            //    }
+            //}
+            //catch (Exception Ex)
+            //{
+            //    Global.EmailAdmin("Error(281)", "User=" + Session["User"] + " & Treat=" + Session["Treat"] + " &&&&&&&&&&& Exception = " + Ex);
+            //    LabelMessage.Text = "Your answers are updated.";
+            //}
 
-            query = "EXEC Orient @Treatment, @Group, @User, @Vol";
-            com = new SqlCommand(query, conn);
-            com.Parameters.AddWithValue("@User", Session["User"]);
-            com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
-            com.Parameters.AddWithValue("@Group", Session["Group"]);
-            com.Parameters.AddWithValue("@Vol", Session["InitialVolume"]);
-            try
-            {
-                if (com.ExecuteNonQuery() < 1)
-                {                    
-                    Global.EmailAdmin("Error 258: Constitution", "UserID =" + Session["User"]);
-                    LabelMessage.Text = "Your answers are updated.";
-                }
-            }
-            catch (Exception Ex)
-            {
-                Global.EmailAdmin("Error(281)", "User=" + Session["User"] + " & Treat=" + Session["Treat"] + " &&&&&&&&&&& Exception = " + Ex);
-                LabelMessage.Text = "Your answers are updated.";
-            }
-
-            conn.Close();
+            //conn.Close();
 
             int Period = Global.Refresh((int)Session["Treat"], (int)Session["Group"], out DateTime DT);
             

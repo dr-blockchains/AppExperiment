@@ -54,12 +54,11 @@ namespace ProcessTree
 
             TimeSpan.Text = ((DateTime)Session["DT"] - DateTime.Now).TotalMilliseconds.ToString();
 
-            if (IsPostBack) return;
-            ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('Not Postback');", true);
+            if (IsPostBack) return;            
 
-            PeriodChoice.Text = "Shares of the firm ASSUMING it " + " <i>" +
-    (Session["Choice"].ToString() == "0" ? "holds cash" : "invests on Portfolio " + Session["Choice"].ToString()) +
-    "</i> in month " + ((int)Session["Period"] / 2).ToString();
+            PeriodChoice.Text = "Shares of the firm ASSUMING it <i>" +
+            (Session["Choice"].ToString() == "0" ? "holds cash" : "invests on Portfolio " + 
+            Session["Choice"].ToString()) + "</i> in month " + ((int)Session["Period"] / 2).ToString();
 
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
             conn.Open();
@@ -129,7 +128,6 @@ namespace ProcessTree
             com.Dispose();
             GroupData.Close();
 
-
             // Person's shares for this choice:
             query = "SELECT Volume, BalanceConfirm, BalanceVoid FROM Shares WHERE [Owner] = @User AND Treatment = @Treat AND [Group#] = @Group AND [Period] = @Period AND Choice = @Choice";
             com = new SqlCommand(query, conn);
@@ -154,6 +152,14 @@ namespace ProcessTree
             }
                         
             SharePerson.Close();
+
+            if(avshare > shares1)
+            {
+                ClientScript.RegisterStartupScript(GetType(), "Discrepancy", "alert('Error 158: Your Share > Total Shares');", true);
+                Global.EmailAdmin("Error 159: Bonding", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"] + " & shares1 = " + shares1 + " & avshare = " + avshare);
+
+                avshare = shares1;
+            }
 
             AvShare.Text = avshare.ToString("N3");
             AvFund.Text = avfund.ToString("N2");
@@ -261,13 +267,13 @@ namespace ProcessTree
 
             Session["Message"] = "Your order did not go through!";
 
-            float A, B, shares1, shares2, dshare, dfund, avfund, avshare;
+            float shares1, dshare;
 
             try
             {
                 shares1 = float.Parse(StartShares.Text, CultureInfo.InvariantCulture.NumberFormat);
-                A = float.Parse(Atxt.Text, CultureInfo.InvariantCulture.NumberFormat);
-                B = float.Parse(Btxt.Text, CultureInfo.InvariantCulture.NumberFormat);
+                //A = float.Parse(Atxt.Text, CultureInfo.InvariantCulture.NumberFormat);
+                //B = float.Parse(Btxt.Text, CultureInfo.InvariantCulture.NumberFormat);
             }
             catch
             {
@@ -279,85 +285,102 @@ namespace ProcessTree
             try
             {
                 dshare = float.Parse(DeltaShares.Text, CultureInfo.InvariantCulture.NumberFormat);
-                if (!(dshare > 0 && dshare < 10000)) throw new Exception();
+                if (!(dshare > 0 && dshare < 10000))
+                {
+                    DeltaShares.Focus();
+                    Message.Text = "Number of shares is out of range!";
+                    return;
+                }
             }
             catch
             {
                 DeltaShares.Focus();
-                Message.Text = "Number of shares is out of range!";
+                Message.Text = "Invalid number of shares!";
                 return;
             }
+            //try
+            //{
+            //    dfund = float.Parse(DeltaFund.Text, CultureInfo.InvariantCulture.NumberFormat);
+            //    if (!(dfund > 0 && dfund < 1000))
+            //    {
+            //        DeltaFund.Focus();
+            //        Message.Text = "Amount of fund is out of range!";
+            //        return;
+            //    }
+            //}
+            //catch
+            //{
+            //    DeltaFund.Focus();
+            //    Message.Text = "Invalid amount of fund!";
+            //    return;
+            //} 
+            //if (RadioOrder.SelectedValue == "Buy")
+            //{
+            //    try
+            //    {
+            //        avfund = float.Parse(AvFund.Text, CultureInfo.InvariantCulture.NumberFormat);
+            //        if (!(avfund > 0 && avfund < 1000))
+            //        {
+            //            DeltaFund.Focus();
+            //            Message.Text = "No available fund!";
+            //            return;
+            //        }
+            //    }
+            //    catch
+            //    {
+            //        DeltaFund.Focus();
+            //        Message.Text = "No available fund!";
+            //        return;
+            //    }
 
-            try
-            {
-                dfund = float.Parse(DeltaFund.Text, CultureInfo.InvariantCulture.NumberFormat);
-                if (!(dfund > 0 && dfund < 1000)) throw new Exception();
-            }
-            catch
-            {
-                DeltaFund.Focus();
-                Message.Text = "Amount of fund is out of range!";
-                return;
-            }        
-
-            if (RadioOrder.SelectedValue == "Buy")
-            {
-                try
-                {
-                    avfund = float.Parse(AvFund.Text, CultureInfo.InvariantCulture.NumberFormat);
-                    if (!(avfund > 0 && avfund < 1000)) throw new Exception();
-                }
-                catch
-                {
-                    DeltaFund.Focus();
-                    Message.Text = "No available fund!";
-                    return;
-                }
-
-                if (dfund > avfund)
-                {
-                    ClientScript.RegisterStartupScript(GetType(), "Insufficient Balance", "alert('You do not have $" + dfund.ToString("N2") + " of available fund. \n The order is fulfilled partially.');", true);
-                    dfund = (float) Math.Floor(avfund * 10000) / 10000;
-                    DeltaFund.Text = dfund.ToString("N3");
-                    Message.Text = "You invested $" + DeltaFund.Text + " !";
-                    DeltaFund.Focus();
-                }
+            //    if (dfund > avfund)
+            //    {
+            //        ClientScript.RegisterStartupScript(GetType(), "Insufficient Balance", "alert('You do not have $" + dfund.ToString("N2") + " of available fund. \n The order is fulfilled partially.');", true);
+            //        dfund = (float) Math.Floor(avfund * 100000) / 100000;
+            //        DeltaFund.Text = dfund.ToString("N3");
+            //        Message.Text = "You invested $" + DeltaFund.Text + " !";
+            //        DeltaFund.Focus();
+            //    }
                 
-                float p1 = (A * shares1 + B);
-                shares2 = (-B + (float)Math.Sqrt(p1 * p1 + 2 * A * dfund)) / A ;
+            //    float p1 = (A * shares1 + B);
+            //    shares2 = (-B + (float)Math.Sqrt(p1 * p1 + 2 * A * dfund)) / A ;
 
-                dshare = shares2 - shares1;
+            //    dshare = shares2 - shares1;
 
-                //DeltaShares.Text = dshare.ToString("N2");
-            }
-            else
-            {
-                try
-                {
-                    avshare = float.Parse(AvShare.Text, CultureInfo.InvariantCulture.NumberFormat);
-                    if (!(avshare > 0 && avshare < 10000)) throw new Exception();
-                }
-                catch
-                {
-                    DeltaShares.Focus();
-                    Message.Text = "No available share!";
-                    return;
-                }
+            //    //DeltaShares.Text = dshare.ToString("N2");
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        avshare = float.Parse(AvShare.Text, CultureInfo.InvariantCulture.NumberFormat);
+            //        if (!(avshare > 0 && avshare < 10000))
+            //        {
+            //            DeltaShares.Focus();
+            //            Message.Text = "No available share!";
+            //            return;
+            //        }
+            //    }
+            //    catch
+            //    {
+            //        DeltaShares.Focus();
+            //        Message.Text = "No available share!";
+            //        return;
+            //    }
 
-                if (dshare > avshare)
-                {
-                    ClientScript.RegisterStartupScript(GetType(), "Insufficient Shares", "alert('You do not have " + dshare.ToString("N3") + " shares for this choice. \n The order is fulfilled partially.');", true);
-                    dshare = (float) Math.Floor(avshare * 10000) / 10000;
-                    DeltaShares.Text = dshare.ToString("N2");
-                    Message.Text = "You sold " + DeltaShares.Text + " shares!";
-                    DeltaShares.Focus();
-                }
+            //    if (dshare > avshare)
+            //    {
+            //        ClientScript.RegisterStartupScript(GetType(), "Insufficient Shares", "alert('You do not have " + dshare.ToString("N3") + " shares for this choice. \n The order is fulfilled partially.');", true);
+            //        dshare = (float) Math.Floor(avshare * 100000) / 100000;
+            //        DeltaShares.Text = dshare.ToString("N2");
+            //        Message.Text = "You sold " + DeltaShares.Text + " shares!";
+            //        DeltaShares.Focus();
+            //    }
 
-                //shares2 = shares1 - dshare;
-                //dfund = dshare * (shares1 + shares2) / 200.0f;
-                //DeltaFund.Text = dfund.ToString("N2");
-            }
-
+            //    //shares2 = shares1 - dshare;
+            //    //dfund = dshare * (shares1 + shares2) / 200.0f;
+            //    //DeltaFund.Text = dfund.ToString("N2");
+            //}
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
             conn.Open();
 
@@ -369,7 +392,6 @@ namespace ProcessTree
             com.Parameters.AddWithValue("@Period", Session["Period"]);
             com.Parameters.AddWithValue("@Choice", Session["Choice"]);
             com.Parameters.AddWithValue("@Bidder", Session["User"]);
-            //com.Parameters.AddWithValue("@Time", DateTime.Now);
             com.Parameters.AddWithValue("@Buy0Sell1", RadioOrder.SelectedIndex);
             com.Parameters.AddWithValue("@Score", shares1);
             com.Parameters.AddWithValue("@DShare", dshare);

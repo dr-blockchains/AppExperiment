@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Globalization;
 
 namespace ProcessTree
 {
@@ -13,6 +14,7 @@ namespace ProcessTree
             //WGroup.Text = (PerPerson * Convert.ToSingle(PerGroup.Text)).ToString();
 
             if (IsPostBack) return;
+            //ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('Not Postback');", true);
 
             if ((string)Session["User"] == "experimenter")
                 Participants.Visible = true;
@@ -240,13 +242,11 @@ namespace ProcessTree
 
             if (GroupsCount <= 1)
             {
-                Down.Enabled = false;
-                
+                Down.Enabled = false;                
             }
             else
             {
-                Down.Enabled = true;
-               
+                Down.Enabled = true;               
             }
 
             Groups.Text = GroupsCount.ToString();
@@ -279,8 +279,15 @@ namespace ProcessTree
             }
             else
             {
-                Artifact.Text = DataReader["Artifact"].ToString();   
-                InitialVolume.Text = DataReader["PerVal"].ToString();
+                Artifact.Text = DataReader["Artifact"].ToString();
+
+                float f1 = (float) DataReader["PerVal"];
+                float n = float.Parse(PerGroup.Text, CultureInfo.InvariantCulture.NumberFormat);
+                float b = float.Parse(Beta.Text, CultureInfo.InvariantCulture.NumberFormat);
+
+                float s = -b + (float)Math.Sqrt(b*b+2*f1); 
+
+                InitialVolume.Text = (s/n).ToString();
             }
 
             #endregion
@@ -867,10 +874,18 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
             }
             #endregion
 
+            float ds = float.Parse(InitialVolume.Text, CultureInfo.InvariantCulture.NumberFormat);
+            float n = float.Parse(PerGroup.Text, CultureInfo.InvariantCulture.NumberFormat);
+            float b = float.Parse(Beta.Text, CultureInfo.InvariantCulture.NumberFormat); 
+
+            float s = n * ds;
+            float f1 = .5f * s * s + b * s;
+
             query = "update Versions set Artifact = @Artifact, HtmlArtifact = @HtmlArtifact, PerVal = @PerVal, Time = '" + DateTime.Now + "' where (Treatment= " + Treat.SelectedValue + " and Period = 2 and Choice = 0)";
             #region Execute
             com = new SqlCommand(query, conn);
-            com.Parameters.AddWithValue("@PerVal", InitialVolume.Text.Trim());
+
+            com.Parameters.AddWithValue("@PerVal", f1);
             com.Parameters.AddWithValue("@Artifact", Artifact.Text.Trim());            
             com.Parameters.AddWithValue("@HtmlArtifact", Artifact.Text.Replace("\r", "").Replace("\n", "<br>").Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;"));
 
@@ -1087,6 +1102,8 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
             com.Dispose();
 
             conn.Close();
+            
+            Response.Redirect("~/ControlPanel.aspx");
         }
     }
 }

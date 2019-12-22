@@ -130,7 +130,7 @@
         <table class="auto-style15">
             <tr>
                 <td class="auto-style36">
-                    <asp:Button ID="BtnSubmit" runat="server" Enabled="False" Font-Bold="True" onclick="BtnSubmitScore_Click" TabIndex="40" Text="Submit Vote" Width="140px" CssClass="auto-style21" Font-Size="Medium" />
+                    <asp:Button ID="BtnSubmit" runat="server" Font-Bold="True" onclick="BtnSubmitScore_Click" TabIndex="40" Text="Submit Vote" Width="140px" CssClass="auto-style21" Font-Size="Medium" />
                     &nbsp;
                     <asp:Label ID="Message" runat="server" Font-Bold="True" ForeColor="Red" CssClass="auto-style1" Font-Size="Medium" Height="28px" style="font-size: medium"></asp:Label>
                 </td>
@@ -179,7 +179,7 @@ ORDER BY Choice">
                         SelectCommand="SELECT '&lt;span class=&quot;version-choice&quot;&gt;' + 
   CASE WHEN Choice = 0 THEN 'Hold Cash'
 ELSE 'Portfolio ' + CAST(Choice AS VARCHAR(MAX)) END + 
-' &amp;nbsp&amp;nbsp ( Current Starting Price = '  + CAST(Score/100 AS VARCHAR(MAX)) + 
+' &amp;nbsp&amp;nbsp ( Current Price = '  + CAST(Score/100 AS VARCHAR(MAX)) + 
 ' , Number of shares outstanding = ' + CAST(Score AS VARCHAR(MAX)) + 
 ' ) :&lt;/span&gt;&lt;div class=&quot;version-artifact&quot;&gt;&lt;br&gt;' + 
 REPLACE(HtmlArtifact, CHAR(13), '&lt;br&gt;') + '&lt;/div&gt;&lt;hr&gt;'   
