@@ -469,7 +469,7 @@
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
 
             if (SelectedRadio == "Buy") {
-                shares2 = Math.ceil((-b + Math.sqrt(p1*p1 + 2*a*dfund))/a/1000)*1000;
+                shares2 = Math.ceil((-b + Math.sqrt(p1*p1 + 2*a*dfund))*1000/a)/1000;
                 dshare = shares2 - shares1;
 
                 const avfund = Number(AvFund.innerHTML);
@@ -567,10 +567,10 @@
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
 
             if (SelectedRadio == "Buy") {
-                DeltaFund.value = (Math.ceil(Number(AvFund.innerHTML)*100)/100).toFixed(2);
+                DeltaFund.value = (Number(AvFund.innerHTML)+.01).toFixed(2);
                 DFund2All();
             } else {
-                DeltaShares.value = (Math.ceil(Number(AvShare.innerHTML)*1000)/1000).toFixed(3);
+                DeltaShares.value = (Number(AvShare.innerHTML)+.001).toFixed(3);
                 DShare2All();
             }
         }

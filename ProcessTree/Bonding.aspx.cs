@@ -399,7 +399,7 @@ namespace ProcessTree
             if (com.ExecuteNonQuery() < 3)
             {
                 Message.Text = "Could not place the order. Try again!";
-                Global.EmailAdmin("Error 250: Trading", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"]);
+                Global.EmailAdmin("Error 250: Bonding", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"]);
                 conn.Close();
                 return;
             }
