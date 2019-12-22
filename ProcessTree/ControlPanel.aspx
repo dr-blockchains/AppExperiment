@@ -374,7 +374,7 @@
                     $</td>
             </tr>
              <tr>
-                <td class="auto-style65">Initial Balance = <asp:TextBox ID="InitialBalance" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="85px">0</asp:TextBox>
+                <td class="auto-style65">Initial Balance = <asp:TextBox ID="InitialBalance" runat="server" required pattern ="[0-9]*\.?[0-9]+" TabIndex="280" BackColor="Lime" Width="85px" AutoPostBack="True">10</asp:TextBox>
                     $ / Person</td>
                 <td class="auto-style74">
 
@@ -418,8 +418,8 @@
 
                     
 
-                    Max Cost per Person =
-                    <asp:Label ID="WPerson" runat="server" Text="0"></asp:Label>
+                    Initial Total Fund =
+                    <asp:Label ID="InitialFund" runat="server" Text="0"></asp:Label>
 &nbsp;$</td>
                 <td class="auto-style74">
 
@@ -432,8 +432,8 @@
                     &nbsp;</td>
                 <td class="auto-style65">
 
-                    Max Cost per Group =
-                    <asp:Label ID="WGroup" runat="server" Text="0"></asp:Label>
+                    Max Total Fund =
+                    <asp:Label ID="MaxFund" runat="server" Text="0"></asp:Label>
 &nbsp;$</td>
                 <td class="auto-style74">
 
@@ -454,8 +454,8 @@
 
                 f2 = f1 + n * df;
 
-                WGroup.innerHTML = (p*f2).toFixed(2);
-                WPerson.innerHTML = (p*f2/n).toFixed(2);               
+                InitialFund.innerHTML = f2.toFixed(2);
+                MaxFund.innerHTML = (p*f2).toFixed(2);                             
 
             </script>
             <strong>Instructions:</strong></td>

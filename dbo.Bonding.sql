@@ -31,8 +31,7 @@ BEGIN TRY
 
 	DECLARE @A FLOAT, @B FLOAT, @Price1 FLOAT, @Shares1 FLOAT, @Shares2 FLOAT, @DFund FLOAT, @UnFull FLOAT = 0;
 
-	SELECT @Shares1 = Score
-		FROM Versions
+	SELECT @Shares1 = Score FROM Versions
 		WHERE (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
 	IF ABS(@Shares1 - @Shares1Rounded) > .01 
@@ -177,8 +176,7 @@ BEGIN CATCH
 	RETURN ERROR_NUMBER();
 END CATCH	
 
-END; -- ELSE
-
+END; -- END ELSE
 
 BEGIN TRY
 	DECLARE @SumShares FLOAT;

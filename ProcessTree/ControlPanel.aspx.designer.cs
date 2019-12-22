@@ -348,13 +348,13 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.CheckBox AuctionSort;
 
         /// <summary>
-        /// WPerson control.
+        /// InitialFund control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label WPerson;
+        protected global::System.Web.UI.WebControls.Label InitialFund;
 
         /// <summary>
         /// SuggestionFee control.
@@ -366,13 +366,13 @@ namespace ProcessTree
         protected global::System.Web.UI.WebControls.TextBox SuggestionFee;
 
         /// <summary>
-        /// WGroup control.
+        /// MaxFund control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label WGroup;
+        protected global::System.Web.UI.WebControls.Label MaxFund;
 
         /// <summary>
         /// BetFee control.

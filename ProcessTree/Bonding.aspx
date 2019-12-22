@@ -469,7 +469,7 @@
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
 
             if (SelectedRadio == "Buy") {
-                shares2 = (-b + Math.sqrt(p1*p1 + 2*a*dfund))/a;
+                shares2 = Math.ceil((-b + Math.sqrt(p1*p1 + 2*a*dfund))/a/1000)*1000;
                 dshare = shares2 - shares1;
 
                 const avfund = Number(AvFund.innerHTML);
