@@ -285,8 +285,6 @@
                     &nbsp;&nbsp;
                     <asp:Button ID="PlaceOrder" ClientIDMode="Static" runat="server" Font-Bold="True" OnClick="PlaceOrder_Click" TabIndex="60" Text="Sell Shares" CssClass="auto-style21" Font-Size="Large" BackColor="pink" ForeColor="Black" />
 
-                    <asp:Label ID="Message" ClientIDMode="Static" runat="server" Font-Bold="True" ForeColor="#993333" Font-Size="Medium" Height="63px" Style="font-size: medium; margin-bottom: 0px;" Font-Italic="True"></asp:Label>
-    
                 </td>
 
                 <td class="auto-style56">&nbsp;</td>
@@ -296,7 +294,11 @@
 
                 <td class="auto-style13">Transaction price history:</td>
 
-                <td class="auto-style14" colspan="4">&nbsp;</td>
+                <td class="auto-style14" colspan="4">
+
+                    <asp:Label ID="Message" ClientIDMode="Static" runat="server" Font-Bold="True" ForeColor="#993333" Font-Size="Medium" Height="63px" Style="font-size: medium; margin-bottom: 0px;" Font-Italic="True"></asp:Label>
+    
+                </td>
 
             </tr>
 
@@ -368,30 +370,28 @@
 
     <script>
 
-                    //window.setInterval(PullPrice, 500);
+        //window.setInterval(PullPrice, 500);
 
-                    //function PullPrice() {
+        //function PullPrice() {
 
-                    //    get score from Versions.Score
+        //    get score from Versions.Score
 
-                    //    StartShares.innerHTML = Versions.Score ;
-                    //    Share2All();
-                    //}
+        //    StartShares.innerHTML = Versions.Score ;
+        //    Share2All();
+        //}
 
-                    //let socket;
+        //let socket;
 
-                    //export default function Store(props) {
+        //export default function Store(props) {
 
-                    //    if (!socket) {
-                    //        socket = io(':3001');
-                    //        socket.on('chat message', function (msg) {
-                    //            dispatch({ type: 'RECEIVE_MESSAGE', payload: msg })
-                    //        });
-                    //    }
+        //    if (!socket) {
+        //        socket = io(':3001');
+        //        socket.on('chat message', function (msg) {
+        //            dispatch({ type: 'RECEIVE_MESSAGE', payload: msg })
+        //        });
+        //    }
 
         // fetch (url )
-
-
 
         //socket = socket.io(':3001');
         //socket.on("New shares", function (msg) {
@@ -412,8 +412,8 @@
             StartPrice.innerHTML = p1.toFixed(2);
 
             dshare = Number(DeltaShares.value);
-            if (dshare < 0 || dshare > 10000) {
-                Message.innerHTML = "Number of shares is out of range!";
+            if (dshare <= 0 || dshare > 10000) {
+                Message.innerHTML = "Enter a valid number for shares!";
                 dshare = 0;
                 DeltaShares.value = '0';
             }
@@ -422,9 +422,6 @@
             document.getElementById("PlaceOrder").disabled = false;
 
             if (SelectedRadio == "Buy") { // Buy
-                shares2 = shares1 + dshare;
-                dfund = dshare * (a*(shares1 + shares2)/2+b);
-
                 const avfund = Number(AvFund.innerHTML);
                 if (avfund <= 0) {
                     Message.innerHTML = ("You have no fund!");
@@ -434,22 +431,27 @@
                     dshare = 0;
                     DeltaShares.value = dshare.toFixed(3);
                 }
-                else if (dfund >= avfund) {
-                    Message.innerHTML = ("Using all available fund!");
-                    dfund = avfund;
-                    shares2 = Math.ceil((-b + Math.sqrt(p1 * p1 + 2 * a * dfund)) * 1000 / a) / 1000;
-                    dshare = shares2 - shares1;
-                    DeltaShares.value = dshare.toFixed(3);
+                else {
+                    shares2 = shares1 + dshare;
+                    dfund = dshare * (a * (shares1 + shares2) / 2 + b);
+                    if (dfund >= avfund) {
+                        Message.innerHTML = ("Using all available fund!");
+                        dfund = avfund;
+                        shares2 = Math.ceil((-b + Math.sqrt(p1 * p1 + 2 * a * dfund)) * 1000 / a) / 1000;
+                        dshare = shares2 - shares1;
+                        DeltaShares.value = dshare.toFixed(3);
+                    }
                 }
 
             } else { // Sell 
                 avshare = Number(AvShare.innerHTML);
                 if (avshare > shares1) {
-                    alert("Error438: Your Share (" + avshare + ") > Total Share ("+shares1+")");
+                    alert("Error449: Your Share (" + avshare + ") > Total Share ("+shares1+")");
                     avshare = shares1;
                     AvShare.innerHTML = avshare.toFixed(3);
                 }
-                else if (avshare <= 0) {
+
+                if (avshare <= 0) {
                     Message.innerHTML = ("You have no share!");
                     document.getElementById("PlaceOrder").disabled = true;
                     dshare = 0;
@@ -483,7 +485,7 @@
 
             dfund = Number(DeltaFund.value);
             if (dfund < 0 || dfund > 1000) {
-                Message.innerHTML = "Amount of fund is out of range!"
+                Message.innerHTML = "Enter a valid number for fund!";
                 dfund = 0;
                 DeltaFund.value = '0';
             }
@@ -508,16 +510,14 @@
                 dshare = shares2 - shares1;
 
             } else { // Sell
-                shares2 = (-b + Math.sqrt(p1 * p1 - 2 * a * dfund)) / a;
-                dshare = shares1 - shares2;
-
                 avshare = Number(AvShare.innerHTML);
                 if (avshare > shares1) {
-                    alert("Error494: Your Share (" + avshare + ") > Total Share (" + shares1 + ")");
+                    alert("Error513: Your Share (" + avshare + ") > Total Share (" + shares1 + ")");
                     avshare = shares1;
                     AvShare.innerHTML = avshare.toFixed(3);
                 }
-                else if (avshare <= 0) {
+
+                if (avshare <= 0) {
                     Message.innerHTML = ("You have no share!");
                     document.getElementById("PlaceOrder").disabled = true;
                     dshare = 0;
@@ -525,12 +525,31 @@
                     dfund = 0;
                     DeltaFund.value = dfund.toFixed(2);
                 }
-                else if (dshare >= avshare) {
-                    Message.innerHTML = ("Selling all your shares!");
-                    dshare = avshare;
-                    shares2 = shares1 - dshare;
-                    dfund = dshare * (a * (shares1 + shares2) / 2 + b);
-                    DeltaFund.value = dfund.toFixed(2);
+                else {
+
+                    shares2 = shares1 - avshare;
+                    avfundS = avshare * (a * (shares1 + shares2) / 2 + b); 
+
+                    //const F1 = (.5 * a * shares1 + b) * shares1;
+                    //const F2 = (.5 * a * shares2 + b) * shares2;
+                    //avfundS = F1 - F2;
+
+                    if (dfund > avfundS) {
+                        Message.innerHTML = ("Selling all your shares!");
+                        dfund = avfundS;
+                        DeltaFund.value = dfund.toFixed(2);
+                    }
+
+                    shares2 = (-b + Math.sqrt(p1 * p1 - 2 * a * dfund)) / a;
+                    dshare = shares1 - shares2;
+
+                    if (dshare >= avshare) {
+                        Message.innerHTML = ("Selling all your shares!");
+                        dshare = avshare;
+                        shares2 = shares1 - dshare;
+                        dfund = dshare * (a * (shares1 + shares2) / 2 + b);
+                        DeltaFund.value = dfund.toFixed(2);
+                    }
                 }
             }
 
