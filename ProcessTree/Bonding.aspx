@@ -407,40 +407,62 @@
             const shares1 = Number(StartShares.innerHTML);
             const a = Number(Atxt.innerHTML);
             const b = Number(Btxt.innerHTML);
-
-            StartPrice.innerHTML = (a*shares1 + b).toFixed(2);
+            
+            const p1 = (a * shares1 + b);
+            StartPrice.innerHTML = p1.toFixed(2);
 
             dshare = Number(DeltaShares.value);
             if (dshare < 0 || dshare > 10000) {
                 Message.innerHTML = "Number of shares is out of range!";
-                dshare = NaN;
+                dshare = 0;
+                DeltaShares.value = '0';
             }
 
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
+            document.getElementById("PlaceOrder").disabled = false;
 
             if (SelectedRadio == "Buy") { // Buy
                 shares2 = shares1 + dshare;
                 dfund = dshare * (a*(shares1 + shares2)/2+b);
 
                 const avfund = Number(AvFund.innerHTML);
-                if (dfund >= avfund) {
+                if (avfund <= 0) {
+                    Message.innerHTML = ("You have no fund!");
+                    document.getElementById("PlaceOrder").disabled = true;
+                    dfund = 0;
+                    shares2 = shares1;
+                    dshare = 0;
+                    DeltaShares.value = dshare.toFixed(3);
+                }
+                else if (dfund >= avfund) {
                     Message.innerHTML = ("Using all available fund!");
+                    dfund = avfund;
+                    shares2 = Math.ceil((-b + Math.sqrt(p1 * p1 + 2 * a * dfund)) * 1000 / a) / 1000;
+                    dshare = shares2 - shares1;
+                    DeltaShares.value = dshare.toFixed(3);
                 }
 
-            } else { // Sell               
-                shares2 = shares1 - dshare;
-                dfund = dshare * (a * (shares1 + shares2) /2  + b);
-
-                const avshare = Number(AvShare.innerHTML);
+            } else { // Sell 
+                avshare = Number(AvShare.innerHTML);
                 if (avshare > shares1) {
                     alert("Error438: Your Share (" + avshare + ") > Total Share ("+shares1+")");
                     avshare = shares1;
                     AvShare.innerHTML = avshare.toFixed(3);
                 }
-
-                if (dshare >= avshare) {
-                    Message.innerHTML = ("Selling all your shares!");
+                else if (avshare <= 0) {
+                    Message.innerHTML = ("You have no share!");
+                    document.getElementById("PlaceOrder").disabled = true;
+                    dshare = 0;
+                    DeltaShares.value = dshare.toFixed(3);
                 }
+                else if (dshare >= avshare) {
+                    Message.innerHTML = ("Selling all your shares!");
+                    dshare = avshare;
+                    DeltaShares.value = dshare.toFixed(3);
+                }
+
+                shares2 = shares1 - dshare;
+                dfund = dshare * (a * (shares1 + shares2) / 2 + b);                
             }
 
             DeltaFund.value = dfund.toFixed(2);
@@ -457,47 +479,58 @@
             const b = Number(Btxt.innerHTML);
 
             const p1 = (a * shares1 + b);
-
             StartPrice.innerHTML = p1.toFixed(2);
 
             dfund = Number(DeltaFund.value);
             if (dfund < 0 || dfund > 1000) {
                 Message.innerHTML = "Amount of fund is out of range!"
-                dfund = NaN;
+                dfund = 0;
+                DeltaFund.value = '0';
             }
 
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
+            document.getElementById("PlaceOrder").disabled = false;
 
             if (SelectedRadio == "Buy") {
-                shares2 = Math.ceil((-b + Math.sqrt(p1*p1 + 2*a*dfund))*1000/a)/1000;
+                const avfund = Number(AvFund.innerHTML);
+                if (avfund <= 0) {
+                    Message.innerHTML = ("You have no fund!");
+                    document.getElementById("PlaceOrder").disabled = true;
+                    dfund = 0;
+                    DeltaFund.value = dfund;
+                }
+                else if (dfund >= avfund) {
+                    Message.innerHTML = ("Using all available fund!");
+                    dfund = avfund;
+                    DeltaFund.value = dfund;
+                }
+                shares2 = Math.ceil((-b + Math.sqrt(p1 * p1 + 2 * a * dfund)) * 1000 / a) / 1000;
                 dshare = shares2 - shares1;
 
-                const avfund = Number(AvFund.innerHTML);
-                if (dfund >= avfund) {
-                    Message.innerHTML = ("Using all available fund!");
-                }
-
             } else { // Sell
-
-                const F1 = (.5*a*shares1 + b)*shares1;
-                if (dfund > F1) {
-                    alert("Error484: Your Fund (" + dfund + ") > Total Funds (" + F1 + ")");
-                    dfund = F1;
-                    DeltaFund.value = dfund;                    
-                }
-
-                shares2 = (-b + Math.sqrt(p1 * p1 - 2 * a * dfund)) / a;                
+                shares2 = (-b + Math.sqrt(p1 * p1 - 2 * a * dfund)) / a;
                 dshare = shares1 - shares2;
 
-                const avshare = Number(AvShare.innerHTML);
+                avshare = Number(AvShare.innerHTML);
                 if (avshare > shares1) {
                     alert("Error494: Your Share (" + avshare + ") > Total Share (" + shares1 + ")");
                     avshare = shares1;
                     AvShare.innerHTML = avshare.toFixed(3);
                 }
-
-                if (dshare >= avshare) {
+                else if (avshare <= 0) {
+                    Message.innerHTML = ("You have no share!");
+                    document.getElementById("PlaceOrder").disabled = true;
+                    dshare = 0;
+                    shares2 = shares1;
+                    dfund = 0;
+                    DeltaFund.value = dfund.toFixed(2);
+                }
+                else if (dshare >= avshare) {
                     Message.innerHTML = ("Selling all your shares!");
+                    dshare = avshare;
+                    shares2 = shares1 - dshare;
+                    dfund = dshare * (a * (shares1 + shares2) / 2 + b);
+                    DeltaFund.value = dfund.toFixed(2);
                 }
             }
 
@@ -505,7 +538,7 @@
 
             EndShares.innerHTML = shares2.toFixed(3);
             EndPrice.innerHTML = (a * shares2 + b).toFixed(2);
-            AveragePrice.innerHTML = (.5 * a * (shares1 + shares2) + b).toFixed(2);  
+            AveragePrice.innerHTML = (.5 * a * (shares1 + shares2) + b).toFixed(2); 
         }
 
         function RadioClick() {
@@ -515,6 +548,15 @@
 
             if (SelectedRadio == "Buy") {
                 DeltaFund.focus();
+                const avfund = Number(AvFund.innerHTML);
+                if(avfund <= 0){
+                    Message.innerHTML = ("You have no fund!");
+                    document.getElementById("PlaceOrder").disabled = true;
+                }
+                else {
+                    Message.innerHTML = ('');
+                    document.getElementById("PlaceOrder").disabled = false;
+                }
 
                 PlaceOrder.value = "Buy Shares";
                 BuySell.innerHTML = "Buy";
@@ -542,6 +584,15 @@
 
             } else {
                 DeltaShares.focus();
+                const avshare = Number(AvShare.innerHTML);
+                if (avshare <= 0) {
+                    Message.innerHTML = ("You have no share!");
+                    document.getElementById("PlaceOrder").disabled = true;
+                }
+                else {
+                    Message.innerHTML = ('');
+                    document.getElementById("PlaceOrder").disabled = false;
+                }
 
                 PlaceOrder.value = "Sell Shares";
                 BuySell.innerHTML = "Sell";
@@ -567,10 +618,10 @@
             const SelectedRadio = document.querySelector("input[name='RadioOrder']:checked").value;
 
             if (SelectedRadio == "Buy") {
-                DeltaFund.value = (Number(AvFund.innerHTML)+.01).toFixed(2);
+                DeltaFund.value = (Number(AvFund.innerHTML)).toFixed(2);
                 DFund2All();
             } else {
-                DeltaShares.value = (Number(AvShare.innerHTML)+.001).toFixed(3);
+                DeltaShares.value = (Number(AvShare.innerHTML)).toFixed(3);
                 DShare2All();
             }
         }

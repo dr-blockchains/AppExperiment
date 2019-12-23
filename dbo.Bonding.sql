@@ -4,7 +4,7 @@
 -- Description:	<Parallel Primary Markets>
 -- =============================================
 
-CREATE PROCEDURE [dbo].[Bonding]
+ALTER PROCEDURE [dbo].[Bonding]
 ( 
 	@Treatment INT, 
 	@Group INT,
@@ -89,6 +89,13 @@ BEGIN TRY
 
 		IF @EndBalance < 0 BEGIN
 			SET @DFund = @DFund + @EndBalance;
+
+			IF @DFund <= 0 BEGIN
+				ROLLBACK TRANSACTION;
+				INSERT INTO ErrorLog VALUES (GETDATE(),95, 'DFund decreased to: ' + CAST(@DFund AS VARCHAR) , 11);		
+				RETURN ERROR_NUMBER();	
+			END;
+
 			SET @EndBalance = 0;
 			SET @Shares2 = (-@B + SQRT(@Price1*@Price1 + 2 * @A * @DFund) ) / @A;
 			
@@ -121,7 +128,7 @@ BEGIN TRY
 	SELECT @AvShare = Volume FROM Shares
 		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 	
-	IF @Shares1 < @AvShare BEGIN		
+	IF @AvShare > @Shares1 BEGIN		
 		INSERT INTO ErrorLog VALUES (GETDATE(), 137, 'Av Share not match: ' + CAST((@AvShare - @Shares1) AS VARCHAR(10)) , 9);
 		IF @AvShare - @Shares1 > .01 BEGIN
 			ROLLBACK TRANSACTION;
@@ -131,7 +138,12 @@ BEGIN TRY
 	
 	IF @AvShare < @DShare BEGIN		
 		SET @UnFull = @DShare - @AvShare;
-		SET @DShare = @AvShare;			   		 	  	  	 
+		SET @DShare = @AvShare;		
+		IF @DShare <= 0 BEGIN
+				ROLLBACK TRANSACTION;
+				INSERT INTO ErrorLog VALUES (GETDATE(),144, 'DShare decreased to: ' + CAST(@DShare AS VARCHAR) , 12);		
+				RETURN ERROR_NUMBER();
+		END;
 	END;
 		
 	SET @Shares2 = @Shares1 - @DShare;

@@ -53,13 +53,13 @@
         }
         .auto-style34 {
             text-align: left;
-            width: 452px;
+            width: 583px;
         }
 
         .auto-style36 {
             text-align: left;
             height: 38px;
-            width: 452px;
+            width: 583px;
         }
 
         .auto-style37 {
@@ -179,8 +179,7 @@ ORDER BY Choice">
                         SelectCommand="SELECT '&lt;span class=&quot;version-choice&quot;&gt;' + 
   CASE WHEN Choice = 0 THEN 'Hold Cash'
 ELSE 'Portfolio ' + CAST(Choice AS VARCHAR(MAX)) END + 
-' &amp;nbsp&amp;nbsp ( Current Price = '  + CAST(Score/100 AS VARCHAR(MAX)) + 
-' , Number of shares outstanding = ' + CAST(Score AS VARCHAR(MAX)) + 
+' &amp;nbsp&amp;nbsp ( Number of shares outstanding = ' + CAST(Score AS VARCHAR(MAX)) + 
 ' ) :&lt;/span&gt;&lt;div class=&quot;version-artifact&quot;&gt;&lt;br&gt;' + 
 REPLACE(HtmlArtifact, CHAR(13), '&lt;br&gt;') + '&lt;/div&gt;&lt;hr&gt;'   
 AS Expr1, 

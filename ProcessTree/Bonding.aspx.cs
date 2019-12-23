@@ -84,7 +84,6 @@ namespace ProcessTree
 
             User.Close();
 
-
             // Version Content
             query = "select * from Versions where Treatment = " + Session["Treat"] + " and Group# = " + Session["Group"] + " and [Period] = " + Period + " and Choice = " + Session["Choice"];
             com = new SqlCommand(query, conn);
@@ -101,7 +100,7 @@ namespace ProcessTree
             Version.Text = VersionData["Artifact"].ToString().Trim().Replace("\r", "").Replace("\n", "<br>");
 
             float shares1 = (float)VersionData["Score"];
-            StartShares.Text = shares1.ToString("N3");
+            StartShares.Text = (Math.Ceiling(shares1*1000.0)/1000.0).ToString("N3");
 
             com.Dispose();
             VersionData.Close();
@@ -161,8 +160,8 @@ namespace ProcessTree
                 avshare = shares1;
             }
 
-            AvShare.Text = avshare.ToString("N3");
-            AvFund.Text = avfund.ToString("N2");
+            AvShare.Text = (Math.Ceiling(avshare*1000.0)/1000.0).ToString("N3");
+            AvFund.Text = (Math.Ceiling(avfund*100.0)/100.0).ToString("N2");
 
             // Balances of other choices if they void:
             float VoidBalances = 0.0f;
