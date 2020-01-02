@@ -4,7 +4,7 @@
 -- Description:	<Parallel Primary Markets>
 -- =============================================
 
-ALTER PROCEDURE [dbo].[Bonding]
+CREATE PROCEDURE [dbo].[Bonding]
 ( 
 	@Treatment INT, 
 	@Group INT,
@@ -195,12 +195,10 @@ BEGIN TRY
 	SELECT @SumShares = SUM(Volume) FROM Shares
 		WHERE (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
-	IF @Shares2 <> @SumShares BEGIN
+	IF ABS(@Shares2 - @SumShares) > .01 BEGIN
 		INSERT INTO ErrorLog VALUES (GETDATE(), 209, 'Sum Shares not match: ' + CAST((@SumShares - @Shares2) AS VARCHAR) , 8);
-		IF ABS(@Shares2 - @SumShares) > .01 BEGIN
-			ROLLBACK TRANSACTION;
-			RETURN 209;
-		END;
+		ROLLBACK TRANSACTION;
+		RETURN 209;
 	END;
 
 	--**************************** OFFER / Order / TRANSACTION ***********************

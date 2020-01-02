@@ -544,7 +544,7 @@ namespace ProcessTree
 
             //query = "insert into Groups (Treatment , Group#, DT, Starting) values (" + Treat.SelectedIndex + " , " + Count + ", DATEADD(HOUR, 2, GETDATE()), DATEADD(HOUR, 2, GETDATE()))";
             query = @"INSERT INTO Groups 
-                             SELECT Treatment, @NewGroup, Period, DT, Starting 
+                             SELECT Treatment, @NewGroup, Period, DT, Starting, A, B 
                              FROM Groups
                              WHERE Treatment = @Treat AND Group# = 1";
 
