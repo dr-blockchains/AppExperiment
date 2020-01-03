@@ -248,85 +248,88 @@ namespace ProcessTree
             if (User["Treatment"].Equals(DBNull.Value) || User["Group#"].Equals(DBNull.Value))                      // ||  User["InitialScore"].Equals(DBNull.Value) )
             {
                 User.Close();
-                query = @"
-                SELECT
-                    Groups.Treatment,
-                    Groups.Group#,
-                    COALESCE(Subjects.SubjectCount, 0) AS SubjectCount,
-                    Treatments.PerGroup,
-                    Groups.Period
-                FROM Groups
-                LEFT JOIN (
-                    SELECT
-                        COUNT(People.ID) AS SubjectCount,
-                        People.Treatment,
-                        People.Group# 
-                    FROM People 
-                    WHERE People.Rater <> 1
-                    GROUP BY People.Treatment, People.Group# 
-                ) AS Subjects
-                    ON Subjects.Treatment=Groups.Treatment AND Subjects.Group# = Groups.Group#
-                LEFT JOIN Treatments
-                    ON Treatments.TID = Groups.Treatment
-                WHERE    
-                    COALESCE(Subjects.SubjectCount, 0) < Treatments.PerGroup    
-                    AND Groups.Period = 0
-                    AND COALESCE(Subjects.SubjectCount, 0) = (
-                        SELECT
-                            MIN(SubjectNumbers.SubjectCount) AS MinCount
-                        FROM (
-                            SELECT
-                                COALESCE(COUNT(People.ID), 0) AS SubjectCount
-                            FROM Groups 
-                            LEFT JOIN People ON People.Treatment = Groups.Treatment AND People.Group# = Groups.Group# AND People.Rater <> 1
-                            LEFT JOIN Treatments ON Treatments.TID = Groups.Treatment
-                            GROUP BY Groups.Treatment, Groups.Group#, Groups.Period, Treatments.PerGroup
-                            HAVING
-                                COALESCE(COUNT(People.ID), 0) < Treatments.PerGroup
-                                AND Groups.Period = 0
-                        ) AS SubjectNumbers
-                    )
-                ";
+                //query = @"
+                //SELECT
+                //    Groups.Treatment,
+                //    Groups.Group#,
+                //    COALESCE(Subjects.SubjectCount, 0) AS SubjectCount,
+                //    Treatments.PerGroup,
+                //    Groups.Period
+                //FROM Groups
+                //LEFT JOIN (
+                //    SELECT
+                //        COUNT(People.ID) AS SubjectCount,
+                //        People.Treatment,
+                //        People.Group# 
+                //    FROM People 
+                //    WHERE People.Rater <> 1
+                //    GROUP BY People.Treatment, People.Group# 
+                //) AS Subjects
+                //    ON Subjects.Treatment=Groups.Treatment AND Subjects.Group# = Groups.Group#
+                //LEFT JOIN Treatments
+                //    ON Treatments.TID = Groups.Treatment
+                //WHERE    
+                //    COALESCE(Subjects.SubjectCount, 0) < Treatments.PerGroup    
+                //    AND Groups.Period = 0
+                //    AND COALESCE(Subjects.SubjectCount, 0) = (
+                //        SELECT
+                //            MIN(SubjectNumbers.SubjectCount) AS MinCount
+                //        FROM (
+                //            SELECT
+                //                COALESCE(COUNT(People.ID), 0) AS SubjectCount
+                //            FROM Groups 
+                //            LEFT JOIN People ON People.Treatment = Groups.Treatment AND People.Group# = Groups.Group# AND People.Rater <> 1
+                //            LEFT JOIN Treatments ON Treatments.TID = Groups.Treatment
+                //            GROUP BY Groups.Treatment, Groups.Group#, Groups.Period, Treatments.PerGroup
+                //            HAVING
+                //                COALESCE(COUNT(People.ID), 0) < Treatments.PerGroup
+                //                AND Groups.Period = 0
+                //        ) AS SubjectNumbers
+                //    )
+                //";
 
-                com = new SqlCommand(query, conn);
-                var TreatGroup = com.ExecuteReader();
-                var TreatmentGroup = new DataTable();
-                TreatmentGroup.Load(TreatGroup);
-                TreatGroup.Close();
-                int Count = TreatmentGroup.Rows.Count;
-                if (Count == 0)
-                {
-                    query = @"
-                SELECT Groups.Treatment, Groups.Group#, SubjectCount, PerGroup, Groups.Period
-                FROM Groups LEFT JOIN (
-                		SELECT COUNT(People.ID) AS SubjectCount, People.Treatment, People.Group# 
-                		FROM People 
-                		WHERE People.Rater<>1
-                		GROUP BY People.Treatment, People.Group# 
-                		) AS Subjects ON Subjects.Treatment=Groups.Treatment AND Subjects.Group# = Groups.Group#
-                		LEFT JOIN Treatments on Treatments.TID = Groups.Treatment
-                WHERE (SubjectCount < PerGroup OR SubjectCount IS NULL) AND Groups.Period IS NULL";
+                //com = new SqlCommand(query, conn);
+                //var TreatGroup = com.ExecuteReader();
+                //var TreatmentGroup = new DataTable();
+                //TreatmentGroup.Load(TreatGroup);
+                //TreatGroup.Close();
+                //int Count = TreatmentGroup.Rows.Count;
+                //if (Count == 0)
+                //{
+                //    query = @"
+                //SELECT Groups.Treatment, Groups.Group#, SubjectCount, PerGroup, Groups.Period
+                //FROM Groups LEFT JOIN (
+                //		SELECT COUNT(People.ID) AS SubjectCount, People.Treatment, People.Group# 
+                //		FROM People 
+                //		WHERE People.Rater<>1
+                //		GROUP BY People.Treatment, People.Group# 
+                //		) AS Subjects ON Subjects.Treatment=Groups.Treatment AND Subjects.Group# = Groups.Group#
+                //		LEFT JOIN Treatments on Treatments.TID = Groups.Treatment
+                //WHERE (SubjectCount < PerGroup OR SubjectCount IS NULL) AND Groups.Period IS NULL";
 
-                    com = new SqlCommand(query, conn);
-                    TreatGroup = com.ExecuteReader();
-                    TreatmentGroup = new DataTable();
-                    TreatmentGroup.Load(TreatGroup);
-                    TreatGroup.Close();
-                    Count = TreatmentGroup.Rows.Count;
-                    if (Count == 0)
-                    {
-                        LabelLogin.Text = "We already got enough participants.";
-                        Session["Treat"] = null; Session["Group"] = null;
-                        conn.Close();
-                        ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('You are too late.\\nThis experiment has already started.');", true);
-                        return;
-                    }
-                }
-                Random rnd = new Random();
-                int RandomRow = rnd.Next(Count);
+                //    com = new SqlCommand(query, conn);
+                //    TreatGroup = com.ExecuteReader();
+                //    TreatmentGroup = new DataTable();
+                //    TreatmentGroup.Load(TreatGroup);
+                //    TreatGroup.Close();
+                //    Count = TreatmentGroup.Rows.Count;
+                //    if (Count == 0)
+                //    {
+                //        LabelLogin.Text = "We already got enough participants.";
+                //        Session["Treat"] = null; Session["Group"] = null;
+                //        conn.Close();
+                //        ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('You are too late.\\nThis experiment has already started.');", true);
+                //        return;
+                //    }
+                //}
+                //Random rnd = new Random();
+                //int RandomRow = rnd.Next(Count);
 
-                Session["Treat"] = (int)TreatmentGroup.Rows[RandomRow][0];
-                Session["Group"] = (int)TreatmentGroup.Rows[RandomRow][1];
+                //Session["Treat"] = (int)TreatmentGroup.Rows[RandomRow][0];
+                //Session["Group"] = (int)TreatmentGroup.Rows[RandomRow][1];
+
+                Session["Treat"] = 1;
+                Session["Group"] = 1;
 
                 // Assign the Treatment Group to the User:
                 query = "update People set Treatment = " + Session["Treat"] + ", Group# = " + Session["Group"] + " where ID = @User";
@@ -515,6 +518,24 @@ namespace ProcessTree
 
             #endregion
 
+            query = "update People set HashP = @HashP , Treatment = @Treat, Group# = @Group where ID = @ID";
+            #region Execute
+
+            com = new SqlCommand(query, conn);
+            com.Parameters.AddWithValue("@HashP", HashResult);
+            com.Parameters.AddWithValue("@Treat", Session["Treat"]);
+            com.Parameters.AddWithValue("@Group", Session["Group"]);
+            com.Parameters.AddWithValue("@ID", TextID.Text);
+
+            if (com.ExecuteNonQuery() != 1)
+            {
+                LabelMessage.Text = "Error (376). Please contact the admin: Law.Economist@Gmail.com";
+                Global.EmailAdmin("Error 376: Default", "UserID =" + TextID.Text);
+                conn.Close();
+                return;
+            }
+            #endregion
+
             Session["User"] = TextID.Text;
             Session["Active"] = false;
 
@@ -535,101 +556,102 @@ namespace ProcessTree
             //            Global.Email(TextID.Text, "Verification", Content);
 
             // Assign Treatment Groups:
-            query = @"
-            SELECT
-                Groups.Treatment,
-                Groups.Group#,
-                COALESCE(Subjects.SubjectCount, 0) AS SubjectCount,
-                Treatments.PerGroup,
-                Groups.Period
-            FROM Groups
-            LEFT JOIN (
-                SELECT
-                    COUNT(People.ID) AS SubjectCount,
-                    People.Treatment,
-                    People.Group# 
-                FROM People 
-                WHERE People.Rater <> 1
-                GROUP BY People.Treatment, People.Group# 
-            ) AS Subjects
-                ON Subjects.Treatment=Groups.Treatment AND Subjects.Group# = Groups.Group#
-            LEFT JOIN Treatments
-                ON Treatments.TID = Groups.Treatment
-            WHERE    
-                COALESCE(Subjects.SubjectCount, 0) < Treatments.PerGroup    
-                AND Groups.Period = 0
-                AND COALESCE(Subjects.SubjectCount, 0) = (
-                    SELECT
-                        MIN(SubjectNumbers.SubjectCount) AS MinCount
-                    FROM (
-                        SELECT
-                            COALESCE(COUNT(People.ID), 0) AS SubjectCount
-                        FROM Groups 
-                        LEFT JOIN People ON People.Treatment = Groups.Treatment AND People.Group# = Groups.Group# AND People.Rater <> 1
-                        LEFT JOIN Treatments ON Treatments.TID = Groups.Treatment
-                        GROUP BY Groups.Treatment, Groups.Group#, Groups.Period, Treatments.PerGroup
-                        HAVING
-                            COALESCE(COUNT(People.ID), 0) < Treatments.PerGroup
-                            AND Groups.Period = 0
-                    ) AS SubjectNumbers
-                )
-            ";
+            //query = @"
+            //SELECT
+            //    Groups.Treatment,
+            //    Groups.Group#,
+            //    COALESCE(Subjects.SubjectCount, 0) AS SubjectCount,
+            //    Treatments.PerGroup,
+            //    Groups.Period
+            //FROM Groups
+            //LEFT JOIN (
+            //    SELECT
+            //        COUNT(People.ID) AS SubjectCount,
+            //        People.Treatment,
+            //        People.Group# 
+            //    FROM People 
+            //    WHERE People.Rater <> 1
+            //    GROUP BY People.Treatment, People.Group# 
+            //) AS Subjects
+            //    ON Subjects.Treatment=Groups.Treatment AND Subjects.Group# = Groups.Group#
+            //LEFT JOIN Treatments
+            //    ON Treatments.TID = Groups.Treatment
+            //WHERE    
+            //    COALESCE(Subjects.SubjectCount, 0) < Treatments.PerGroup    
+            //    AND Groups.Period = 0
+            //    AND COALESCE(Subjects.SubjectCount, 0) = (
+            //        SELECT
+            //            MIN(SubjectNumbers.SubjectCount) AS MinCount
+            //        FROM (
+            //            SELECT
+            //                COALESCE(COUNT(People.ID), 0) AS SubjectCount
+            //            FROM Groups 
+            //            LEFT JOIN People ON People.Treatment = Groups.Treatment AND People.Group# = Groups.Group# AND People.Rater <> 1
+            //            LEFT JOIN Treatments ON Treatments.TID = Groups.Treatment
+            //            GROUP BY Groups.Treatment, Groups.Group#, Groups.Period, Treatments.PerGroup
+            //            HAVING
+            //                COALESCE(COUNT(People.ID), 0) < Treatments.PerGroup
+            //                AND Groups.Period = 0
+            //        ) AS SubjectNumbers
+            //    )
+            //";
 
-            com = new SqlCommand(query, conn);
-            var TreatGroup = com.ExecuteReader();
-            var TreatmentGroup = new DataTable();
-            TreatmentGroup.Load(TreatGroup);
-            TreatGroup.Close();
-            int Count = TreatmentGroup.Rows.Count;
-            if (Count == 0)
-            {
-                query = @"
-            SELECT Groups.Treatment, Groups.Group#, SubjectCount, PerGroup, Groups.Period
-            FROM Groups LEFT JOIN (
-            		SELECT COUNT(People.ID) AS SubjectCount, People.Treatment, People.Group# 
-            		FROM People 
-            		WHERE People.Rater<>1
-            		GROUP BY People.Treatment, People.Group# 
-            		) AS Subjects ON Subjects.Treatment=Groups.Treatment AND Subjects.Group# = Groups.Group#
-            		LEFT JOIN Treatments on Treatments.TID = Groups.Treatment
-            WHERE (SubjectCount < PerGroup OR SubjectCount IS NULL) AND Groups.Period IS NULL";
+            //com = new SqlCommand(query, conn);
+            //var TreatGroup = com.ExecuteReader();
+            //var TreatmentGroup = new DataTable();
+            //TreatmentGroup.Load(TreatGroup);
+            //TreatGroup.Close();
+            //int Count = TreatmentGroup.Rows.Count;
+            //if (Count == 0)
+            //{
+            //    query = @"
+            //SELECT Groups.Treatment, Groups.Group#, SubjectCount, PerGroup, Groups.Period
+            //FROM Groups LEFT JOIN (
+            //		SELECT COUNT(People.ID) AS SubjectCount, People.Treatment, People.Group# 
+            //		FROM People 
+            //		WHERE People.Rater<>1
+            //		GROUP BY People.Treatment, People.Group# 
+            //		) AS Subjects ON Subjects.Treatment=Groups.Treatment AND Subjects.Group# = Groups.Group#
+            //		LEFT JOIN Treatments on Treatments.TID = Groups.Treatment
+            //WHERE (SubjectCount < PerGroup OR SubjectCount IS NULL) AND Groups.Period IS NULL";
 
-                com = new SqlCommand(query, conn);
-                TreatGroup = com.ExecuteReader();
-                TreatmentGroup = new DataTable();
-                TreatmentGroup.Load(TreatGroup);
-                TreatGroup.Close();
-                Count = TreatmentGroup.Rows.Count;
-                if (Count == 0)
-                {
-                    LabelLogin.Text = "You are too late!";
-                    Session["Treat"] = null; Session["Group"] = null;
-                    conn.Close();
-                    ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('You are too late.\\nThis experiment has already started.');", true);
-                    return;
-                }
-            }
-            Random rnd = new Random();
-            int RandomRow = rnd.Next(Count);
+            //    com = new SqlCommand(query, conn);
+            //    TreatGroup = com.ExecuteReader();
+            //    TreatmentGroup = new DataTable();
+            //    TreatmentGroup.Load(TreatGroup);
+            //    TreatGroup.Close();
+            //    Count = TreatmentGroup.Rows.Count;
+            //    if (Count == 0)
+            //    {
+            //        LabelLogin.Text = "You are too late!";
+            //        Session["Treat"] = null; Session["Group"] = null;
+            //        conn.Close();
+            //        ClientScript.RegisterStartupScript(GetType(), "Attention", "alert('You are too late.\\nThis experiment has already started.');", true);
+            //        return;
+            //    }
+            //}
+            //Random rnd = new Random();
+            //int RandomRow = rnd.Next(Count);
 
-            Session["Treat"] = (int)TreatmentGroup.Rows[RandomRow][0];
-            Session["Group"] = (int)TreatmentGroup.Rows[RandomRow][1];
+            //Session["Treat"] = (int)TreatmentGroup.Rows[RandomRow][0];
+            //Session["Group"] = (int)TreatmentGroup.Rows[RandomRow][1];
 
-            // Assign the Treatment Group to the User:
-            query = "update People set Treatment = " + Session["Treat"] + ", Group# = " + Session["Group"] + " where ID = @User";
-            #region Execute
-            com = new SqlCommand(query, conn);
-            com.Parameters.AddWithValue("@User", Session["User"].ToString());
-            if (com.ExecuteNonQuery() != 1)
-            {
-                LabelLogin.Text = "Error (162). Please contact the admin: Law.Economist@Gmail.com";
-                Global.EmailAdmin("Error 162: Rating", "UserID = " + Session["User"] + " & Treatment = " + Session["Treat"]);
-                conn.Close();
-                return;
-            }
-            #endregion
+            //// Assign the Treatment Group to the User:
+            //query = "update People set Treatment = " + Session["Treat"] + ", Group# = " + Session["Group"] + " where ID = @User";
+            //#region Execute
+            //com = new SqlCommand(query, conn);
+            //com.Parameters.AddWithValue("@User", Session["User"].ToString());
+            //if (com.ExecuteNonQuery() != 1)
+            //{
+            //    LabelLogin.Text = "Error (162). Please contact the admin: Law.Economist@Gmail.com";
+            //    Global.EmailAdmin("Error 162: Rating", "UserID = " + Session["User"] + " & Treatment = " + Session["Treat"]);
+            //    conn.Close();
+            //    return;
+            //}
+            //#endregion
 
             conn.Close();
+
             // A Participant with a Treatment Group: -->                           
             int Period = Global.Refresh((int)Session["Treat"], (int)Session["Group"], out DateTime DT);
 
