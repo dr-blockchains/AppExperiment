@@ -476,7 +476,7 @@ namespace ProcessTree
                     //        WHERE Treatment = @Treatment AND [Group#] = @Group AND Period = @Period
                     //        ORDER BY Score DESC, Choice";
                     query = @"SELECT *
-                            FROM Versions LEFT JOIN (SELECT * FROM Offers WHERE Buy0Sell1 = 0 AND UnFullfilled > 0) AS Offers1
+                            FROM Versions LEFT JOIN (SELECT * FROM Orders WHERE DShare > 0 AND UnFullfilled > 0) AS Offers1
                             ON Versions.Treatment = Offers1.Treatment AND Versions.Group# = Offers1.Group# AND Versions.Period= Offers1.Period AND Versions.Choice=Offers1.Choice
                             WHERE Versions.Treatment = @Treatment AND Versions.[Group#] = @Group AND Versions.Period = @Period
                             ORDER BY Price DESC, Versions.Score DESC, Versions.Choice";
@@ -1049,14 +1049,14 @@ namespace ProcessTree
 
                     //User.Close();                  
                     query = @"UPDATE People SET 
-ShareBalance = (@Fund/1000000.0) * COALESCE((SELECT Volume FROM Shares WHERE Owner = People.ID AND Period = @Period + 2 AND Choice = 0),0)
+ShareBalance = (@Dividend) * COALESCE((SELECT Volume FROM Shares WHERE Owner = People.ID AND Period = @Period + 2 AND Choice = 0),0)
 WHERE Treatment = @Treat AND Group# = @Group";
 
                     com = new SqlCommand(query, conn);
                     com.Parameters.AddWithValue("@Treat", Treat);
                     com.Parameters.AddWithValue("@Group", Group);
                     com.Parameters.AddWithValue("@Period", Period);
-                    com.Parameters.AddWithValue("@Fund", NewValue);
+                    com.Parameters.AddWithValue("@Dividend", NewValue/Score);
                     if (com.ExecuteNonQuery() < 1)
                         EmailAdmin("Error 1004: Global.Refresh", "Treatment = " + Treat + " <br> Period = " + Period + " <br> DT = " + DT + " <br> Winner = " + Winner);
                     

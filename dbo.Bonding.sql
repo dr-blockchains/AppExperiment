@@ -4,14 +4,13 @@
 -- Description:	<Parallel Primary Markets>
 -- =============================================
 
-CREATE PROCEDURE [dbo].[Bonding]
+ALTER PROCEDURE [dbo].[Bonding]
 ( 
 	@Treatment INT, 
 	@Group INT,
 	@Period INT, 
 	@Choice INT, 
 	@Bidder NVARCHAR(50),
-	@Buy0Sell1 BIT,
 	@Shares1Rounded FLOAT,
 	@DShare FLOAT
 )
@@ -22,19 +21,19 @@ BEGIN TRANSACTION
 --**************************** Shares1 / Shares2 / Price1 / Price2 / dfund ***********************
 BEGIN TRY
 
-	IF (@DShare <= 0 OR @DShare > 10000 OR @Shares1Rounded < 0 OR @Shares1Rounded > 10000) 
+	IF (@DShare < -10000 OR @DShare > 10000 OR @DShare = 0 OR @Shares1Rounded < -10000 OR @Shares1Rounded > 10000) 
 	BEGIN
 		--ROLLBACK TRANSACTION;
 		INSERT INTO ErrorLog VALUES (GETDATE(),28, 'Out of Range', 2);
 		RETURN 20;
 	END;
 
-	DECLARE @A FLOAT, @B FLOAT, @Price1 FLOAT, @Shares1 FLOAT, @Shares2 FLOAT, @DFund FLOAT, @UnFull FLOAT = 0;
+	DECLARE @A FLOAT, @B FLOAT, @Price1 FLOAT, @Price2 FLOAT, @Shares1 FLOAT, @Shares2 FLOAT, @DFund FLOAT, @UnFull FLOAT = 0;
 
 	SELECT @Shares1 = Score FROM Versions
 		WHERE (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
-	IF ABS(@Shares1 - @Shares1Rounded) > .01 
+	IF ABS(@Shares1 - @Shares1Rounded) > .001 
 	BEGIN
 		--ROLLBACK TRANSACTION;
 		INSERT INTO ErrorLog VALUES (GETDATE(),41, 'Price Changed: Difference=' + CAST(@Shares1 - @Shares1Rounded AS VARCHAR), 3);
@@ -56,7 +55,7 @@ BEGIN CATCH
 END CATCH	
 
 
-IF @Buy0Sell1 = 0
+IF @DShare > 0
 --*****************************BUYER********************************
 BEGIN
 BEGIN TRY
@@ -124,6 +123,8 @@ END
 ELSE --****************************SELLER ******************************
 BEGIN
 BEGIN TRY
+	SET @DShare = -@DShare;
+
 	DECLARE @AvShare FLOAT;
 	SELECT @AvShare = Volume FROM Shares
 		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
@@ -202,7 +203,7 @@ BEGIN TRY
 	END;
 
 	--**************************** OFFER / Order / TRANSACTION ***********************
-	INSERT INTO Offers VALUES (@Treatment, @Group, @Period, @Choice, @Bidder, GETDATE(), @Price1, @DShare, @UnFull, @Buy0Sell1);
+	INSERT INTO Orders VALUES (@Treatment, @Group, @Period, @Choice, @Bidder, GETDATE(), @DShare, @UnFull, @Price1, @A*@Shares2 + @B);
 
 	--**************************** UPDATE Total Shares & Price ******************************
 	UPDATE Versions SET Score = @Shares2 

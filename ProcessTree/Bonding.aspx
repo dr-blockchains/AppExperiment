@@ -358,9 +358,12 @@
 
         </div>
 
-        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" SelectCommand="SELECT Price, Time AS TranTime FROM Offers WHERE (Treatment = @Treatment) AND (Group# = @Group ) AND (Period = @Period) AND (Choice = @Choice) ORDER BY TranTime">
+        <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" SelectCommand="SELECT Price1, Time AS TranTime FROM Orders WHERE (Treatment = @Treatment) AND (Group# = @Group ) AND (Period = @Period) AND (Choice = @Choice)
+UNION ALL
+SELECT Price2, Time AS TranTime FROM Orders WHERE (Treatment = @Treatment) AND (Group# = @Group ) AND (Period = @Period) AND (Choice = @Choice)
+ORDER BY TranTime">
             <SelectParameters>
-                <asp:Parameter DefaultValue="0" Name="Treatment" />
+                <asp:Parameter DefaultValue="1" Name="Treatment" />
                 <asp:Parameter DefaultValue="1" Name="Group" />
                 <asp:Parameter DefaultValue="2" Name="Period" />
                 <asp:Parameter DefaultValue="0" Name="Choice" />

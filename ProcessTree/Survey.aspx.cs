@@ -44,13 +44,13 @@ namespace ProcessTree
                 User.Close();
                                                                                                     
                 int LastPeriod = 12;
-                float FinalValue = 100000.0f;
+                float FinalValue = 0.0f, Score = 0;
 
                 query = "SELECT TOP 1 * FROM Versions WHERE Treatment = @Treat AND Group# = @Group AND Choice = 0 ORDER BY Period DESC";
                 com = new SqlCommand(query, conn);                
                 com.Parameters.AddWithValue("@Treat", Session["Treat"]);
                 com.Parameters.AddWithValue("@Group", Session["Group"]);
-
+               
                 var FinalArtifact = com.ExecuteReader();
                 if (!FinalArtifact.Read())
                 {
@@ -62,6 +62,7 @@ namespace ProcessTree
                     LabelArtifact.Text = FinalArtifact["HtmlArtifact"].ToString();
                     LastPeriod = (int)FinalArtifact["Period"];
                     FinalValue = (float)FinalArtifact["PerVal"];
+                    Score = (float)FinalArtifact["Score"];
                 }
 
                 FinalArtifact.Close();
@@ -76,7 +77,7 @@ namespace ProcessTree
                 float Shares = (float)(com.ExecuteScalar() ?? 0.0f);
                 LabelShare.Text = "Your Number of Shares = " + Shares.ToString();
 
-                Session["FinalBalance"] = Math.Round((Balance + Shares * FinalValue / 1000000.0f) * 100) / 100;                
+                Session["FinalBalance"] = Math.Round((Balance + Shares * FinalValue / Score) * 100) / 100;                
 
                 // Initialize the timer: **********************************************************************
                 query = @"SELECT Treatment, Group#, Compensation, Starting, Tz, Tf

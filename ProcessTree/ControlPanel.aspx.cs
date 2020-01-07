@@ -674,7 +674,7 @@ namespace ProcessTree
             }
             #endregion
 
-            query = "delete from Offers where Treatment = " + Treat.SelectedValue + " and Group# > " + Count;
+            query = "delete from Orders where Treatment = " + Treat.SelectedValue + " and Group# > " + Count;
             #region Execute
             com = new SqlCommand(query, conn);
             if (com.ExecuteNonQuery() < 0)
