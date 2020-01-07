@@ -383,7 +383,7 @@ namespace ProcessTree
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
             conn.Open();
 
-            string query = "EXEC Bonding @Treatment, @Group, @Period, @Choice, @Bidder, @Buy0Sell1, @Score, @Dshare";
+            string query = "EXEC Bonding @Treatment, @Group, @Period, @Choice, @Bidder, @Score, @DShare";
             SqlCommand com = new SqlCommand(query, conn);
 
             com.Parameters.AddWithValue("@Treatment", Session["Treat"]);
@@ -391,9 +391,9 @@ namespace ProcessTree
             com.Parameters.AddWithValue("@Period", Session["Period"]);
             com.Parameters.AddWithValue("@Choice", Session["Choice"]);
             com.Parameters.AddWithValue("@Bidder", Session["User"]);
-            com.Parameters.AddWithValue("@Buy0Sell1", RadioOrder.SelectedIndex);
+//            com.Parameters.AddWithValue("@Buy0Sell1", RadioOrder.SelectedIndex);
             com.Parameters.AddWithValue("@Score", shares1);
-            com.Parameters.AddWithValue("@DShare", dshare);
+            com.Parameters.AddWithValue("@DShare", dshare * ( RadioOrder.SelectedIndex == 0 ? 1 : -1 ));
 
             if (com.ExecuteNonQuery() < 3)
             {

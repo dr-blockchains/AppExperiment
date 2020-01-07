@@ -479,7 +479,7 @@ namespace ProcessTree
                             FROM Versions LEFT JOIN (SELECT * FROM Orders WHERE DShare > 0 AND UnFullfilled > 0) AS Offers1
                             ON Versions.Treatment = Offers1.Treatment AND Versions.Group# = Offers1.Group# AND Versions.Period= Offers1.Period AND Versions.Choice=Offers1.Choice
                             WHERE Versions.Treatment = @Treatment AND Versions.[Group#] = @Group AND Versions.Period = @Period
-                            ORDER BY Price DESC, Versions.Score DESC, Versions.Choice";
+                            ORDER BY Price1 DESC, Versions.Score DESC, Versions.Choice";
 
                     com = new SqlCommand(query, conn);
                     com.Parameters.AddWithValue("@Treatment", Treat);
