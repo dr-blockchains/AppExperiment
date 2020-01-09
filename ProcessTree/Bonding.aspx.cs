@@ -77,7 +77,7 @@ namespace ProcessTree
 
             float avfund = (float) User["Balance"];
 
-            if (Session["MEssage"] == null)
+            if (Session["Message"] == null)
                 Message.Text = User["Name"] + ", buy or sell considering the current price!";
             else
                 Message.Text = Session["Message"].ToString();

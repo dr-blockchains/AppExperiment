@@ -15,15 +15,16 @@ ALTER PROCEDURE [dbo].[Bonding]
 	@DShare FLOAT
 )
 AS
-BEGIN TRANSACTION
+SET XACT_ABORT ON;
 
+BEGIN TRANSACTION
 
 --**************************** Shares1 / Shares2 / Price1 / Price2 / dfund ***********************
 BEGIN TRY
 
 	IF (@DShare < -10000 OR @DShare > 10000 OR @DShare = 0 OR @Shares1Rounded < -10000 OR @Shares1Rounded > 10000) 
 	BEGIN
-		--ROLLBACK TRANSACTION;
+		ROLLBACK TRANSACTION;
 		INSERT INTO ErrorLog VALUES (GETDATE(),28, 'Out of Range', 2);
 		RETURN 20;
 	END;
@@ -35,7 +36,7 @@ BEGIN TRY
 
 	IF ABS(@Shares1 - @Shares1Rounded) > .001 
 	BEGIN
-		--ROLLBACK TRANSACTION;
+		ROLLBACK TRANSACTION;
 		INSERT INTO ErrorLog VALUES (GETDATE(),41, 'Price Changed: Difference=' + CAST(@Shares1 - @Shares1Rounded AS VARCHAR), 3);
 		RETURN 30;
 	END;
