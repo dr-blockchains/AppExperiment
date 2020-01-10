@@ -1056,7 +1056,7 @@ WHERE Treatment = @Treat AND Group# = @Group";
                     com.Parameters.AddWithValue("@Treat", Treat);
                     com.Parameters.AddWithValue("@Group", Group);
                     com.Parameters.AddWithValue("@Period", Period);
-                    com.Parameters.AddWithValue("@Dividend", NewValue/Score);
+                    com.Parameters.AddWithValue("@Dividend", Score>0 ? NewValue/Score : 0);
                     if (com.ExecuteNonQuery() < 1)
                         EmailAdmin("Error 1004: Global.Refresh", "Treatment = " + Treat + " <br> Period = " + Period + " <br> DT = " + DT + " <br> Winner = " + Winner);
                     
