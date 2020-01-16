@@ -14,13 +14,17 @@ BEGIN TRY
 								+ (SELECT COALESCE(SUM(BalanceVoid),0) FROM Shares WHERE [Owner] = People.ID AND Choice != @Winner AND [Period] = @Period)
 	WHERE Treatment = @Treatment AND [Group#] = @Group;
 	
-	UPDATE Versions SET SCORE = (SELECT SCORE FROM Versions WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period AND Choice = @Winner)
-	WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period + 2;
+	DECLARE @Score FLOAT, @Fund FLOAT;
+
+	SELECT @Score = Score, @Fund = Fund FROM Versions 
+		WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period AND Choice = @Winner;
+
+	UPDATE Versions SET Score = @Score, Fund = @Fund
+		WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period + 2;
 
     DECLARE @m INT;
-	SELECT @m = COUNT(Choice)
-	FROM Versions 
-	WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period + 2;
+	SELECT @m = COUNT(Choice)	FROM Versions 
+		WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period + 2;
 	
 	DECLARE @i INT = 0;
 	WHILE @i < @m
@@ -30,7 +34,7 @@ BEGIN TRY
             FROM Shares
             WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period AND Choice = @Winner;
 
-		SET @i = @i + 1 ;
+		SET @i = @i + 1;
 	END;
 
 	--INSERT INTO Offers SELECT  Treatment, Group#, @Period + 2 , 0, Bidder, [Time] , Price, UnFullfilled, UnFullfilled, Buy0Sell1

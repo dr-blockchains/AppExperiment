@@ -4,7 +4,7 @@
 -- Description:	<Parallel Primary Markets>
 -- =============================================
 
-ALTER PROCEDURE [dbo].[Bonding]
+CREATE PROCEDURE [dbo].[Bonding]
 ( 
 	@Treatment INT, 
 	@Group INT,
@@ -131,11 +131,14 @@ BEGIN TRY
 		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 	
 	IF @AvShare > @Shares1 BEGIN		
-		INSERT INTO ErrorLog VALUES (GETDATE(), 137, 'Av Share not match: ' + CAST((@AvShare - @Shares1) AS VARCHAR(10)) , 9);
+		INSERT INTO ErrorLog VALUES (GETDATE(), 137, 'Av Share not match: ' + CAST((@AvShare - @Shares1) AS VARCHAR) , 9);
 		IF @AvShare - @Shares1 > .01 BEGIN
 			ROLLBACK TRANSACTION;
 			RETURN 137;  	 
 		END;
+
+		SET @AvShare = @Shares1;
+
 	END;
 	
 	IF @AvShare < @DShare BEGIN		
@@ -153,6 +156,8 @@ BEGIN TRY
 
 	UPDATE Shares SET BalanceConfirm = BalanceConfirm + @DFund, Volume = Volume - @DShare 
 		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
+
+	SET @DFund = -@DFund;
 
 	DECLARE @MinB FLOAT;
 
@@ -207,7 +212,7 @@ BEGIN TRY
 	INSERT INTO Orders VALUES (@Treatment, @Group, @Period, @Choice, @Bidder, GETDATE(), @DShare, @UnFull, @Price1, @A*@Shares2 + @B);
 
 	--**************************** UPDATE Total Shares & Price ******************************
-	UPDATE Versions SET Score = @Shares2 
+	UPDATE Versions SET Score = @Shares2 , Fund = Fund + @DFund
 		WHERE (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
 END TRY

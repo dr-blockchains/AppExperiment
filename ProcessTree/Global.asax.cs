@@ -336,7 +336,7 @@ namespace ProcessTree
             }         
             else if (Period == 0) // Was registration Period: ***********************************************
             {
-                query = "UPDATE Versions SET Time = GETDATE() , Score = 0 WHERE Treatment = @Treat AND Group# = @Group";
+                query = "UPDATE Versions SET Time = GETDATE() , Score = 0 , Fund = 0 WHERE Treatment = @Treat AND Group# = @Group";
                 com = new SqlCommand(query, conn);
                 com.Parameters.AddWithValue("@Treat", Treat);
                 com.Parameters.AddWithValue("@Group", Group);
@@ -583,8 +583,8 @@ namespace ProcessTree
                         break;
                 }
 
-                NewCash = "$" + NewValue.ToString("N2") + " in cash ";
-                HtmlNewCash = NewCash + "<br><hr>" +
+                NewCash = "$" + NewValue.ToString("N2");
+                HtmlNewCash = "Fund from previous round = " + NewCash + "<br><hr>" +
                     "<strong>Calculation:</strong><br><br><i>" +
                     "The winnig choice on " + RoundDate + ": <br><br>" +
                     Artifact.Replace("\r", "").Replace("\n", "<br>") + "<br><br>" +
@@ -595,7 +595,7 @@ namespace ProcessTree
                 
                 // Insert the winner to the next round (Period +2)
                 query = @"INSERT INTO Versions(Treatment, Group#, Period , Choice , Artifact , HtmlArtifact, Proposer, Time, Score, PerVal) values(
-                     @Treatment, @Group, @Period, 0, @Artifact, @HtmlArtifact, @Proposer, GETDATE(), @Score, @PerVal)";
+                     @Treatment, @Group, @Period, 0, @Artifact, @HtmlArtifact, @Proposer, GETDATE(), @Score, @PerVal, @Fund)";
                 com = new SqlCommand(query, conn);
                 com.Parameters.AddWithValue("@Treatment", Treat);
                 com.Parameters.AddWithValue("@Group", Group);
@@ -605,6 +605,7 @@ namespace ProcessTree
                 com.Parameters.AddWithValue("@Proposer", Proposer);
                 com.Parameters.AddWithValue("@Score", Score);
                 com.Parameters.AddWithValue("@PerVal", NewValue);
+                com.Parameters.AddWithValue("@Fund", NewValue);
 
                 try
                 {

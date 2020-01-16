@@ -177,9 +177,9 @@ ORDER BY Choice">
                     <asp:SqlDataSource ID="SqlDataSource5" runat="server" 
                         ConnectionString="<%$ ConnectionStrings:ProcessTreeConnectionString %>" 
                         SelectCommand="SELECT '&lt;span class=&quot;version-choice&quot;&gt;' + 
-  CASE WHEN Choice = 0 THEN 'Hold Cash'
+CASE WHEN Choice = 0 THEN 'Hold Cash'
 ELSE 'Portfolio ' + CAST(Choice AS VARCHAR(MAX)) END + 
-' &amp;nbsp&amp;nbsp ( Number of shares outstanding = ' + FORMAT(Score, 'N3') + 
+' &amp;nbsp&amp;nbsp ( Number of shares outstanding = ' + FORMAT(Score, 'N3') + ' &amp;nbsp , &amp;nbsp Amount of fund = ' + FORMAT(Fund, 'N3') + 
 ' ) :&lt;/span&gt;&lt;div class=&quot;version-artifact&quot;&gt;&lt;br&gt;' + 
 REPLACE(HtmlArtifact, CHAR(13), '&lt;br&gt;') + '&lt;/div&gt;&lt;hr&gt;'   
 AS Expr1, 
