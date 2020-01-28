@@ -445,10 +445,10 @@ ORDER BY TranTime, Sequence">
                     }
                 }
 
-            } else { // Sell 
+            } else { // Sell
                 avshare = Number(AvShare.innerHTML);
                 if (avshare > shares1) {
-                    alert("Error449: Your Share (" + avshare + ") > Total Share ("+shares1+")");
+                    // alert("Error449: Your Share (" + avshare + ") > Total Share ("+shares1+")");
                     avshare = shares1;
                     AvShare.innerHTML = avshare.toFixed(3);
                 }
@@ -466,7 +466,7 @@ ORDER BY TranTime, Sequence">
                 }
 
                 shares2 = shares1 - dshare;
-                dfund = dshare * (a * (shares1 + shares2) / 2 + b);                
+                dfund = dshare * (a * (shares1 + shares2) / 2 + b);
             }
 
             DeltaFund.value = dfund.toFixed(2);
@@ -514,7 +514,7 @@ ORDER BY TranTime, Sequence">
             } else { // Sell
                 avshare = Number(AvShare.innerHTML);
                 if (avshare > shares1) {
-                    alert("Error513: Your Share (" + avshare + ") > Total Share (" + shares1 + ")");
+                    // alert("Error513: Your Share (" + avshare + ") > Total Share (" + shares1 + ")");
                     avshare = shares1;
                     AvShare.innerHTML = avshare.toFixed(3);
                 }
@@ -528,9 +528,8 @@ ORDER BY TranTime, Sequence">
                     DeltaFund.value = dfund.toFixed(2);
                 }
                 else {
-
                     shares2 = shares1 - avshare;
-                    avfundS = avshare * (a * (shares1 + shares2) / 2 + b); 
+                    avfundS = avshare * (a * (shares1 + shares2) / 2 + b);
 
                     //const F1 = (.5 * a * shares1 + b) * shares1;
                     //const F2 = (.5 * a * shares2 + b) * shares2;
@@ -559,7 +558,7 @@ ORDER BY TranTime, Sequence">
 
             EndShares.innerHTML = shares2.toFixed(3);
             EndPrice.innerHTML = (a * shares2 + b).toFixed(2);
-            AveragePrice.innerHTML = (.5 * a * (shares1 + shares2) + b).toFixed(2); 
+            AveragePrice.innerHTML = (.5 * a * (shares1 + shares2) + b).toFixed(2);
         }
 
         function RadioClick() {
@@ -623,7 +622,6 @@ ORDER BY TranTime, Sequence">
                 AutoFill.style.backgroundColor = "pink";
                 DeltaShares.style.backgroundColor = "pink";
                 DeltaFund.style.backgroundColor = "pink";
-
             }
 
             if (LastChange.innerHTML == 'F') {

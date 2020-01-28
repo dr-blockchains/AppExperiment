@@ -309,7 +309,7 @@ namespace ProcessTree
             int M = (int)Treatment["M"];
             short Valuation = (short) Treatment["Valuation"];
 
-            float Beta = (float)Treatment["Beta"];
+            // float Beta = (float)Treatment["Beta"];
 
             //float Reward = (float)Treatment["Reward"];
             //float Rv = (float)Treatment["Rv"];
@@ -430,8 +430,7 @@ namespace ProcessTree
             {
                 int Winner;
                 string Proposer, Artifact, NewCash, HtmlNewCash;
-                float OldValue, NewValue, Score = 0;
-                DataTable VersionVotes;
+                float OldValue = 0 , NewValue, Score = 0, Fund;
                 //int MinVote = 0;
                 //string ProposerName;
                 //float Balance, MaxVote;
@@ -453,15 +452,23 @@ namespace ProcessTree
                         conn.Close();
                         return Period;
                     }
-
                     Winner = (int)DataReader["Choice"];
-                    Score= (float) DataReader["Score"];                   
+                    Score = (float) DataReader["Score"];
+                    Fund = (float)DataReader["Fund"];
                     Proposer = (string)DataReader["Proposer"];
                     Artifact = (string)DataReader["Artifact"];
                     Performance = (Winner==0?1:(float)DataReader["PerVal"]);
-                                                         
+
                     com.Dispose();
                     DataReader.Close();
+
+                    OldValue = .5f * A * Score * Score + B * Score;
+
+                    EmailAdmin("Global.Refresh", "Treatment = " + Treat + " <br> Group = " + Group + " <br> Period = " + Period + " <br> DT = " + DT + " <br> Winner = " + Winner +
+                        " <br> Fund (Accumulated) = " + Fund + " <br> Fund (Calculated) = " + OldValue + " <br> Fund - OldValue = " + (Fund - OldValue));
+
+                    A *= Performance;
+                    B *= Performance;
                 }
                 else if (Valuation == 10) // Parallel Market
                 {
@@ -525,7 +532,7 @@ namespace ProcessTree
                     #region Execute
                     com = new SqlCommand(query, conn);
                     var DataReader = com.ExecuteReader();
-                    VersionVotes = new DataTable();
+                    DataTable VersionVotes = new DataTable();
                     VersionVotes.Load(DataReader);
                     DataReader.Close();
                     if (VersionVotes.Rows.Count == 0)
@@ -545,10 +552,7 @@ namespace ProcessTree
                     Performance = (float)VersionVotes.Rows[0][4]; // Version["PerVal"];
                 }
 
-                OldValue = .5f * A * Score * Score + B * Score;
                 NewValue = OldValue * Performance;
-                A *= Performance;
-                B *= Performance;
                 // Only for voting or parallel (secondary) markets (Valutation < 12) 
                 //if (Winner == 0)
                 //{
@@ -584,23 +588,24 @@ namespace ProcessTree
                 }
 
                 NewCash = "$" + NewValue.ToString("N2");
-                HtmlNewCash = "Fund from previous round = " + NewCash + "<br><hr>" +
+
+                HtmlNewCash = "Starting fund in this round for every choice = " + NewCash + "<br><hr>" +
                     "<strong>Calculation:</strong><br><br><i>" +
                     "The winnig choice on " + RoundDate + ": <br><br>" +
                     Artifact.Replace("\r", "").Replace("\n", "<br>") + "<br><br>" +
-                    "Its performance was " +  Performance.ToString("N6") + "<br>" + //(Winner == 0 ? "1" : Performance.ToString("N6")) + "<br>" +
+                    "Its performance was " +  Performance.ToString("N6") + "<br>" +
                     "Prior fund invested by the firm (on " + RoundDate + ") was $" + OldValue.ToString("N2") + "<br>" +
                     "New fund = Prior fund * Performance = $" + NewValue.ToString("N2") + "<i><br>" +
                     "New price function is: Price = " + A.ToString("N3") + " * S + " + B.ToString("N3");
                 
                 // Insert the winner to the next round (Period +2)
-                query = @"INSERT INTO Versions(Treatment, Group#, Period , Choice , Artifact , HtmlArtifact, Proposer, Time, Score, PerVal) values(
+                query = @"INSERT INTO Versions(Treatment, Group#, Period , Choice , Artifact , HtmlArtifact, Proposer, Time, Score, PerVal, Fund) values(
                      @Treatment, @Group, @Period, 0, @Artifact, @HtmlArtifact, @Proposer, GETDATE(), @Score, @PerVal, @Fund)";
                 com = new SqlCommand(query, conn);
                 com.Parameters.AddWithValue("@Treatment", Treat);
                 com.Parameters.AddWithValue("@Group", Group);
                 com.Parameters.AddWithValue("@Period", Period + 2);
-                com.Parameters.AddWithValue("@Artifact", NewCash);
+                com.Parameters.AddWithValue("@Artifact", "Holding Cash");
                 com.Parameters.AddWithValue("@HtmlArtifact", HtmlNewCash);
                 com.Parameters.AddWithValue("@Proposer", Proposer);
                 com.Parameters.AddWithValue("@Score", Score);

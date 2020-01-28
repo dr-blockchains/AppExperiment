@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[Winning]
-( 
+(
 	@Treatment INT, 
 	@Group INT,
 	@Period INT, 

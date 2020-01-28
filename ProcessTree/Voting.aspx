@@ -86,8 +86,8 @@
                      <asp:Label ID="LabelLogin" runat="server" Class="login" Text="Error! Please contact the admin: Law.Economist@Gmail.com" Font-Size="Large" ForeColor="#CC0000" Width="185%"></asp:Label>
                     </td>
                 <td class="questions">
-                    <!-- <a href="./ChatRoom.aspx" target="_blank">Open Chat Room</a>
-                        -->
+                     <a href="./ChatRoom.aspx" target="_blank">Open Chat Room</a>
+                        
                                     </td>
                 <asp:Label id="TimeSpan" runat="server" style="display: none"></asp:Label>  
             </tr>            

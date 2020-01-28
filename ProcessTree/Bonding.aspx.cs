@@ -154,7 +154,7 @@ namespace ProcessTree
 
             if(avshare > shares1)
             {
-                ClientScript.RegisterStartupScript(GetType(), "Discrepancy", "alert('Error 158: Your Share > Total Shares');", true);
+                // ClientScript.RegisterStartupScript(GetType(), "Discrepancy", "alert('Error 158: Your Share > Total Shares');", true);
                 Global.EmailAdmin("Error 159: Bonding", "UserID =" + Session["User"] + " & Choice = " + Session["Choice"] + " & shares1 = " + shares1 + " & avshare = " + avshare);
 
                 avshare = shares1;
