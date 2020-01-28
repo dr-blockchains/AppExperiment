@@ -589,13 +589,14 @@ namespace ProcessTree
 
                 NewCash = "$" + NewValue.ToString("N2");
 
-                HtmlNewCash = "Starting fund in this round for every choice = " + NewCash + "<br><hr>" +
-                    "<strong>Calculation:</strong><br><br><i>" +
+                HtmlNewCash = "Confirmed fund = " + NewCash + 
+                    "<br>Confirmed outstanding shares = " + Score +
+                    "<br><hr><strong>Calculation:</strong><br><br><i>" +
                     "The winnig choice on " + RoundDate + ": <br><br>" +
                     Artifact.Replace("\r", "").Replace("\n", "<br>") + "<br><br>" +
-                    "Its performance was " +  Performance.ToString("N6") + "<br>" +
-                    "Prior fund invested by the firm (on " + RoundDate + ") was $" + OldValue.ToString("N2") + "<br>" +
-                    "New fund = Prior fund * Performance = $" + NewValue.ToString("N2") + "<i><br>" +
+                    "Its performance was : " +  Performance.ToString("N6") + "<br>" +
+                    "Total fund invested on this choice (on " + RoundDate + ") was : $" + OldValue.ToString("N2") + "<br>" +
+                    "New fund = Total fund * Performance = $" + NewValue.ToString("N2") + "<i><br>" +
                     "New price function is: Price = " + A.ToString("N3") + " * S + " + B.ToString("N3");
                 
                 // Insert the winner to the next round (Period +2)

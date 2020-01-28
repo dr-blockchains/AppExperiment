@@ -124,7 +124,7 @@ END
 ELSE --****************************SELLER ******************************
 BEGIN
 BEGIN TRY
-	SET @DShare = -@DShare;
+	--SET @DShare = -@DShare;
 
 	DECLARE @AvShare FLOAT;
 	SELECT @AvShare = Volume FROM Shares
@@ -141,23 +141,23 @@ BEGIN TRY
 
 	END;
 	
-	IF @AvShare < @DShare BEGIN		
-		SET @UnFull = @DShare - @AvShare;
-		SET @DShare = @AvShare;		
-		IF @DShare <= 0 BEGIN
+	IF @AvShare < -@DShare BEGIN		
+		SET @UnFull = -@DShare - @AvShare;
+		SET @DShare = -@AvShare;		
+		IF @DShare >= 0 BEGIN
 				ROLLBACK TRANSACTION;
-				INSERT INTO ErrorLog VALUES (GETDATE(),144, 'DShare decreased to: ' + CAST(@DShare AS VARCHAR) , 12);		
+				INSERT INTO ErrorLog VALUES (GETDATE(),144, 'AvShare = DShare = ' + CAST(@DShare AS VARCHAR) , 12);		
 				RETURN ERROR_NUMBER();
 		END;
 	END;
 		
-	SET @Shares2 = @Shares1 - @DShare;
+	SET @Shares2 = @Shares1 + @DShare;
 	SET @DFund = @DShare * ( .5 * @A * (@Shares1 + @Shares2) + @B);
 
-	UPDATE Shares SET BalanceConfirm = BalanceConfirm + @DFund, Volume = Volume - @DShare 
+	UPDATE Shares SET BalanceConfirm = BalanceConfirm - @DFund, Volume = Volume + @DShare 
 		WHERE ([Owner] = @Bidder) AND (Treatment = @Treatment) AND([Group#] = @Group) AND (Period = @Period) AND (Choice = @Choice);
 
-	SET @DFund = -@DFund;
+	-- SET @DFund = -@DFund;
 
 	DECLARE @MinB FLOAT;
 
