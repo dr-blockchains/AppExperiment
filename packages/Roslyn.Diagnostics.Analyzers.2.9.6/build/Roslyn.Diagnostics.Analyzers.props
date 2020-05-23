@@ -1,0 +1,22 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <!-- 
+    This item group adds any .editorconfig file present at the project root directory
+    as an additional file.
+  -->  
+  <ItemGroup Condition="'$(SkipDefaultEditorConfigAsAdditionalFile)' != 'true' And Exists('$(MSBuildProjectDirectory)\.editorconfig')" >
+    <AdditionalFiles Include="$(MSBuildProjectDirectory)\.editorconfig" />
+  </ItemGroup>
+
+  <!-- 
+    This property group prevents the rule ids implemented in this package to be bumped to errors when
+    the 'CodeAnalysisTreatWarningsAsErrors' = 'false'.
+  -->
+  <PropertyGroup Condition="'$(CodeAnalysisTreatWarningsAsErrors)' == 'false'">
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);RS0001;RS0002;RS0004;RS0005;RS0006;RS0013;RS0016;RS0017;RS0019;RS0022;RS0023;RS0024;RS0025;RS0026;RS0027;RS0030;RS0031;RS0032;RS0033;RS0034;RS0035</WarningsNotAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Features>$(Features);flow-analysis</Features> 
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="ProcessTreeConnectionString-Web.config Connection String" description="ProcessTreeConnectionString Connection String used in web.config by the application to access the database." defaultValue="Data Source=MSBSQLC\MSBSQLC;Initial Catalog=Hamed_MSU_EDU;Integrated Security=True;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\hk8486\\Desktop\\AppExperiment\\ProcessTree\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='ProcessTreeConnectionString']/@connectionString" />
+  </parameter>
+</parameters>

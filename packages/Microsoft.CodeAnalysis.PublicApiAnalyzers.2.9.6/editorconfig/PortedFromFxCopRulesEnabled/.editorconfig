@@ -1,0 +1,34 @@
+# NOTE: Requires **VS2019 16.3** or later
+
+# PortedFromFxCop Rules Enabled with default severity
+# Description: All PortedFromFxCop Rules are enabled with default severity. PortedFromFxCop Rules with IsEnabledByDefault = false are force enabled with default severity. Non-PortedFromFxCop Rules are disabled.
+
+# Code files
+[*.{cs,vb}]
+
+# PortedFromFxCop Rules
+
+
+
+# Other Rules
+
+# RS0016: Add public types and members to the declared API
+dotnet_diagnostic.RS0016.severity = none
+
+# RS0017: Remove deleted types and members from the declared API
+dotnet_diagnostic.RS0017.severity = none
+
+# RS0022: Constructor make noninheritable base class inheritable
+dotnet_diagnostic.RS0022.severity = none
+
+# RS0024: The contents of the public API files are invalid
+dotnet_diagnostic.RS0024.severity = none
+
+# RS0025: Do not duplicate symbols in public API files
+dotnet_diagnostic.RS0025.severity = none
+
+# RS0026: Do not add multiple public overloads with optional parameters
+dotnet_diagnostic.RS0026.severity = none
+
+# RS0027: Public API with optional parameter(s) should have the most parameters amongst its public overloads.
+dotnet_diagnostic.RS0027.severity = none

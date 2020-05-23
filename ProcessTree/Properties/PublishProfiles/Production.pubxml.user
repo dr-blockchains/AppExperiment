@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>\\webwp1.bus.msu.edu\hamed-constitution.broad.msu.edu</_PublishTargetUrl>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA9L+Jdd5baUu6xDB2agSiWgAAAAACAAAAAAADZgAAwAAAABAAAAC/yo+M1sFv5Foeksq5flL5AAAAAASAAACgAAAAEAAAAF4t8q3LXgilDm6dfb0kAxYYAAAAMtMTVpy9H+NnRaYSfOGF6elXlQHEMRjfFAAAAMfsWhZ2wVMznC6s7VdZyTlxeBRT</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/App_global.asax.compiled">
+      <publishTime>06/24/2018 14:26:16</publishTime>
+    </File>
+    <File Include="bin/App_global.asax.dll">
+      <publishTime>06/24/2018 14:26:16</publishTime>
+    </File>
+    <File Include="bin/AWSSDK.Core.dll">
+      <publishTime>03/29/2018 00:06:32</publishTime>
+    </File>
+    <File Include="bin/AWSSDK.IdentityManagement.dll">
+      <publishTime>03/29/2018 00:09:08</publishTime>
+    </File>
+    <File Include="bin/AWSSDK.MTurk.dll">
+      <publishTime>03/29/2018 00:10:10</publishTime>
+    </File>
+    <File Include="bin/DiffPlex.dll">
+      <publishTime>03/30/2017 19:59:32</publishTime>
+    </File>
+    <File Include="bin/ProcessTree.dll">
+      <publishTime>06/24/2018 14:26:10</publishTime>
+    </File>
+    <File Include="bin/ProcessTree.pdb">
+      <publishTime>04/24/2017 18:07:18</publishTime>
+    </File>
+    <File Include="bin/System.Runtime.InteropServices.RuntimeInformation.dll">
+      <publishTime>11/05/2016 04:57:00</publishTime>
+    </File>
+    <File Include="ChangePass.aspx">
+      <publishTime>06/11/2018 13:23:10</publishTime>
+    </File>
+    <File Include="ChangePeriod.aspx">
+      <publishTime>05/09/2018 18:07:49</publishTime>
+    </File>
+    <File Include="ChatRoom.aspx">
+      <publishTime>06/04/2018 18:56:25</publishTime>
+    </File>
+    <File Include="ClassDiagram1.cd">
+      <publishTime>05/17/2017 17:46:21</publishTime>
+    </File>
+    <File Include="Constitution.aspx">
+      <publishTime>06/24/2018 13:10:15</publishTime>
+    </File>
+    <File Include="ControlPanel.aspx">
+      <publishTime>06/19/2018 19:46:04</publishTime>
+    </File>
+    <File Include="css/StyleSheet1.css">
+      <publishTime>05/20/2017 12:54:02</publishTime>
+    </File>
+    <File Include="Default.aspx">
+      <publishTime>06/11/2018 16:22:54</publishTime>
+    </File>
+    <File Include="EmailVerify.aspx">
+      <publishTime>04/22/2017 13:01:08</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>02/17/2017 15:46:49</publishTime>
+    </File>
+    <File Include="History.aspx">
+      <publishTime>06/20/2018 13:26:17</publishTime>
+    </File>
+    <File Include="Images/Basics.png">
+      <publishTime>06/13/2018 20:01:19</publishTime>
+    </File>
+    <File Include="Images/Compare.png">
+      <publishTime>06/17/2018 18:01:45</publishTime>
+    </File>
+    <File Include="Images/Process.png">
+      <publishTime>06/14/2018 17:33:05</publishTime>
+    </File>
+    <File Include="Images/Scale.png">
+      <publishTime>06/13/2018 20:01:25</publishTime>
+    </File>
+    <File Include="Images/Start.JPG">
+      <publishTime>06/18/2018 15:48:59</publishTime>
+    </File>
+    <File Include="Intro.aspx">
+      <publishTime>11/15/2017 22:39:20</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>04/19/2018 16:53:17</publishTime>
+    </File>
+    <File Include="Participants.aspx">
+      <publishTime>06/12/2018 16:19:23</publishTime>
+    </File>
+    <File Include="PrecompiledApp.config">
+      <publishTime>06/24/2018 14:26:13</publishTime>
+    </File>
+    <File Include="Rating.aspx">
+      <publishTime>05/11/2018 14:31:20</publishTime>
+    </File>
+    <File Include="Results.aspx">
+      <publishTime>06/18/2018 16:55:56</publishTime>
+    </File>
+    <File Include="SignUp.aspx">
+      <publishTime>03/31/2017 13:01:23</publishTime>
+    </File>
+    <File Include="StyleSheet.css">
+      <publishTime>05/20/2018 18:12:17</publishTime>
+    </File>
+    <File Include="Suggestion.aspx">
+      <publishTime>06/20/2018 13:26:06</publishTime>
+    </File>
+    <File Include="Survey.aspx">
+      <publishTime>06/20/2018 21:39:57</publishTime>
+    </File>
+    <File Include="Timer.js">
+      <publishTime>05/20/2018 17:28:42</publishTime>
+    </File>
+    <File Include="Tips.aspx">
+      <publishTime>06/24/2018 14:22:00</publishTime>
+    </File>
+    <File Include="Voting.aspx">
+      <publishTime>06/20/2018 13:25:53</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>06/20/2018 17:54:27</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

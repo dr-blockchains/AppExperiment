@@ -1,0 +1,135 @@
+﻿body{
+    background-color: ghostwhite; 
+    width: 100%;    
+    margin: 10px auto;
+    min-width:980px;
+    max-width:2000px;
+}
+
+form{    
+    width: 80%;    
+    margin: 10px auto;   
+}
+
+table{
+     width: 100%;             
+     margin: 0px auto;
+}
+
+
+footer {
+    clear: both;
+    color:lightslategrey;    
+    text-align: center;    
+}
+
+
+.SignUp{
+    width : 500px;
+    margin: 0px auto;
+}
+
+.login{
+     font-weight:bold;
+     font-style:italic;
+     color: red;
+     font-size: 1.2em;          
+     margin: 0px auto;
+}
+
+.balance{
+     font-weight:bold;
+     color: darkgreen;      
+     font-size: .7em;     
+}
+
+
+.version-artifact {
+    font-style: normal;
+    margin-left: 2.5em;    
+}
+
+.version-choice {
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+.time{
+    font-style: italic;
+    font-size: 1em;
+    color:darkblue;
+    font-weight:bold;
+    border:solid #ccc 2px;
+    border-radius:5px;
+    padding:3px;
+    }
+.diff-del {
+    color:#fff;
+    background:#fff;
+}
+.diff-add {
+    font-weight:bold;
+    font-size: 1.1em;
+    color: darkblue;      
+}
+.diff-delnohover, .diff-addnohover {
+    color:inherit !important;
+    background:inherit !important;
+    font-weight:inherit !important;
+    font-size: inherit !important;    
+}
+.diff-delnohover {
+    display:none;    
+}
+
+.questions {
+     text-align:right;
+}
+
+.justified {
+     text-align: justify;
+     padding: 10px;
+     overflow: auto;
+}
+
+.remove-checkbox input[type="checkbox"] {
+    display:none;
+}
+
+.user-alert {
+    color: #D00;
+    font-size: 30px;
+}
+
+.chat-log {
+	height: 600px;
+	overflow: auto;
+	background-color: #EDA;
+}
+
+.chat-log ul {
+	list-style: none;
+	padding: 5px 5px 5px 5px;
+}
+
+.chat-author {
+	display: inline-block;
+	font-weight: bold;
+	font-size: 125%;
+}
+
+.chat-message {
+	display: inline-block;
+	margin-bottom: 10px;
+}
+
+.chat-textarea {
+	height: 100px;
+	background-color: #BDF;
+}
+
+.chat-log, .chat-textarea {
+	display: block;
+	width: 100%;	
+	margin: 5px auto;
+}

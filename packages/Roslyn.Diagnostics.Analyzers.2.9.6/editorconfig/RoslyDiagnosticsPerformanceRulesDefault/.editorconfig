@@ -1,0 +1,76 @@
+# NOTE: Requires **VS2019 16.3** or later
+
+# RoslyDiagnosticsPerformance Rules with default severity
+# Description: All RoslyDiagnosticsPerformance Rules with default severity. Rules with IsEnabledByDefault = false or from a different category are disabled.
+
+# Code files
+[*.{cs,vb}]
+
+# RoslyDiagnosticsPerformance Rules
+
+# RS0001: Use SpecializedCollections.EmptyEnumerable()
+dotnet_diagnostic.RS0001.severity = warning
+
+# RS0002: Use SpecializedCollections.SingletonEnumerable()
+dotnet_diagnostic.RS0002.severity = warning
+
+# RS0005: Do not use generic CodeAction.Create to create CodeAction
+dotnet_diagnostic.RS0005.severity = warning
+
+# RS0013: Do not invoke Diagnostic.Descriptor
+dotnet_diagnostic.RS0013.severity = none
+
+
+
+# Other Rules
+
+# RS0004: Invoke the correct property to ensure correct use site diagnostics.
+dotnet_diagnostic.RS0004.severity = none
+
+# RS0006: Do not mix attributes from different versions of MEF
+dotnet_diagnostic.RS0006.severity = none
+
+# RS0016: Add public types and members to the declared API
+dotnet_diagnostic.RS0016.severity = none
+
+# RS0017: Remove deleted types and members from the declared API
+dotnet_diagnostic.RS0017.severity = none
+
+# RS0019: SymbolDeclaredEvent must be generated for source symbols
+dotnet_diagnostic.RS0019.severity = none
+
+# RS0022: Constructor make noninheritable base class inheritable
+dotnet_diagnostic.RS0022.severity = none
+
+# RS0023: Parts exported with MEFv2 must be marked as Shared
+dotnet_diagnostic.RS0023.severity = none
+
+# RS0024: The contents of the public API files are invalid
+dotnet_diagnostic.RS0024.severity = none
+
+# RS0025: Do not duplicate symbols in public API files
+dotnet_diagnostic.RS0025.severity = none
+
+# RS0026: Do not add multiple public overloads with optional parameters
+dotnet_diagnostic.RS0026.severity = none
+
+# RS0027: Public API with optional parameter(s) should have the most parameters amongst its public overloads.
+dotnet_diagnostic.RS0027.severity = none
+
+# RS0030: Do not used banned APIs
+dotnet_diagnostic.RS0030.severity = none
+
+# RS0031: The list of banned symbols contains a duplicate
+dotnet_diagnostic.RS0031.severity = none
+
+# RS0032: Test exports should not be discoverable
+dotnet_diagnostic.RS0032.severity = none
+
+# RS0033: Importing constructor should be [Obsolete]
+dotnet_diagnostic.RS0033.severity = none
+
+# RS0034: Exported parts should have [ImportingConstructor]
+dotnet_diagnostic.RS0034.severity = none
+
+# RS0035: External access to internal symbols outside the restricted namespace(s) is prohibited
+dotnet_diagnostic.RS0035.severity = none

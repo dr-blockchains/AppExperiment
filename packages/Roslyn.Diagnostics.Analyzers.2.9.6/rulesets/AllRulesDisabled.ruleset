@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<RuleSet Name="All Rules Disabled" Description="All Rules are disabled." ToolsVersion="15.0">
+   <Rules AnalyzerId="Roslyn.Diagnostics.Analyzers" RuleNamespace="Roslyn.Diagnostics.Analyzers">
+      <Rule Id="RS0001" Action="None" />             <!-- Use SpecializedCollections.EmptyEnumerable() -->
+      <Rule Id="RS0002" Action="None" />             <!-- Use SpecializedCollections.SingletonEnumerable() -->
+      <Rule Id="RS0004" Action="None" />             <!-- Invoke the correct property to ensure correct use site diagnostics. -->
+      <Rule Id="RS0005" Action="None" />             <!-- Do not use generic CodeAction.Create to create CodeAction -->
+      <Rule Id="RS0006" Action="None" />             <!-- Do not mix attributes from different versions of MEF -->
+      <Rule Id="RS0013" Action="None" />             <!-- Do not invoke Diagnostic.Descriptor -->
+      <Rule Id="RS0016" Action="None" />             <!-- Add public types and members to the declared API -->
+      <Rule Id="RS0017" Action="None" />             <!-- Remove deleted types and members from the declared API -->
+      <Rule Id="RS0019" Action="None" />             <!-- SymbolDeclaredEvent must be generated for source symbols -->
+      <Rule Id="RS0022" Action="None" />             <!-- Constructor make noninheritable base class inheritable -->
+      <Rule Id="RS0023" Action="None" />             <!-- Parts exported with MEFv2 must be marked as Shared -->
+      <Rule Id="RS0024" Action="None" />             <!-- The contents of the public API files are invalid -->
+      <Rule Id="RS0025" Action="None" />             <!-- Do not duplicate symbols in public API files -->
+      <Rule Id="RS0026" Action="None" />             <!-- Do not add multiple public overloads with optional parameters -->
+      <Rule Id="RS0027" Action="None" />             <!-- Public API with optional parameter(s) should have the most parameters amongst its public overloads. -->
+      <Rule Id="RS0030" Action="None" />             <!-- Do not used banned APIs -->
+      <Rule Id="RS0031" Action="None" />             <!-- The list of banned symbols contains a duplicate -->
+      <Rule Id="RS0032" Action="None" />             <!-- Test exports should not be discoverable -->
+      <Rule Id="RS0033" Action="None" />             <!-- Importing constructor should be [Obsolete] -->
+      <Rule Id="RS0034" Action="None" />             <!-- Exported parts should have [ImportingConstructor] -->
+      <Rule Id="RS0035" Action="None" />             <!-- External access to internal symbols outside the restricted namespace(s) is prohibited -->
+   </Rules>
+</RuleSet>

@@ -589,7 +589,7 @@ namespace ProcessTree
 
                 NewCash = "$" + NewValue.ToString("N2");
 
-                HtmlNewCash = "Confirmed fund = " + NewCash + 
+                HtmlNewCash = "Fund after profit (loss) = " + NewCash + 
                     "<br>Confirmed outstanding shares = " + Score +
                     "<br><hr><strong>Calculation:</strong><br><br><i>" +
                     "The winnig choice on " + RoundDate + ": <br><br>" +

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<RuleSet Name="Dataflow Rules with default severity" Description="All Dataflow Rules with default severity. Rules with IsEnabledByDefault = false and non-Dataflow rules are disabled." ToolsVersion="15.0">
+   <!-- Dataflow Rules -->
+
+
+
+   <!-- Other Rules -->
+   <Rules AnalyzerId="Microsoft.CodeAnalysis.PublicApiAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.PublicApiAnalyzers">
+      <Rule Id="RS0016" Action="None" />             <!-- Add public types and members to the declared API -->
+      <Rule Id="RS0017" Action="None" />             <!-- Remove deleted types and members from the declared API -->
+      <Rule Id="RS0022" Action="None" />             <!-- Constructor make noninheritable base class inheritable -->
+      <Rule Id="RS0024" Action="None" />             <!-- The contents of the public API files are invalid -->
+      <Rule Id="RS0025" Action="None" />             <!-- Do not duplicate symbols in public API files -->
+      <Rule Id="RS0026" Action="None" />             <!-- Do not add multiple public overloads with optional parameters -->
+      <Rule Id="RS0027" Action="None" />             <!-- Public API with optional parameter(s) should have the most parameters amongst its public overloads. -->
+   </Rules>
+</RuleSet>
