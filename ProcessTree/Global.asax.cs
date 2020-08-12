@@ -23,11 +23,12 @@ namespace ProcessTree
         {
             // ClientScript.RegisterStartupScript(this.GetType(), "Attention", "alert('No treatment group is available now. Please come back later! ');", true);
             // HttpContext.Current.Response.Write(Subject);
-            return;
 #if DEBUG
             HttpContext.Current.Response.Write(Subject);
             return;
 #endif
+            if (Address.IndexOf('@') == -1) return; 
+
             string Body = Content + "<br><br>" +
 
                 "You can log into your account <a href = 'https://Faculty.McCombs.UTexas.edu/Hamed.Khaledi/'>HERE</a> with your <i>Email Address</i> as your <i>Username</i>. <br><br>" +
