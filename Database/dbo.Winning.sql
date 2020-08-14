@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[Winning]
-(
+( 
 	@Treatment INT, 
 	@Group INT,
 	@Period INT, 
@@ -17,7 +17,8 @@ BEGIN TRY
 	DECLARE @Score FLOAT, @Fund FLOAT;
 
 	SELECT @Score = Score, @Fund = Fund FROM Versions 
-		WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period AND Choice = @Winner;
+		WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period+2 AND Choice = 0;
+		--AND [Period] = @Period AND Choice = @Winner;
 
 	UPDATE Versions SET Score = @Score, Fund = @Fund
 		WHERE Treatment = @Treatment AND [Group#] = @Group AND [Period] = @Period + 2;

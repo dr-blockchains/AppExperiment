@@ -6,6 +6,8 @@ DELETE FROM Orders WHERE Treatment = @TID;
 
 DELETE FROM Shares WHERE Treatment = @TID AND Period > 2;
 
+DELETE FROM Chats WHERE Treatment = @TID;
+
 UPDATE Shares SET Volume = 0 , BalanceConfirm = 0 , BalanceVoid = 0 WHERE Treatment = @TID AND Period = 2;
 
 SELECT * FROM Shares WHERE Treatment = @TID;
