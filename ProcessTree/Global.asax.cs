@@ -103,7 +103,7 @@ namespace ProcessTree
             }
         }
 
-        /* public static void InviteVoting(int Treat, int Group, DateTime DT)
+        public static void InviteVoting(int Treat, int Group, DateTime DT)
         {
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
             conn.Open();
@@ -124,9 +124,9 @@ namespace ProcessTree
 
             conn.Close();         
         }
-        */
+       
 
-        /* public static int FinalPeriod(int Treat, int Group, DateTime EndingTime)
+        public static int FinalPeriod(int Treat, int Group, DateTime EndingTime)
         {
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ProcessTreeConnectionString"].ConnectionString);
             conn.Open();
@@ -203,7 +203,7 @@ namespace ProcessTree
             return P;
         }
         
-        */
+        
 
         /* Period =
          

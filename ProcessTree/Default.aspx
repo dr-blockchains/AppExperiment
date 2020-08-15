@@ -310,7 +310,7 @@
                 <br />
                 <span class="auto-style65">Please log in if you already registered.</span></td>
             <td class="auto-style101">
-                <strong>Worker ID: </strong></td>
+                <strong>Username: </strong></td>
             <td class="auto-style61">
                 <asp:TextBox ID="TextUser" runat="server" Width="225px" TabIndex="1" OnTextChanged="TextUser_TextChanged"></asp:TextBox>
             </td>
@@ -451,7 +451,7 @@
             </tr>
             <tr>
                 <td class="auto-style87">
-                    Worker ID : <td class="auto-style88">
+                    Username : <td class="auto-style88">
                     <asp:TextBox ID="TextID" runat="server" MaxLength="50" 
                         ontextchanged="TextID_TextChanged" TabIndex="10" CausesValidation="True" BackColor="#FFCCFF" Font-Bold="True" Width="281px" AutoPostBack="True"></asp:TextBox>
                     *</td>
@@ -459,12 +459,12 @@
                     <asp:Label ID="LabelMessage" runat="server" Font-Bold="True" ForeColor="Red"></asp:Label>
                     <br />
                     <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" 
-                        ControlToValidate="TextID" ErrorMessage="Please type a valid Worker ID!" 
+                        ControlToValidate="TextID" ErrorMessage="Please type a valid Username!" 
                         Font-Bold="True" ForeColor="Red" 
-                        ValidationExpression="^A[0-9A-Z]{3,30}$" SetFocusOnError="True" Enabled="False"></asp:RegularExpressionValidator>
+                        ValidationExpression="\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.edu" SetFocusOnError="True" Enabled="False"></asp:RegularExpressionValidator>
                     <br />
                     <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" 
-                        ControlToValidate="TextID" ErrorMessage="Worker ID is required." Font-Bold="True" 
+                        ControlToValidate="TextID" ErrorMessage="Username is required." Font-Bold="True" 
                         ForeColor="Red" SetFocusOnError="True"></asp:RequiredFieldValidator>
                 </td>
             </tr>

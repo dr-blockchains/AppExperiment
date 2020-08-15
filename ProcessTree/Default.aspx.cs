@@ -12,7 +12,7 @@ namespace ProcessTree
     public partial class Main : System.Web.UI.Page
     {
         public static Regex WIDCheck = new Regex("^A[0-9A-Z]{3,30}$");
-        // public static Regex EmailCheck = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.edu");
+        public static Regex EmailCheck = new Regex("\\w+([-+.']\\w+)*@\\w+([-.]\\w+)*\\.edu");
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -28,10 +28,13 @@ namespace ProcessTree
                 {
                     TextID.Text = WorkerID;
                     TextID.ReadOnly = true;
-                    LabelLogin.Text = "Please choose a nick name for your self.";
+                    LabelLogin.Text = "Please choose a nick name for yourself.";
                     LabelMessage.Text = "Please check that your Worker ID is correct.";
                     return;
                 }
+
+                TextID.ReadOnly = false;
+                LabelLogin.Text = "Your Username is your Email address.";
                                                
                 // Email Verification
                 string Nonce = Request.QueryString["nonce"];

@@ -1068,11 +1068,11 @@ PerGroup = @PerGroup, VoteChange = @VoteChange, Valuation = @Valuation, AuctionS
             while (Subjects.Read())
             {
                 Content = "Hello " + Subjects["Name"] + " ! <br>" +
-                    "Please note that the experiment is conducted in the behavioral lab (CBA 6.402 and 6.499) in the McCombs School of Business.<br>" +
-                    "See you before noon! <br>";
+                    "Please note that the experiment is conducted online at the specified time.<br>" +
+                    "Please prepare beforehand! <br>";
                 try
                 {
-                    Global.Email(Subjects["ID"].ToString(), "Location of Experiment", Content);
+                    Global.Email(Subjects["ID"].ToString(), "Coordination of the Experiment", Content);
                 }
                 catch
                 {
